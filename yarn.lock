@@ -1867,9 +1867,9 @@ ember-cli-preprocess-registry@^3.0.0:
     process-relative-require "^1.0.0"
     silent-error "^1.0.0"
 
-"ember-cli-pretender@https://github.com/bgentry/ember-cli-pretender.git":
-  version "1.0.0"
-  resolved "https://github.com/bgentry/ember-cli-pretender.git#c27695195c0b8bc97fb293c7a0569eb1ef777f82"
+ember-cli-pretender@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/ember-cli-pretender/-/ember-cli-pretender-1.0.1.tgz#35540babddef6f2778e91c627d190c73505103cd"
   dependencies:
     broccoli-funnel "^1.1.0"
     broccoli-merge-trees "^1.2.1"
