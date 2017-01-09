@@ -39,8 +39,9 @@ you can then use it:
 ```js
 import Ember from 'ember';
 import gql from 'graphql-tag';
+import UnsubscribeRouteMixin from 'ember-apollo-client/mixins/unsubscribe-route';
 
-export default Ember.Route.extend({
+export default Ember.Route.extend(UnsubscribeRouteMixin, {
   apollo: Ember.inject.service(),
 
   model(params) {
@@ -56,6 +57,21 @@ export default Ember.Route.extend({
   }
 });
 ```
+
+When you use the `query` method, ember-apollo is actually performing a
+`watchQuery` on the ApolloClient. The resulting object is an `Ember.Object` and
+therefore has full support for computed properties, observers, etc.
+
+If a subsequent query (such as a mutation) happens to fetch the same data while
+this query's subscription is still active, the object will immediately receive
+the latest attributes (just like ember-data).
+
+Please note that when using `query`, you should unsubscribe when you're done
+with the query data. You can instead use `queryOnce` if you just want a single
+query with a POJO response and no watch updates.
+
+See the [API docs](#apollo-service-api)
+for more details.
 
 ### Mutations and Fragments
 
