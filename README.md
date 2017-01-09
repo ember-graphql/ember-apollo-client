@@ -186,6 +186,9 @@ The dummy app contains example routes for mutations and queries:
 * [Acceptance test for a regular query](https://github.com/bgentry/ember-apollo-client/blob/master/tests/acceptance/main-test.js)
 * [Route integration test for a mutation with a fragment](https://github.com/bgentry/ember-apollo-client/blob/master/tests/unit/routes/new-review-test.js)
 
+The tests also contain a sample Star Wars GraphQL schema with an
+ember-cli-pretender setup for mock data.
+
 ## Development
 
 ### Installation
