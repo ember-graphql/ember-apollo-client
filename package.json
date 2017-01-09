@@ -1,17 +1,20 @@
 {
   "name": "ember-apollo-client",
   "version": "0.0.0",
-  "description": "The default blueprint for ember-cli addons.",
+  "description": "An ember-cli addon for apollo-client.",
   "keywords": [
-    "ember-addon"
+    "ember-addon",
+    "apollo-client",
+    "apollo",
+    "graphql"
   ],
   "license": "MIT",
-  "author": "",
+  "author": "Blake Gentry",
   "directories": {
     "doc": "doc",
     "test": "tests"
   },
-  "repository": "",
+  "repository": "https://github.com/bgentry/ember-apollo-client",
   "scripts": {
     "build": "ember build",
     "start": "ember server",
@@ -21,6 +24,7 @@
     "ember-cli-babel": "^5.1.7"
   },
   "devDependencies": {
+    "apollo-client": "^0.6.0",
     "broccoli-asset-rev": "^2.4.5",
     "ember-ajax": "^2.4.1",
     "ember-cli": "2.10.0",
@@ -38,9 +42,13 @@
     "ember-data": "^2.10.0",
     "ember-disable-prototype-extensions": "^1.1.0",
     "ember-export-application-global": "^1.0.5",
+    "ember-graphql-tag-shim": "0.1.1",
     "ember-load-initializers": "^0.5.1",
     "ember-resolver": "^2.0.3",
     "ember-welcome-page": "^1.0.3",
+    "graphql": "^0.8.2",
+    "graphql-tag": "1.2.1",
+    "graphql-tools": "^0.9.0",
     "loader.js": "^4.0.10"
   },
   "engines": {
