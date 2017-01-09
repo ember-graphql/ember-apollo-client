@@ -5,7 +5,7 @@ Ember app.
 
 It is still a WIP due to the fact that I have no idea how Broccoli build
 pipelines work and can't figure out the get the npm dependencies loaded
-without the ember-browserify `npm:` prefix.
+without the ember-browserify `npm:` prefix. See [issue #1](https://github.com/bgentry/ember-apollo-client/issues/1) for details.
 
 I have been using the non-addon version of this in my own app for a few months.
 I've taken care of edge cases around testability and unsubscribing from watch
