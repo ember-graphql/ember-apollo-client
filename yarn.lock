@@ -10,7 +10,7 @@
   version "3.4.34"
   resolved "https://registry.yarnpkg.com/@types/chai/-/chai-3.4.34.tgz#d5335792823bb09cddd5e38c3d211b709183854d"
 
-"@types/graphql@^0.8.0":
+"@types/graphql@^0.8.0", "@types/graphql@^0.8.5":
   version "0.8.5"
   resolved "https://registry.yarnpkg.com/@types/graphql/-/graphql-0.8.5.tgz#3f06ab58a5f37a94c94fafe0767efa0fcd0e7b3a"
 
@@ -2070,9 +2070,25 @@ ember-export-application-global@^1.0.5:
   dependencies:
     ember-cli-babel "^5.1.10"
 
+ember-graphql-shim@0.1.0:
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/ember-graphql-shim/-/ember-graphql-shim-0.1.0.tgz#9d9943310da47ee15eea4ce9bf1dd3fff997ab3d"
+  dependencies:
+    broccoli-merge-trees "^1.2.1"
+    broccoli-webpack "^1.0.0"
+    ember-cli-babel "^5.1.7"
+
 ember-graphql-tag-shim@0.1.1:
   version "0.1.1"
   resolved "https://registry.yarnpkg.com/ember-graphql-tag-shim/-/ember-graphql-tag-shim-0.1.1.tgz#ae990693f6a348c80dc7e1b957e52712f3545bac"
+  dependencies:
+    broccoli-merge-trees "^1.2.1"
+    broccoli-webpack "^1.0.0"
+    ember-cli-babel "^5.1.7"
+
+ember-graphql-tools-shim@0.1.0:
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/ember-graphql-tools-shim/-/ember-graphql-tools-shim-0.1.0.tgz#4a78929185dcdaabf2236649e38ab68b1e24fbc9"
   dependencies:
     broccoli-merge-trees "^1.2.1"
     broccoli-webpack "^1.0.0"
@@ -2964,17 +2980,17 @@ graphql-tag@^1.1.1, graphql-tag@^1.2.1:
   version "1.2.1"
   resolved "https://registry.yarnpkg.com/graphql-tag/-/graphql-tag-1.2.1.tgz#d5ddb8ff7607717a2e5ab92e6d9e1529d2bf1734"
 
-graphql-tools@^0.8.4:
-  version "0.8.4"
-  resolved "https://registry.yarnpkg.com/graphql-tools/-/graphql-tools-0.8.4.tgz#3cf4b2a650e0322b655ca274ec24914b608fb562"
+graphql-tools@0.9.0:
+  version "0.9.0"
+  resolved "https://registry.yarnpkg.com/graphql-tools/-/graphql-tools-0.9.0.tgz#672c31b05dab7affc92321635545a49602355f05"
   dependencies:
     deprecated-decorator "^0.1.6"
     lodash "^4.3.0"
     uuid "^3.0.1"
   optionalDependencies:
-    typed-graphql "^1.0.2"
+    "@types/graphql" "^0.8.5"
 
-graphql@^0.8.2:
+graphql@0.8.2:
   version "0.8.2"
   resolved "https://registry.yarnpkg.com/graphql/-/graphql-0.8.2.tgz#eb1bb524b38104bbf2c9157f9abc67db2feba7d2"
   dependencies:
@@ -5915,10 +5931,6 @@ type-is@~1.6.13:
   dependencies:
     media-typer "0.3.0"
     mime-types "~2.1.13"
-
-typed-graphql@^1.0.2:
-  version "1.0.2"
-  resolved "https://registry.yarnpkg.com/typed-graphql/-/typed-graphql-1.0.2.tgz#4c0f788775d552df4d4ec3d73f25469252f40fb8"
 
 typedarray@~0.0.5:
   version "0.0.6"

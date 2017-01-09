@@ -44,14 +44,16 @@
     "ember-data": "^2.10.0",
     "ember-disable-prototype-extensions": "^1.1.0",
     "ember-export-application-global": "^1.0.5",
+    "ember-graphql-shim": "0.1.0",
     "ember-graphql-tag-shim": "0.1.1",
+    "ember-graphql-tools-shim": "0.1.0",
     "ember-load-initializers": "^0.5.1",
     "ember-network": "0.3.1",
     "ember-resolver": "^2.0.3",
     "eslint-plugin-ember-suave": "^1.0.0",
-    "graphql": "^0.8.2",
+    "graphql": "0.8.2",
     "graphql-tag": "^1.2.1",
-    "graphql-tools": "^0.8.4",
+    "graphql-tools": "0.9.0",
     "loader.js": "^4.0.10"
   },
   "engines": {
