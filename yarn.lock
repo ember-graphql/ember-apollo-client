@@ -1697,7 +1697,7 @@ ember-ajax@^2.4.1:
   dependencies:
     ember-cli-babel "^5.1.5"
 
-ember-browserify@1.1.13:
+ember-browserify@^1.1.13:
   version "1.1.13"
   resolved "https://registry.yarnpkg.com/ember-browserify/-/ember-browserify-1.1.13.tgz#df74eea4adf4694e8c364222f9c5fd605000930b"
   dependencies:
