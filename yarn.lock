@@ -1869,7 +1869,7 @@ ember-cli-preprocess-registry@^3.0.0:
 
 "ember-cli-pretender@https://github.com/bgentry/ember-cli-pretender.git":
   version "1.0.0"
-  resolved "https://github.com/bgentry/ember-cli-pretender.git#9264a0ede98111b728890d7fb4adb9db1436c310"
+  resolved "https://github.com/bgentry/ember-cli-pretender.git#c27695195c0b8bc97fb293c7a0569eb1ef777f82"
   dependencies:
     broccoli-funnel "^1.1.0"
     broccoli-merge-trees "^1.2.1"
