@@ -8,6 +8,7 @@ const Router = Ember.Router.extend({
 
 Router.map(function() {
   this.route('luke');
+  this.route('new-review');
 });
 
 export default Router;

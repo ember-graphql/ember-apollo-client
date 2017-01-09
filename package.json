@@ -21,6 +21,7 @@
     "test": "ember try:each"
   },
   "dependencies": {
+    "common-tags": "^1.4.0",
     "ember-cli-babel": "^5.1.7"
   },
   "devDependencies": {

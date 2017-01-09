@@ -57,6 +57,53 @@ export default Ember.Route.extend({
 });
 ```
 
+### Mutations and Fragments
+
+You can perform a mutation using the `mutate` method. You can also use GraphQL
+fragments in your queries. This is especially useful if you want to ensure that
+you refetch the same attributes in a subsequent query or mutation involving the
+same model(s).
+
+The following example shows both mutations and fragments in action:
+
+```js
+import Ember from 'ember';
+import gql from 'graphql-tag';
+
+const ReviewFragment = gql`
+  fragment ReviewFragment on Human {
+    stars
+    commentary
+  }
+`;
+
+export default Ember.Route.extend({
+  apollo: Ember.inject.service(),
+
+  model() {
+    return Ember.Object.create({});
+  },
+
+  actions: {
+    createReview(ep, review) {
+      let mutation = gql`
+        mutation createReview($ep: Episode!, $review: ReviewInput!) {
+          createReview(episode: $ep, review: $review) {
+            review {
+              ...ReviewFragment
+            }
+          }
+        }
+
+        ${ReviewFragment}
+      `;
+      let variables = { ep, review };
+      return this.get('apollo').mutate({ mutation, variables }, 'review');
+    }
+  }
+});
+```
+
 ### Apollo service API
 
 The `apollo` service has the following public API:
@@ -127,6 +174,17 @@ export default {
   initialize
 };
 ```
+
+### Testing
+
+This addon is very friendly for tests. All promises from the apollo service are
+tracked with `Ember.Test.registerWaiter`, so your tests should be completely
+deterministic.
+
+The dummy app contains example routes for mutations and queries:
+
+* [Acceptance test for a regular query](https://github.com/bgentry/ember-apollo-client/blob/master/tests/acceptance/main-test.js)
+* [Route integration test for a mutation with a fragment](https://github.com/bgentry/ember-apollo-client/blob/master/tests/unit/routes/new-review-test.js)
 
 ## Development
 

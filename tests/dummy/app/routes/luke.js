@@ -10,7 +10,7 @@ export default Ember.Route.extend(UnsubscribeRouteMixin, {
   apollo: service(),
   model() {
     let query = gql`
-      query human($id: String!) {
+      query human($id: ID!) {
         human(id: $id) {
           name
         }
