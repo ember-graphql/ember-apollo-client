@@ -7,12 +7,15 @@ module.exports = {
     return this.addAddonsToProject({
       packages: [
         { name: 'ember-browserify', target: '^1.1.11' },
-        { name: 'ember-graphql-shim' },
         { name: 'ember-graphql-tag-shim' }
       ]
     })
     .then(() => {
-      return this.addPackageToProject('apollo-client');
+      return this.addPackagesToProject([
+        { name: 'apollo-client' },
+        { name: 'graphql-tools' },
+        { name: 'graphql' }
+      ]);
     });
   }
 };

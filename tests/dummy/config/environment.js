@@ -1,4 +1,4 @@
-/* jshint node: true */
+/* globals module */
 
 module.exports = function(environment) {
   var ENV = {
@@ -6,6 +6,9 @@ module.exports = function(environment) {
     environment: environment,
     rootURL: '/',
     locationType: 'auto',
+    apollo: {
+      apiURL: 'https://test.example/graphql'
+    },
     EmberENV: {
       FEATURES: {
         // Here you can enable experimental features on an ember canary build
@@ -42,9 +45,8 @@ module.exports = function(environment) {
     ENV.APP.rootElement = '#ember-testing';
   }
 
-  if (environment === 'production') {
-
-  }
+  // if (environment === 'production') {
+  // }
 
   return ENV;
 };
