@@ -4,9 +4,15 @@ import graphqlTools from 'npm:graphql-tools';
 
 const { addResolveFunctionsToSchema } = graphqlTools;
 
-moduleForAcceptance('Acceptance | main');
+let application;
 
-test('visiting /', function(assert) {
+moduleForAcceptance('Acceptance | main', {
+  beforeEach() {
+    application = this.application;
+  }
+});
+
+test('visiting /luke', function(assert) {
   let done = assert.async();
 
   let mockHuman = {
@@ -22,11 +28,29 @@ test('visiting /', function(assert) {
     }
   });
 
-  visit('/');
+  let apollo = application.__container__.lookup('service:apollo');
+  let getQueries = () => apollo.client.queryManager.getApolloState().queries;
+
+  visit('/luke');
 
   andThen(function() {
-    assert.equal(currentURL(), '/');
+    assert.equal(currentURL(), '/luke');
     assert.equal(find('.model-name').text(), 'Luke Skywalker');
-    done();
+
+    // Because we used query() (which uses apollo client's watchQuery) there
+    // should be an ongoing query in the apollo query manager:
+    let queries = getQueries();
+    assert.ok(Object.keys(queries).length, 'there is an active watchQuery');
+
+    visit('/');
+
+    andThen(function() {
+      // Now that we've gone to a route with no queries, the
+      // UnsubscribeRouteMixin should have unsubscribed from the watcyQuery andThen
+      // there should be no ongoing queries:
+      let queries = getQueries();
+      assert.notOk(Object.keys(queries).length, 'there are no active watchQueries');
+      done();
+    });
   });
 });

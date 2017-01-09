@@ -97,7 +97,7 @@ export default Service.extend({
    */
   query(opts, resultKey) {
     let obj, subscription;
-    let apolloUnsubscribe = function() {
+    let _apolloUnsubscribe = function() {
       subscription.unsubscribe();
     };
     return this._waitFor(new RSVP.Promise((resolve) => {
@@ -107,9 +107,9 @@ export default Service.extend({
         if (isNone(obj)) {
           if (isArray(dataToSend)) {
             obj = A(dataToSend);
-            obj.setProperties({ apolloUnsubscribe });
+            obj.setProperties({ _apolloUnsubscribe });
           } else {
-            obj = EmberObject.create(merge(dataToSend, { apolloUnsubscribe }));
+            obj = EmberObject.create(merge(dataToSend, { _apolloUnsubscribe }));
           }
           resolve(obj);
         } else {

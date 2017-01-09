@@ -1,11 +1,12 @@
 import Ember from 'ember';
+import UnsubscribeRouteMixin from 'ember-apollo-client/mixins/unsubscribe-route';
 import gql from 'graphql-tag';
 
 const {
   inject: { service }
 } = Ember;
 
-export default Ember.Route.extend({
+export default Ember.Route.extend(UnsubscribeRouteMixin, {
   apollo: service(),
   model() {
     let query = gql`
