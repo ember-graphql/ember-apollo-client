@@ -1,8 +1,6 @@
 import { test } from 'qunit';
 import moduleForAcceptance from '../../tests/helpers/module-for-acceptance';
-import graphqlTools from 'npm:graphql-tools';
-
-const { addResolveFunctionsToSchema } = graphqlTools;
+import { addResolveFunctionsToSchema } from 'graphql-tools';
 
 let application;
 

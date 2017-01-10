@@ -2,8 +2,7 @@ import Ember from 'ember';
 import gql from 'graphql-tag';
 
 // working around browserify limitations:
-// eslint-disable-next-line no-unused-vars
-import commonTags from 'npm:common-tags';
+import 'npm:common-tags';
 
 const {
   inject: { service },

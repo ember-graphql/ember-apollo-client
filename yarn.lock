@@ -2087,14 +2087,6 @@ ember-export-application-global@^1.0.5:
   dependencies:
     ember-cli-babel "^5.1.10"
 
-ember-graphql-tag-shim@0.1.1:
-  version "0.1.1"
-  resolved "https://registry.yarnpkg.com/ember-graphql-tag-shim/-/ember-graphql-tag-shim-0.1.1.tgz#ae990693f6a348c80dc7e1b957e52712f3545bac"
-  dependencies:
-    broccoli-merge-trees "^1.2.1"
-    broccoli-webpack "^1.0.0"
-    ember-cli-babel "^5.1.7"
-
 ember-inflector@^1.9.4:
   version "1.10.0"
   resolved "https://registry.yarnpkg.com/ember-inflector/-/ember-inflector-1.10.0.tgz#965fe33ead5ffcef21f208aab78666f7df297ecf"

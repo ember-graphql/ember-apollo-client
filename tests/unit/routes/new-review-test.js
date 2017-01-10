@@ -1,9 +1,10 @@
 import { moduleFor, test } from 'ember-qunit';
 import Ember from 'ember';
-import graphql from 'npm:graphql';
+import { print } from 'graphql';
+
+// TODO maybe make `ember-common-tags` with a similar Webpack setup to what we're doing in this addon
 import commonTags from 'npm:common-tags';
 
-const { print } = graphql;
 const { stripIndent } = commonTags;
 
 const { run } = Ember;
