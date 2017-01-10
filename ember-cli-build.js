@@ -5,6 +5,7 @@ var EmberAddon = require('ember-cli/lib/broccoli/ember-addon');
 module.exports = function(defaults) {
   var app = new EmberAddon(defaults, {
     babel: {
+      // Necessary for Object.assign when testing in the dummy app with PhantomJS
       includePolyfill: true
     }
   });
