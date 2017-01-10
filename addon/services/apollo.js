@@ -1,5 +1,5 @@
 import Ember from 'ember';
-import ApolloClientLib from 'npm:apollo-client';
+import ApolloClient, { createNetworkInterface } from 'apollo-client';
 
 const {
   A,
@@ -16,11 +16,6 @@ const {
   Test,
   testing
 } = Ember;
-
-const {
-  createNetworkInterface,
-  default: ApolloClient
-} = ApolloClientLib;
 
 export default Service.extend({
   client: null,
