@@ -3,13 +3,20 @@
 This is an ember-cli addon to integrate [apollo-client][apollo-client] into an
 Ember app.
 
-It is still a WIP due to the fact that I have no idea how Broccoli build
-pipelines work and can't figure out the get the npm dependencies loaded
-without the ember-browserify `npm:` prefix. See [issue #1](https://github.com/bgentry/ember-apollo-client/issues/1) for details.
+This addon includes the following dependencies:
+
+* [apollo-client][apollo-client]
+* [graphql][graphql-repo]
+* [graphql-tag][graphql-tag-repo]
+* [graphql-tools][graphql-tools-repo]
 
 I have been using the non-addon version of this in my own app for a few months.
 I've taken care of edge cases around testability and unsubscribing from watch
 queries.
+
+[graphql-repo]: https://github.com/graphql/graphql-js "GraphQL"
+[graphql-tag-repo]: https://github.com/apollostack/graphql-tag "graphql-tag"
+[graphql-tools-repo]: https://github.com/apollostack/graphql-tools "graphql-tools"
 
 ## Usage
 
@@ -193,9 +200,8 @@ export default {
 
 ### Testing
 
-This addon is very friendly for tests. All promises from the apollo service are
-tracked with `Ember.Test.registerWaiter`, so your tests should be completely
-deterministic.
+This addon is test-ready! All promises from the apollo service are tracked with
+`Ember.Test.registerWaiter`, so your tests should be completely deterministic.
 
 The dummy app contains example routes for mutations and queries:
 
@@ -203,7 +209,9 @@ The dummy app contains example routes for mutations and queries:
 * [Route integration test for a mutation with a fragment](https://github.com/bgentry/ember-apollo-client/blob/master/tests/unit/routes/new-review-test.js)
 
 The tests also contain a sample Star Wars GraphQL schema with an
-ember-cli-pretender setup for mock data.
+[ember-cli-pretender setup][pretender-setup] for mock data.
+
+[pretender-setup]: https://github.com/bgentry/ember-apollo-client/blob/master/tests/helpers/start-pretender.js
 
 ## Development
 
@@ -232,3 +240,9 @@ ember-cli-pretender setup for mock data.
 For more information on using ember-cli, visit [https://ember-cli.com/](https://ember-cli.com/).
 
 [apollo-client]: https://github.com/apollostack/apollo-client
+
+## Contributors
+
+A special thanks to the following contributors:
+
+* Dan Freeman ([@dfreeman](https://github.com/dfreeman))
