@@ -46,9 +46,9 @@ you can then use it:
 ```js
 import Ember from 'ember';
 import gql from 'graphql-tag';
-import UnsubscribeRouteMixin from 'ember-apollo-client/mixins/unsubscribe-route';
+import UnsubscribeRoute from 'ember-apollo-client/mixins/unsubscribe-route';
 
-export default Ember.Route.extend(UnsubscribeRouteMixin, {
+export default Ember.Route.extend(UnsubscribeRoute, {
   apollo: Ember.inject.service(),
 
   model(params) {
@@ -163,13 +163,13 @@ query. On a route, this can be done with the `deactivate` hook. In a component,
 this cleanup is typically done with a `willDestroyElement` hook.
 
 To make this easier on routes, this addon also provides a mixin called
-`UnsubscribeRouteMixin`. You can use it in your route like this:
+`UnsubscribeRoute`. You can use it in your route like this:
 
 ```js
 import Ember from 'ember';
-import UnsubscribeRouteMixin from 'ember-apollo-client/mixins/unsubscribe-route';
+import UnsubscribeRoute from 'ember-apollo-client/mixins/unsubscribe-route';
 
-export default Ember.Route.extend(UnsubscribeRouteMixin, {
+export default Ember.Route.extend(UnsubscribeRoute, {
   model() {
     return this.get('apollo').query(...);
   }

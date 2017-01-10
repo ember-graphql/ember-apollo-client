@@ -1,5 +1,5 @@
 import Ember from 'ember';
-import UnsubscribeRouteMixin from 'ember-apollo-client/mixins/unsubscribe-route';
+import UnsubscribeRoute from 'ember-apollo-client/mixins/unsubscribe-route';
 import { module, test } from 'qunit';
 
 const { Route } = Ember;
@@ -8,7 +8,7 @@ module('Unit | Mixin | unsubscribe route');
 
 let route;
 
-test('it works', function(assert) {
+test('it calls _apolloUnsubscribe on deactivate', function(assert) {
   assert.expect(1);
   let unsubscribeCalled = false;
   let model = Ember.Object.create({
@@ -19,7 +19,7 @@ test('it works', function(assert) {
     }
   });
   let controller = Ember.Object.create({});
-  route = Route.extend(UnsubscribeRouteMixin, {});
+  route = Route.extend(UnsubscribeRoute, {});
 
   let subject = route.create({ controller });
   subject.setupController(controller, model);
