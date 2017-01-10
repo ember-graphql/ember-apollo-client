@@ -1,7 +1,8 @@
 # ember-apollo-client
 
-This is an ember-cli addon to integrate [apollo-client][apollo-client] into an
-Ember app.
+*Use [apollo-client][apollo-client] and GraphQL from your Ember app.*
+
+![Download count all time](https://img.shields.io/npm/dt/ember-apollo-client.svg) [![npm version](https://badge.fury.io/js/ember-apollo-client.svg)](http://badge.fury.io/js/ember-apollo-client) [![Travis CI Build Status](https://travis-ci.org/bgentry/ember-apollo-client.svg?branch=master)](https://travis-ci.org/bgentry/ember-apollo-client) [![Ember Observer Score](http://emberobserver.com/badges/ember-apollo-client.svg)](http://emberobserver.com/addons/ember-apollo-client)
 
 This addon includes the following dependencies:
 
@@ -11,20 +12,23 @@ This addon includes the following dependencies:
 * [graphql-tools][graphql-tools-repo]
 
 I have been using the non-addon version of this in my own app for a few months.
-I've taken care of edge cases around testability and unsubscribing from watch
-queries.
+Because I've actually used it to build a real app, I've encountered and solved
+a few real-world problems such as reliable testing and preventing resource leaks
+by unsubscribing from watch queries.
 
 [graphql-repo]: https://github.com/graphql/graphql-js "GraphQL"
 [graphql-tag-repo]: https://github.com/apollostack/graphql-tag "graphql-tag"
 [graphql-tools-repo]: https://github.com/apollostack/graphql-tools "graphql-tools"
 
-## Usage
-
-### Installation
+## Installation
 
 * `ember install ember-apollo-client`
 
-### Configuration
+## Compatibility
+This addon is tested against the `release`, `beta`, and `canary` channels, as
+well as the latest LTS.
+
+## Configuration
 
 In your app's `config/environment.js`, configure the URL for the GraphQL API:
 
@@ -37,6 +41,8 @@ var ENV = {
   ...
 }
 ```
+
+## Usage
 
 ### Fetching data
 
