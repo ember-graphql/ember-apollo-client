@@ -48,9 +48,9 @@ export default function startPretender() {
     let body = JSON.parse(request.requestBody);
     return new RSVP.Promise((resolve) => {
       graphql(schema, body.query, {}, {}, body.variables).then((result) => {
-        if (result.errors.length > 0) {
-          console.log('ERROR:', result.errors[0]);
-          debugger;
+        if (result.errors && result.errors.length > 0) {
+          console.log('ERROR:', result.errors[0]); // eslint-disable-line no-console
+          debugger; // eslint-disable-line no-debugger
         }
         let resultStr = JSON.stringify(result);
         resolve([200, { 'content-type': 'application/javascript' }, resultStr]);
