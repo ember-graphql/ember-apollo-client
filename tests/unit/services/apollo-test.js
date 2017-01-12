@@ -5,8 +5,8 @@ let options;
 moduleFor('service:apollo', 'Unit | Service | apollo', {
   beforeEach() {
     options = {
-      apiURL: "https://test.example/graphql"
-    }
+      apiURL: 'https://test.example/graphql'
+    };
   }
 });
 
