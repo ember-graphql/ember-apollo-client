@@ -35,9 +35,6 @@ export default Service.extend({
     });
     this.set('client', client);
 
-    // unresolved / ongoing requests, used for tests
-    this._ongoing = 0;
-
     if (testing) {
       this._registerWaiter();
     }
@@ -154,6 +151,9 @@ export default Service.extend({
       return RSVP.reject(err);
     });
   },
+
+  // unresolved / ongoing requests, used for tests:
+  _ongoing: 0,
 
   _incrementOngoing() {
     this._ongoing++;
