@@ -118,7 +118,7 @@ export default Service.extend({
    * Executes a single `query` on the Apollo client. The resolved object will
    * never be updated and does not have to be unsubscribed.
    *
-   * @method query
+   * @method queryOnce
    * @param {!Object} opts The query options used in the Apollo Client query.
    * @param {String} resultKey The key that will be returned from the resulting response data. If null or undefined, the entire response data will be returned.
    * @return {!Promise}
