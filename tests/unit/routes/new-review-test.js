@@ -8,7 +8,9 @@ const { stripIndent } = commonTags;
 
 const { run } = Ember;
 
-moduleFor('route:new-review', 'Unit | Route | new-review');
+moduleFor('route:new-review', 'Unit | Route | new-review', {
+  needs: ['service:apollo']
+});
 
 test('it exists', function(assert) {
   let route = this.subject();
