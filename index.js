@@ -3,6 +3,8 @@
 
 const path = require('path');
 const WebPack = require('broccoli-webpack');
+const DefinePlugin = require('webpack').DefinePlugin;
+const EmberApp = require('ember-cli/lib/broccoli/ember-app');
 const MergeTrees = require('broccoli-merge-trees');
 
 module.exports = {
@@ -28,6 +30,9 @@ module.exports = {
     });
 
     let apolloClient = webpackDependency('apollo-client', {
+      plugins: [
+        new DefinePlugin({ 'process.env.NODE_ENV': JSON.stringify(EmberApp.env()) })
+      ],
       externals: {
         'graphql-tag': 'graphql-tag'
       }
