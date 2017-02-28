@@ -1,4 +1,4 @@
-/* global module, require */
+/* global module, require, __dirname */
 'use strict';
 
 const path = require('path');
@@ -35,6 +35,9 @@ module.exports = {
       ],
       externals: {
         'graphql-tag': 'graphql-tag'
+      },
+      resolveLoader: {
+        root: path.join(__dirname, "node_modules")
       },
       module: {
         loaders: [
