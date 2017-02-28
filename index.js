@@ -1,4 +1,4 @@
-/* global module, require */
+/* global module, require, __dirname */
 'use strict';
 
 const path = require('path');
@@ -35,6 +35,23 @@ module.exports = {
       ],
       externals: {
         'graphql-tag': 'graphql-tag'
+      },
+      resolveLoader: {
+        root: path.join(__dirname, "node_modules")
+      },
+      module: {
+        loaders: [
+          {
+            test: /\.js$/,
+            loader: 'babel-loader?presets[]=es2016&presets[]=es2015'
+          }, {
+            test: /\.js$/,
+            loader: 'babel',
+            query: {
+              presets: ['es2016', 'es2015']
+            }
+          }
+        ]
       }
     });
 

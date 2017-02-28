@@ -21,16 +21,21 @@
     "test": "ember try:each"
   },
   "dependencies": {
-    "apollo-client": "^0.6.0",
+    "apollo-client": "^0.9.0",
     "broccoli-merge-trees": "^1.2.1",
     "broccoli-webpack": "^1.0.0",
     "ember-cli-babel": "^5.1.7",
-    "graphql": "^0.8.2",
-    "graphql-tag": "^1.2.1",
-    "graphql-tools": "^0.9.0",
+    "graphql": "^0.9.1",
+    "graphql-tag": "^1.2.4",
+    "graphql-tools": "^0.10.0",
     "webpack": "^1.14.0"
   },
   "devDependencies": {
+    "babel": "^6.23.0",
+    "babel-core": "^6.23.1",
+    "babel-loader": "^6.3.2",
+    "babel-preset-es2015": "^6.22.0",
+    "babel-preset-es2016": "^6.22.0",
     "broccoli-asset-rev": "^2.4.5",
     "common-tags": "^1.4.0",
     "ember-ajax": "^2.4.1",

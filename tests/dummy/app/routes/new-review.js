@@ -1,6 +1,10 @@
 import Ember from 'ember';
 import gql from 'graphql-tag';
 
+// working around browserify limitations:
+import 'npm:common-tags';
+
+
 const {
   inject: { service },
   Object: EmberObject,
