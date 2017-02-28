@@ -35,6 +35,20 @@ module.exports = {
       ],
       externals: {
         'graphql-tag': 'graphql-tag'
+      },
+      module: {
+        loaders: [
+          {
+            test: /\.js$/,
+            loader: 'babel-loader?presets[]=es2016&presets[]=es2015'
+          }, {
+            test: /\.js$/,
+            loader: 'babel',
+            query: {
+              presets: ['es2016', 'es2015']
+            }
+          }
+        ]
       }
     });
 
