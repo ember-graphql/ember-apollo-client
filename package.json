@@ -21,7 +21,7 @@
     "test": "ember try:each"
   },
   "dependencies": {
-    "apollo-client": "^0.9.0",
+    "apollo-client": "^0.10.1",
     "broccoli-merge-trees": "^1.2.1",
     "broccoli-plugin": "^1.3.0",
     "ember-cli-babel": "^5.1.7",
