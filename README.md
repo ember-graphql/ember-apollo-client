@@ -165,8 +165,8 @@ happens until you explicitly unsubscribe from it.
 
 In ember-apollo-client, this is exposed on the result of `query` via a method
 `_apolloUnsubscribe`. You should call this method whenever you're done with the
-query. On a route, this can be done with the `deactivate` hook. In a component,
-this cleanup is typically done with a `willDestroyElement` hook.
+query. On a route, this can be done with the `resetController` hook. In a
+component, this cleanup is typically done with a `willDestroyElement` hook.
 
 To make this easier on routes, this addon also provides a mixin called
 `UnsubscribeRoute`. You can use it in your route like this:
@@ -183,10 +183,10 @@ export default Ember.Route.extend(UnsubscribeRoute, {
 ```
 
 The mixin will call `_apolloUnsubscribe` on the `model` (if it is set) when the
-route deactivates. For now, this only works if your model was resolved directly
-from the apollo service. It does not work if your `model` hook returns an
-`RSVP.hash` of multiple queries, or something of that sort. You'd have to clean
-up manually in that scenario.
+model changes or the route deactivates. For now, this only works if your model
+was resolved directly from the apollo service. It does not work if your `model`
+hook returns an `RSVP.hash` of multiple queries, or something of that sort.
+You'd have to clean up manually in that scenario.
 
 ### Injecting the apollo service into all routes
 

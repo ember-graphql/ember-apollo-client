@@ -23,6 +23,6 @@ test('it calls _apolloUnsubscribe on deactivate', function(assert) {
 
   let subject = route.create({ controller });
   subject.setupController(controller, model);
-  subject.deactivate();
+  subject.resetController();
   assert.ok(unsubscribeCalled, '_apolloUnsubscribe() was called');
 });
