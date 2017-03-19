@@ -3,7 +3,7 @@ import Ember from 'ember';
 const { Mixin } = Ember;
 
 export default Mixin.create({
-  deactivate() {
+  resetController() {
     this._super(...arguments);
 
     // If the model came from an apollo query, it will have an
