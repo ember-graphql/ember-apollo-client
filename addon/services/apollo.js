@@ -92,7 +92,7 @@ export default Service.extend({
     let _apolloUnsubscribe = function() {
       subscription.unsubscribe();
     };
-    return this._waitFor(new RSVP.Promise((resolve) => {
+    return this._waitFor(new RSVP.Promise((resolve, reject) => {
       let newData = ({ data }) => {
         let dataToSend = isNone(resultKey) ? data : data[resultKey];
         dataToSend = copy(dataToSend, true);
@@ -109,7 +109,12 @@ export default Service.extend({
         }
       };
       // TODO: add an error function here for handling errors
-      subscription = this.client.watchQuery(opts).subscribe({ next: newData });
+      subscription = this.client.watchQuery(opts).subscribe({
+        next: newData,
+        error(e) {
+          reject(e);
+        }
+      })
       return subscription;
     }));
   },
