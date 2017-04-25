@@ -4,6 +4,7 @@ import ApolloClient, { createNetworkInterface } from 'apollo-client';
 const {
   A,
   copy,
+  computed,
   isArray,
   isNone,
   isPresent,
@@ -14,31 +15,52 @@ const {
   Service,
   setProperties,
   Test,
-  testing
+  testing,
 } = Ember;
+
+const { alias } = computed;
 
 export default Service.extend({
   client: null,
+  apiURL: alias('options.apiURL'),
+
+  // options are injected by an initializer and configured in your environment.js.
+  options: { apiURL: null },
 
   init() {
     this._super(...arguments);
 
-    const apiURL = this.get('options.apiURL');
     const owner = getOwner(this);
-    owner.registerOptionsForType('apollo', { instantiate: false });
+    if (owner) {
+      owner.registerOptionsForType('apollo', { instantiate: false });
+    }
 
-    let client = new ApolloClient({
-      networkInterface: createNetworkInterface({ uri: apiURL }),
-      // This dataIdFromObject only works with globally unique IDs. Might want
-      // to make it configurable.
-      dataIdFromObject: (o) => o.id
-    });
+    let client = new ApolloClient(this.get('clientOptions'));
     this.set('client', client);
 
     if (testing) {
       this._registerWaiter();
     }
   },
+
+  /**
+   * This is the options hash that will be passed to the ApolloClient constructor.
+   * You can override it if you wish to customize the ApolloClient.
+   *
+   * @method clientOptions
+   * @return {!Object}
+   * @public
+   */
+  clientOptions: computed(function() {
+    const apiURL = this.get('apiURL');
+
+    return {
+      networkInterface: createNetworkInterface({ uri: apiURL }),
+      // This dataIdFromObject only works with globally unique IDs. You can
+      // override it if your IDs are not already globally unique.
+      dataIdFromObject: o => o.id,
+    };
+  }),
 
   /**
    * Executes a mutation on the Apollo client. The resolved object will
@@ -177,5 +199,5 @@ export default Service.extend({
       return this._shouldWait();
     };
     Test.registerWaiter(this._waiter);
-  }
+  },
 });
