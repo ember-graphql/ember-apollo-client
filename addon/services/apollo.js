@@ -12,6 +12,7 @@ const {
   merge,
   Object: EmberObject,
   RSVP,
+  run,
   Service,
   setProperties,
   Test,
@@ -137,9 +138,11 @@ export default Service.extend({
             }
             resolve(obj);
           } else {
-            isArray(obj)
-              ? obj.setObjects(dataToSend)
-              : setProperties(obj, dataToSend);
+            run(() => {
+              isArray(obj)
+                ? obj.setObjects(dataToSend)
+                : setProperties(obj, dataToSend);
+            });
           }
         };
         // TODO: add an error function here for handling errors
