@@ -7,7 +7,7 @@ let application;
 moduleForAcceptance('Acceptance | main', {
   beforeEach() {
     application = this.application;
-  }
+  },
 });
 
 test('visiting /luke', function(assert) {
@@ -15,15 +15,15 @@ test('visiting /luke', function(assert) {
 
   let mockHuman = {
     id: '1000',
-    name: 'Luke Skywalker'
+    name: 'Luke Skywalker',
   };
   addResolveFunctionsToSchema(this.pretender.schema, {
     Query: {
       human(obj, args) {
         assert.deepEqual(args, { id: '1000' });
         return mockHuman;
-      }
-    }
+      },
+    },
   });
 
   let apollo = application.__container__.lookup('service:apollo');
@@ -47,7 +47,10 @@ test('visiting /luke', function(assert) {
       // UnsubscribeRouteMixin should have unsubscribed from the watcyQuery andThen
       // there should be no ongoing queries:
       let queries = getQueries();
-      assert.notOk(Object.keys(queries).length, 'there are no active watchQueries');
+      assert.notOk(
+        Object.keys(queries).length,
+        'there are no active watchQueries'
+      );
       done();
     });
   });

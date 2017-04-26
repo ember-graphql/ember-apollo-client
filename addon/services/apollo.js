@@ -73,25 +73,32 @@ export default Service.extend({
    * @public
    */
   mutate(opts, resultKey) {
-    return this._waitFor(new RSVP.Promise((resolve, reject) => {
-      this.client.mutate(opts).then((result) => {
-        let dataToSend = isNone(resultKey) ? result.data : result.data[resultKey];
-        dataToSend = copy(dataToSend, true);
-        return resolve(dataToSend);
-      }).catch((error) => {
-        let errors;
-        if (isPresent(error.networkError)) {
-          error.networkError.code = 'network_error';
-          errors = [error.networkError];
-        } else if (isPresent(error.graphQLErrors)) {
-          errors = error.graphQLErrors;
-        }
-        if (errors) {
-          return reject({ errors });
-        }
-        throw error;
-      });
-    }));
+    return this._waitFor(
+      new RSVP.Promise((resolve, reject) => {
+        this.client
+          .mutate(opts)
+          .then(result => {
+            let dataToSend = isNone(resultKey)
+              ? result.data
+              : result.data[resultKey];
+            dataToSend = copy(dataToSend, true);
+            return resolve(dataToSend);
+          })
+          .catch(error => {
+            let errors;
+            if (isPresent(error.networkError)) {
+              error.networkError.code = 'network_error';
+              errors = [error.networkError];
+            } else if (isPresent(error.graphQLErrors)) {
+              errors = error.graphQLErrors;
+            }
+            if (errors) {
+              return reject({ errors });
+            }
+            throw error;
+          });
+      })
+    );
   },
 
   /**
@@ -114,31 +121,37 @@ export default Service.extend({
     let _apolloUnsubscribe = function() {
       subscription.unsubscribe();
     };
-    return this._waitFor(new RSVP.Promise((resolve, reject) => {
-      let newData = ({ data }) => {
-        let dataToSend = isNone(resultKey) ? data : data[resultKey];
-        dataToSend = copy(dataToSend, true);
-        if (isNone(obj)) {
-          if (isArray(dataToSend)) {
-            obj = A(dataToSend);
-            obj.setProperties({ _apolloUnsubscribe });
+    return this._waitFor(
+      new RSVP.Promise((resolve, reject) => {
+        let newData = ({ data }) => {
+          let dataToSend = isNone(resultKey) ? data : data[resultKey];
+          dataToSend = copy(dataToSend, true);
+          if (isNone(obj)) {
+            if (isArray(dataToSend)) {
+              obj = A(dataToSend);
+              obj.setProperties({ _apolloUnsubscribe });
+            } else {
+              obj = EmberObject.create(
+                merge(dataToSend, { _apolloUnsubscribe })
+              );
+            }
+            resolve(obj);
           } else {
-            obj = EmberObject.create(merge(dataToSend, { _apolloUnsubscribe }));
+            isArray(obj)
+              ? obj.setObjects(dataToSend)
+              : setProperties(obj, dataToSend);
           }
-          resolve(obj);
-        } else {
-          isArray(obj) ? obj.setObjects(dataToSend) : setProperties(obj, dataToSend);
-        }
-      };
-      // TODO: add an error function here for handling errors
-      subscription = this.client.watchQuery(opts).subscribe({
-        next: newData,
-        error(e) {
-          reject(e);
-        }
+        };
+        // TODO: add an error function here for handling errors
+        subscription = this.client.watchQuery(opts).subscribe({
+          next: newData,
+          error(e) {
+            reject(e);
+          },
+        });
+        return subscription;
       })
-      return subscription;
-    }));
+    );
   },
 
   /**
@@ -152,13 +165,15 @@ export default Service.extend({
    * @public
    */
   queryOnce(opts, resultKey) {
-    return this._waitFor(this.client.query(opts).then((result) => {
-      let response = result.data;
-      if (!isNone(resultKey)) {
-        response = response[resultKey];
-      }
-      return RSVP.resolve(copy(response, true));
-    }));
+    return this._waitFor(
+      this.client.query(opts).then(result => {
+        let response = result.data;
+        if (!isNone(resultKey)) {
+          response = response[resultKey];
+        }
+        return RSVP.resolve(copy(response, true));
+      })
+    );
   },
 
   /**
@@ -170,13 +185,15 @@ export default Service.extend({
    */
   _waitFor(promise) {
     this._incrementOngoing();
-    return promise.then((result) => {
-      this._decrementOngoing();
-      return result;
-    }).catch((err) => {
-      this._decrementOngoing();
-      return RSVP.reject(err);
-    });
+    return promise
+      .then(result => {
+        this._decrementOngoing();
+        return result;
+      })
+      .catch(err => {
+        this._decrementOngoing();
+        return RSVP.reject(err);
+      });
   },
 
   // unresolved / ongoing requests, used for tests:

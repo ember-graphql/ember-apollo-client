@@ -2,9 +2,7 @@ import Ember from 'ember';
 import UnsubscribeRoute from 'ember-apollo-client/mixins/unsubscribe-route';
 import gql from 'graphql-tag';
 
-const {
-  inject: { service }
-} = Ember;
+const { inject: { service } } = Ember;
 
 export default Ember.Route.extend(UnsubscribeRoute, {
   apollo: service(),
@@ -18,5 +16,5 @@ export default Ember.Route.extend(UnsubscribeRoute, {
     `;
     let variables = { id: '1000' };
     return this.get('apollo').query({ query, variables }, 'human');
-  }
+  },
 });
