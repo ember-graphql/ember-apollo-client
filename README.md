@@ -42,6 +42,10 @@ var ENV = {
 }
 ```
 
+Additional configuration of the ApolloClient can be done by extending the Apollo
+service and overriding the `clientOptions` property. See the
+[Apollo Service API][apollo-service-api] for more info.
+
 ## Usage
 
 ### Fetching data
@@ -137,6 +141,19 @@ export default Ember.Route.extend({
 
 The `apollo` service has the following public API:
 
+* `clientOptions`: This computed property should return the options hash that
+  will be passed to the `ApolloClient` [constructor][ac-constructor]. You can
+  override this property to configure the client this service uses:
+  ```js
+  const OverriddenService = ApolloService.extend({
+    clientOptions: computed(function() {
+      let opts = this._super(...arguments);
+      return merge(opts, {
+        dataIdFromObject: customDataIdFromObject
+      };
+    }),
+  });
+  ```
 * `query(options, resultKey)`: This calls the
   [`ApolloClient.watchQuery`](http://dev.apollodata.com/core/apollo-client-api.html#ApolloClient\.watchQuery)
   method. It returns a promise that resolves with an `Ember.Object`. That object
@@ -245,10 +262,12 @@ The tests also contain a sample Star Wars GraphQL schema with an
 
 For more information on using ember-cli, visit [https://ember-cli.com/](https://ember-cli.com/).
 
-[apollo-client]: https://github.com/apollostack/apollo-client
-
 ## Contributors
 
 A special thanks to the following contributors:
 
 * Dan Freeman ([@dfreeman](https://github.com/dfreeman))
+
+[ac-constructor]: http://dev.apollodata.com/core/apollo-client-api.html#ApolloClient\.constructor
+[apollo-client]: https://github.com/apollostack/apollo-client
+[apollo-service-api]: https://github.com/bgentry/ember-apollo-client#apollo-service-api
