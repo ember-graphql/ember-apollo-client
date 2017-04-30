@@ -4,6 +4,7 @@ import ApolloClient, { createNetworkInterface } from 'apollo-client';
 const {
   A,
   copy,
+  computed,
   isArray,
   isNone,
   isPresent,
@@ -11,34 +12,56 @@ const {
   merge,
   Object: EmberObject,
   RSVP,
+  run,
   Service,
   setProperties,
   Test,
-  testing
+  testing,
 } = Ember;
+
+const { alias } = computed;
 
 export default Service.extend({
   client: null,
+  apiURL: alias('options.apiURL'),
+
+  // options are injected by an initializer and configured in your environment.js.
+  options: { apiURL: null },
 
   init() {
     this._super(...arguments);
 
-    const apiURL = this.get('options.apiURL');
     const owner = getOwner(this);
-    owner.registerOptionsForType('apollo', { instantiate: false });
+    if (owner) {
+      owner.registerOptionsForType('apollo', { instantiate: false });
+    }
 
-    let client = new ApolloClient({
-      networkInterface: createNetworkInterface({ uri: apiURL }),
-      // This dataIdFromObject only works with globally unique IDs. Might want
-      // to make it configurable.
-      dataIdFromObject: (o) => o.id
-    });
+    let client = new ApolloClient(this.get('clientOptions'));
     this.set('client', client);
 
     if (testing) {
       this._registerWaiter();
     }
   },
+
+  /**
+   * This is the options hash that will be passed to the ApolloClient constructor.
+   * You can override it if you wish to customize the ApolloClient.
+   *
+   * @method clientOptions
+   * @return {!Object}
+   * @public
+   */
+  clientOptions: computed(function() {
+    const apiURL = this.get('apiURL');
+
+    return {
+      networkInterface: createNetworkInterface({ uri: apiURL }),
+      // This dataIdFromObject only works with globally unique IDs. You can
+      // override it if your IDs are not already globally unique.
+      dataIdFromObject: o => o.id,
+    };
+  }),
 
   /**
    * Executes a mutation on the Apollo client. The resolved object will
@@ -51,25 +74,32 @@ export default Service.extend({
    * @public
    */
   mutate(opts, resultKey) {
-    return this._waitFor(new RSVP.Promise((resolve, reject) => {
-      this.client.mutate(opts).then((result) => {
-        let dataToSend = isNone(resultKey) ? result.data : result.data[resultKey];
-        dataToSend = copy(dataToSend, true);
-        return resolve(dataToSend);
-      }).catch((error) => {
-        let errors;
-        if (isPresent(error.networkError)) {
-          error.networkError.code = 'network_error';
-          errors = [error.networkError];
-        } else if (isPresent(error.graphQLErrors)) {
-          errors = error.graphQLErrors;
-        }
-        if (errors) {
-          return reject({ errors });
-        }
-        throw error;
-      });
-    }));
+    return this._waitFor(
+      new RSVP.Promise((resolve, reject) => {
+        this.client
+          .mutate(opts)
+          .then(result => {
+            let dataToSend = isNone(resultKey)
+              ? result.data
+              : result.data[resultKey];
+            dataToSend = copy(dataToSend, true);
+            return resolve(dataToSend);
+          })
+          .catch(error => {
+            let errors;
+            if (isPresent(error.networkError)) {
+              error.networkError.code = 'network_error';
+              errors = [error.networkError];
+            } else if (isPresent(error.graphQLErrors)) {
+              errors = error.graphQLErrors;
+            }
+            if (errors) {
+              return reject({ errors });
+            }
+            throw error;
+          });
+      })
+    );
   },
 
   /**
@@ -92,31 +122,39 @@ export default Service.extend({
     let _apolloUnsubscribe = function() {
       subscription.unsubscribe();
     };
-    return this._waitFor(new RSVP.Promise((resolve, reject) => {
-      let newData = ({ data }) => {
-        let dataToSend = isNone(resultKey) ? data : data[resultKey];
-        dataToSend = copy(dataToSend, true);
-        if (isNone(obj)) {
-          if (isArray(dataToSend)) {
-            obj = A(dataToSend);
-            obj.setProperties({ _apolloUnsubscribe });
+    return this._waitFor(
+      new RSVP.Promise((resolve, reject) => {
+        let newData = ({ data }) => {
+          let dataToSend = isNone(resultKey) ? data : data[resultKey];
+          dataToSend = copy(dataToSend, true);
+          if (isNone(obj)) {
+            if (isArray(dataToSend)) {
+              obj = A(dataToSend);
+              obj.setProperties({ _apolloUnsubscribe });
+            } else {
+              obj = EmberObject.create(
+                merge(dataToSend, { _apolloUnsubscribe })
+              );
+            }
+            resolve(obj);
           } else {
-            obj = EmberObject.create(merge(dataToSend, { _apolloUnsubscribe }));
+            run(() => {
+              isArray(obj)
+                ? obj.setObjects(dataToSend)
+                : setProperties(obj, dataToSend);
+            });
           }
-          resolve(obj);
-        } else {
-          isArray(obj) ? obj.setObjects(dataToSend) : setProperties(obj, dataToSend);
-        }
-      };
-      // TODO: add an error function here for handling errors
-      subscription = this.client.watchQuery(opts).subscribe({
-        next: newData,
-        error(e) {
-          reject(e);
-        }
+        };
+        // TODO: add an error function here for handling errors
+        subscription = this.client.watchQuery(opts).subscribe({
+          next: newData,
+          error(e) {
+            reject(e);
+          },
+        });
+        return subscription;
       })
-      return subscription;
-    }));
+    );
   },
 
   /**
@@ -130,13 +168,15 @@ export default Service.extend({
    * @public
    */
   queryOnce(opts, resultKey) {
-    return this._waitFor(this.client.query(opts).then((result) => {
-      let response = result.data;
-      if (!isNone(resultKey)) {
-        response = response[resultKey];
-      }
-      return RSVP.resolve(copy(response, true));
-    }));
+    return this._waitFor(
+      this.client.query(opts).then(result => {
+        let response = result.data;
+        if (!isNone(resultKey)) {
+          response = response[resultKey];
+        }
+        return RSVP.resolve(copy(response, true));
+      })
+    );
   },
 
   /**
@@ -148,13 +188,15 @@ export default Service.extend({
    */
   _waitFor(promise) {
     this._incrementOngoing();
-    return promise.then((result) => {
-      this._decrementOngoing();
-      return result;
-    }).catch((err) => {
-      this._decrementOngoing();
-      return RSVP.reject(err);
-    });
+    return promise
+      .then(result => {
+        this._decrementOngoing();
+        return result;
+      })
+      .catch(err => {
+        this._decrementOngoing();
+        return RSVP.reject(err);
+      });
   },
 
   // unresolved / ongoing requests, used for tests:
@@ -177,5 +219,5 @@ export default Service.extend({
       return this._shouldWait();
     };
     Test.registerWaiter(this._waiter);
-  }
+  },
 });
