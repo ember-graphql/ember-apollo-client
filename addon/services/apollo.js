@@ -1,5 +1,6 @@
 import Ember from 'ember';
 import ApolloClient, { createNetworkInterface } from 'apollo-client';
+import QueryManager from 'ember-apollo-client/apollo/query-manager';
 
 const {
   A,
@@ -20,6 +21,31 @@ const {
 } = Ember;
 
 const { alias } = computed;
+
+function newDataFunc(observable, resultKey, resolve) {
+  let obj;
+  let mergedProps = { _apolloObservable: observable };
+
+  return ({ data }) => {
+    let dataToSend = isNone(resultKey) ? data : data[resultKey];
+    dataToSend = copy(dataToSend, true);
+    if (isNone(obj)) {
+      if (isArray(dataToSend)) {
+        obj = A(dataToSend);
+        obj.setProperties(mergedProps);
+      } else {
+        obj = EmberObject.create(merge(dataToSend, mergedProps));
+      }
+      return resolve(obj);
+    }
+
+    run(() => {
+      isArray(obj)
+        ? obj.setObjects(dataToSend)
+        : setProperties(obj, dataToSend);
+    });
+  };
+}
 
 export default Service.extend({
   client: null,
@@ -155,7 +181,6 @@ export default Service.extend({
             reject(e);
           },
         });
-        return subscription;
       })
     );
   },
@@ -180,6 +205,37 @@ export default Service.extend({
         return RSVP.resolve(copy(response, true));
       })
     );
+  },
+
+  /**
+   * Executes a `watchQuery` on the Apollo client and tracks the resulting
+   * subscription on the provided query manager.
+   *
+   * @method managedWatchQuery
+   * @param {!Object} manager A QueryManager that should track this active watchQuery.
+   * @param {!Object} opts The query options used in the Apollo Client watchQuery.
+   * @param {String} resultKey The key that will be returned from the resulting response data. If null or undefined, the entire response data will be returned.
+   * @return {!Promise}
+   * @private
+   */
+  managedWatchQuery(manager, opts, resultKey) {
+    let observable = this.client.watchQuery(opts);
+
+    return this._waitFor(
+      new RSVP.Promise((resolve, reject) => {
+        let subscription = observable.subscribe({
+          next: newDataFunc(observable, resultKey, resolve),
+          error(e) {
+            reject(e);
+          },
+        });
+        manager.trackSubscription(subscription);
+      })
+    );
+  },
+
+  createQueryManager() {
+    return QueryManager.create({ apollo: this });
   },
 
   /**
