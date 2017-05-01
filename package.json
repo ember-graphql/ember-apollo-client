@@ -1,6 +1,6 @@
 {
   "name": "ember-apollo-client",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "An ember-cli addon for the Apollo GraphQL Client.",
   "keywords": [
     "ember-addon",
