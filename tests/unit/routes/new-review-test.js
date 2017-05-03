@@ -1,10 +1,7 @@
 import { moduleFor, test } from 'ember-qunit';
 import Ember from 'ember';
 import { print } from 'graphql';
-
-import commonTags from 'npm:common-tags';
-
-const { stripIndent } = commonTags;
+import { stripIndent } from 'common-tags';
 
 const { run } = Ember;
 
