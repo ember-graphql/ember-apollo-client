@@ -54,9 +54,15 @@ export default Service.extend({
    */
   clientOptions: computed(function() {
     const apiURL = this.get('apiURL');
+    const middlewares = this.get('middlewares');
+    const networkInterface = createNetworkInterface({ uri: apiURL });
+
+    if (isPresent(middlewares)) {
+      networkInterface.use(middlewares);
+    }
 
     return {
-      networkInterface: createNetworkInterface({ uri: apiURL }),
+      networkInterface,
       // This dataIdFromObject only works with globally unique IDs. You can
       // override it if your IDs are not already globally unique.
       dataIdFromObject: o => o.id,
