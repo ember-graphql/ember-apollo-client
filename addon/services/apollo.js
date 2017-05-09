@@ -9,6 +9,7 @@ const {
   isArray,
   isNone,
   isPresent,
+  get,
   getOwner,
   merge,
   Object: EmberObject,
@@ -27,7 +28,7 @@ function newDataFunc(observable, resultKey, resolve) {
   let mergedProps = { _apolloObservable: observable };
 
   return ({ data }) => {
-    let dataToSend = isNone(resultKey) ? data : data[resultKey];
+    let dataToSend = isNone(resultKey) ? data : get(data, resultKey);
     dataToSend = copy(dataToSend, true);
     if (isNone(obj)) {
       if (isArray(dataToSend)) {
@@ -154,7 +155,7 @@ export default Service.extend({
     return this._waitFor(
       new RSVP.Promise((resolve, reject) => {
         let newData = ({ data }) => {
-          let dataToSend = isNone(resultKey) ? data : data[resultKey];
+          let dataToSend = isNone(resultKey) ? data : get(data, resultKey);
           dataToSend = copy(dataToSend, true);
           if (isNone(obj)) {
             if (isArray(dataToSend)) {
