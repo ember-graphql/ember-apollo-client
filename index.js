@@ -23,5 +23,18 @@ module.exports = {
         'apollo-client'
       ]
     });
+  },
+
+  setupPreprocessorRegistry(type, registry) {
+    if (type === 'parent') {
+      registry.add('js', {
+        name: 'ember-apollo-client',
+        ext: 'graphql',
+        toTree(tree) {
+          const GraphQLFilter = require('./lib/graphql-filter');
+          return new GraphQLFilter(tree);
+        }
+      });
+    }
   }
 };

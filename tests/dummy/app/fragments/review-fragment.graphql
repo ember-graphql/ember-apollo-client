@@ -1,0 +1,4 @@
+fragment ReviewFragment on Human {
+  stars
+  commentary
+}
