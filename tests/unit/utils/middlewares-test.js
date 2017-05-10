@@ -1,4 +1,4 @@
-import middlewares from 'dummy/utils/middlewares';
+import middlewares from 'ember-apollo-client/utils/middlewares';
 import { module, test } from 'qunit';
 import Ember from 'ember';
 
