@@ -1,6 +1,6 @@
 import Ember from 'ember';
 import UnsubscribeRoute from 'ember-apollo-client/mixins/unsubscribe-route';
-import query from 'dummy/queries/human';
+import query from 'dummy/gql/queries/human';
 
 const { inject: { service } } = Ember;
 

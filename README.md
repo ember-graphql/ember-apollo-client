@@ -53,22 +53,25 @@ service and overriding the `clientOptions` property. See the
 The addon makes available an `apollo` service. Inject it into your routes and
 you can then use it:
 
+`app/gql/queries/human.graphql`
+```graphql
+query human($id: String!) {
+  human(id: $id) {
+    name
+  }
+}
+```
+
+`app/routes/some-route.js`
 ```js
 import Ember from 'ember';
-import gql from 'graphql-tag';
 import UnsubscribeRoute from 'ember-apollo-client/mixins/unsubscribe-route';
+import query from 'my-app/gql/queries/human';
 
 export default Ember.Route.extend(UnsubscribeRoute, {
   apollo: Ember.inject.service(),
 
   model(params) {
-    let query = gql`
-      query human($id: String!) {
-        human(id: $id) {
-          name
-        }
-      }
-    `;
     let variables = { id: params.id };
     return this.get('apollo').query({ query, variables }, 'human');
   }
@@ -99,16 +102,31 @@ same model(s).
 
 The following example shows both mutations and fragments in action:
 
+`app/gql/fragments/review-fragment.graphql`
+```graphql
+fragment ReviewFragment on Human {
+  stars
+  commentary
+}
+```
+
+`app/gql/mutations/create-review.graphql`
+```graphql
+#import 'my-app/gql/fragments/review-fragment'
+
+mutation createReview($ep: Episode!, $review: ReviewInput!) {
+  createReview(episode: $ep, review: $review) {
+    review {
+      ...ReviewFragment
+    }
+  }
+}
+```
+
+`app/routes/my-route.js`
 ```js
 import Ember from 'ember';
-import gql from 'graphql-tag';
-
-const ReviewFragment = gql`
-  fragment ReviewFragment on Human {
-    stars
-    commentary
-  }
-`;
+import mutation from 'my-app/gql/mutations/create-review';
 
 export default Ember.Route.extend({
   apollo: Ember.inject.service(),
@@ -119,17 +137,6 @@ export default Ember.Route.extend({
 
   actions: {
     createReview(ep, review) {
-      let mutation = gql`
-        mutation createReview($ep: Episode!, $review: ReviewInput!) {
-          createReview(episode: $ep, review: $review) {
-            review {
-              ...ReviewFragment
-            }
-          }
-        }
-
-        ${ReviewFragment}
-      `;
       let variables = { ep, review };
       return this.get('apollo').mutate({ mutation, variables }, 'review');
     }

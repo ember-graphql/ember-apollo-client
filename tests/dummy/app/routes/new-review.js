@@ -1,5 +1,5 @@
 import Ember from 'ember';
-import mutation from 'dummy/mutations/create-review';
+import mutation from 'dummy/gql/mutations/create-review';
 
 const {
   inject: { service },
