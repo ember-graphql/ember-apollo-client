@@ -1,0 +1,5 @@
+query human($id: ID!) {
+  human(id: $id) {
+    name
+  }
+}

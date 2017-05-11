@@ -1,18 +1,11 @@
 import Ember from 'ember';
-import gql from 'graphql-tag';
+import mutation from 'dummy/gql/mutations/create-review';
 
 const {
   inject: { service },
   Object: EmberObject,
   Route
 } = Ember;
-
-const ReviewFragment = gql`
-  fragment ReviewFragment on Human {
-    stars
-    commentary
-  }
-`;
 
 export default Route.extend({
   apollo: service(),
@@ -23,17 +16,6 @@ export default Route.extend({
 
   actions: {
     createReview(ep, review) {
-      let mutation = gql`
-        mutation createReview($ep: Episode!, $review: ReviewInput!) {
-          createReview(episode: $ep, review: $review) {
-            review {
-              ...ReviewFragment
-            }
-          }
-        }
-
-        ${ReviewFragment}
-      `;
       let variables = { ep, review };
       return this.get('apollo').mutate({ mutation, variables }, 'review');
     }

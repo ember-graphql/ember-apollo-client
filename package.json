@@ -22,6 +22,7 @@
   },
   "dependencies": {
     "apollo-client": "^1.0.4",
+    "broccoli-filter": "^1.2.4",
     "broccoli-merge-trees": "^1.2.1",
     "broccoli-plugin": "^1.3.0",
     "ember-cli-babel": "^5.1.7",
@@ -62,6 +63,9 @@
     "node": ">= 0.12.0"
   },
   "ember-addon": {
-    "configPath": "tests/dummy/config"
+    "configPath": "tests/dummy/config",
+    "before": [
+      "ember-cli-babel"
+    ]
   }
 }

@@ -1,0 +1,7 @@
+#import './test-fragment'
+
+query TestQuery {
+  subject {
+    ...testFragment
+  }
+}
