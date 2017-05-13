@@ -154,6 +154,35 @@ The `apollo` service has the following public API:
     }),
   });
   ```
+* `middlewares`: This computed property provides a list of [middlewares](http://dev.apollodata.com/core/network.html#networkInterfaceMiddleware) to the network interface. You can use the macro `middlewares` to create your middlewares:
+  ```js
+  import middlewares from 'ember-apollo-client/utils/middlewares';
+
+  const OverriddenService = ApolloService.extend({
+    middlewares: middlewares('authorize'),
+
+    authorize(req, next) {
+      // Authorization logic
+      next();
+    }
+  });
+  ```
+
+  Or create them on your own:
+  ```js
+  const OverriddenService = ApolloService.extend({
+    middlewares: computed(function() {
+      return [
+        { applyMiddleware: (req, next) => this.authorize(req, next) }
+      ];
+    }),
+
+    authorize(req, next) {
+      // Authorization logic
+      next();
+    }
+  });
+  ```
 * `query(options, resultKey)`: This calls the
   [`ApolloClient.watchQuery`](http://dev.apollodata.com/core/apollo-client-api.html#ApolloClient\.watchQuery)
   method. It returns a promise that resolves with an `Ember.Object`. That object
@@ -267,6 +296,7 @@ For more information on using ember-cli, visit [https://ember-cli.com/](https://
 A special thanks to the following contributors:
 
 * Dan Freeman ([@dfreeman](https://github.com/dfreeman))
+* Vinícius Sales ([@viniciussbs](https://github.com/viniciussbs))
 
 [ac-constructor]: http://dev.apollodata.com/core/apollo-client-api.html#ApolloClient\.constructor
 [apollo-client]: https://github.com/apollostack/apollo-client
