@@ -304,6 +304,7 @@ A special thanks to the following contributors:
 
 * Dan Freeman ([@dfreeman](https://github.com/dfreeman))
 * Vinícius Sales ([@viniciussbs](https://github.com/viniciussbs))
+* Laurin Quast ([@n1ru4l](https://github.com/n1ru4l))
 
 [ac-constructor]: http://dev.apollodata.com/core/apollo-client-api.html#ApolloClient\.constructor
 [apollo-client]: https://github.com/apollostack/apollo-client
