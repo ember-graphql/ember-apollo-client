@@ -63,9 +63,6 @@ export default Service.extend({
 
     return {
       networkInterface,
-      // This dataIdFromObject only works with globally unique IDs. You can
-      // override it if your IDs are not already globally unique.
-      dataIdFromObject: o => o.id,
     };
   }),
 
