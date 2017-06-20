@@ -176,3 +176,66 @@ test('it throws of there is already a property with the same key as a mutations 
     })
   })
 });
+
+test('it allows the optimisticResponse to be a function', function(assert) {
+  assert.expect(1);
+  const apolloMock = {
+    mutate: () => EPromise.resolve()
+  };
+  let ApolloMutationObject = EObject.extend(ApolloMutationMixin, {
+    apollo: apolloMock,
+  });
+  const subject = ApolloMutationObject.create({
+    mutations: {
+      updateColor: {
+        mutation: 'This should be a gql-tagged document',
+        optimisticResponse: function () {
+          assert.ok(true);
+        },
+      }
+    },
+  });
+  subject.updateColor();
+});
+
+test('it calls a optimisticResponse function with the right context', function(assert) {
+  assert.expect(1);
+  const apolloMock = {
+    mutate: () => EPromise.resolve()
+  };
+  let ApolloMutationObject = EObject.extend(ApolloMutationMixin, {
+    apollo: apolloMock,
+  });
+  const subject = ApolloMutationObject.create({
+    mutations: {
+      updateColor: {
+        mutation: 'This should be a gql-tagged document',
+        optimisticResponse: function () {
+          assert.equal(this, subject);
+        },
+      }
+    },
+  });
+  subject.updateColor();
+});
+
+test('it passes the variables into the optimisticRepsonse function', function (assert) {
+  assert.expect(1);
+  const apolloMock = {
+    mutate: () => EPromise.resolve()
+  };
+  let ApolloMutationObject = EObject.extend(ApolloMutationMixin, {
+    apollo: apolloMock,
+  });
+  const subject = ApolloMutationObject.create({
+    mutations: {
+      updateColor: {
+        mutation: 'This should be a gql-tagged document',
+        optimisticResponse: function (variables) {
+          assert.deepEqual(variables, { color: 'red' });
+        },
+      }
+    },
+  });
+  subject.updateColor({ color: 'red' })
+});

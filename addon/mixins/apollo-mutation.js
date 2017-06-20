@@ -40,6 +40,9 @@ export default Mixin.create({
       const apollo = get(this, 'apollo');
 
       const mergedVariables = Object.assign({}, (mutationData.variables || {}), variables);
+      if (typeof mutationData.optimisticResponse === 'function') {
+        mutationData.optimisticResponse = mutationData.optimisticResponse.call(this, mergedVariables);
+      }
       const data = Object.assign(mutationData, { variables: mergedVariables });
        if (loadingProperty) {
         this.incrementProperty(loadingProperty);
