@@ -6,7 +6,8 @@ const {
   get,
   set,
   assert,
-  isNone
+  isNone,
+  assign
 } = Ember;
 
 export default Mixin.create({
@@ -39,11 +40,12 @@ export default Mixin.create({
     const mutationMethod = function(variables = {}) {
       const apollo = get(this, 'apollo');
 
-      const mergedVariables = Object.assign({}, (mutationData.variables || {}), variables);
-      if (typeof mutationData.optimisticResponse === 'function') {
-        mutationData.optimisticResponse = mutationData.optimisticResponse.call(this, mergedVariables);
+      const mergedVariables = assign({}, (mutationData.variables || {}), variables);
+      let { optimisticResponse } = mutationData;
+      if (typeof optimisticResponse === 'function') {
+        optimisticResponse = optimisticResponse.call(this, mergedVariables);
       }
-      const data = Object.assign(mutationData, { variables: mergedVariables });
+      const data = assign({}, mutationData, { variables: mergedVariables, optimisticResponse });
        if (loadingProperty) {
         this.incrementProperty(loadingProperty);
       }
