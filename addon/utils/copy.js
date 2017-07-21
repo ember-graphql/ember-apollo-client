@@ -4,6 +4,7 @@ const {
   copy,
   A: EmberArray,
   set,
+  get,
 } = Ember;
 
 const graphQLMetaFields = EmberArray([
@@ -14,7 +15,7 @@ const graphQLMetaFields = EmberArray([
 const addGraphQLFieldsToClone = (object, clone) => {
   for (let property in object) {
     if (graphQLMetaFields.includes(property)) {
-      set(clone, property, object[property]);
+      set(clone, property, get(object, property));
     }
   }
 }
