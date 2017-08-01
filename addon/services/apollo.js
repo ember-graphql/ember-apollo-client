@@ -1,9 +1,9 @@
 import Ember from 'ember';
 import ApolloClient, { createNetworkInterface } from 'apollo-client';
+import copy from 'ember-apollo-client/utils/copy';
 
 const {
   A,
-  copy,
   computed,
   isArray,
   isNone,
