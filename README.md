@@ -264,7 +264,7 @@ This addon is test-ready! All promises from the apollo service are tracked with
 
 The dummy app contains example routes for mutations and queries:
 
-* [Acceptance test for a regular query](https://github.com/bgentry/ember-apollo-client/blob/master/tests/acceptance/main-test.js)
+* [Acceptance test for a regular query](https://github.com/bgentry/ember-apollo-client/blob/master/tests/acceptance/query-and-unsubscribe-test.js)
 * [Route integration test for a mutation with a fragment](https://github.com/bgentry/ember-apollo-client/blob/master/tests/unit/routes/new-review-test.js)
 
 The tests also contain a sample Star Wars GraphQL schema with an
