@@ -56,7 +56,7 @@ export default Service.extend({
   clientOptions: computed(function() {
     const apiURL = this.get('apiURL');
     const middlewares = this.get('middlewares');
-    const networkInterface = new FetchNetworkInterface(this.get('apiURL'));
+    const networkInterface = new FetchNetworkInterface(apiURL);
 
     if (isPresent(middlewares)) {
       networkInterface.use(middlewares);
