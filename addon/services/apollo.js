@@ -1,6 +1,6 @@
 import Ember from 'ember';
 import ApolloClient from 'apollo-client';
-import FetchNetworkInterface from '../utils/fetch-network-interface';
+import { FetchNetworkInterface } from '../utils/fetch-network-interface';
 
 const {
   A,
