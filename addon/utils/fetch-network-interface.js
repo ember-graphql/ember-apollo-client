@@ -1,10 +1,8 @@
-import ApolloClient from 'apollo-client';
+import { HTTPFetchNetworkInterface, printAST } from 'apollo-client';
 import fetch from 'fetch';
+import Ember from 'ember'
 
-const {
-  HTTPFetchNetworkInterface,
-  printAST
-} = ApolloClient;
+const { RSVP: { Promise } } = Ember;
 
 export default class FetchNetworkInterface extends HTTPFetchNetworkInterface {
   fetchFromRemoteEndpoint({ request, options }) {
@@ -28,5 +26,5 @@ export default class FetchNetworkInterface extends HTTPFetchNetworkInterface {
         reject(response);
       })
     });
-  };
+  }
 } 
