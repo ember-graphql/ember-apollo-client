@@ -1,4 +1,4 @@
-import ApolloClient from 'npm:apollo-client';
+import ApolloClient from 'apollo-client';
 import fetch from 'fetch';
 
 const {
