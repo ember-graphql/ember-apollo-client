@@ -11,7 +11,6 @@ export default class FetchNetworkInterface extends HTTPFetchNetworkInterface {
     var variables = request.variables
     var query = printAST(request.query)
 
-    // Standard fetch method fallback
     return new Promise( (resolve, reject) => {
       return fetch(this._uri, {
         ...this._opts,
