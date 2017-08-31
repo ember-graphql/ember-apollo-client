@@ -279,7 +279,6 @@ The tests also contain a sample Star Wars GraphQL schema with an
 * `git clone https://github.com/bgentry/ember-apollo-client` this repository
 * `cd ember-apollo-client`
 * `npm install`
-* `bower install`
 
 ### Running
 

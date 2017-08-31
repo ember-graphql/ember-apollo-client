@@ -27,7 +27,7 @@ test('visiting /luke', function(assert) {
   });
 
   let apollo = application.__container__.lookup('service:apollo');
-  let getQueries = () => apollo.client.queryManager.getApolloState().queries;
+  let getQueries = () => apollo.client.queryManager.queryStore.getStore();
 
   visit('/luke');
 
