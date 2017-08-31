@@ -5,7 +5,7 @@ import destroyApp from '../helpers/destroy-app';
 import startPretender from '../helpers/start-pretender';
 import fetch from 'ember-network/fetch';
 
-const { RSVP: { Promise } } = Ember;
+const { RSVP: { resolve } } = Ember;
 
 export default function(name, options = {}) {
   module(name, {
@@ -30,7 +30,7 @@ export default function(name, options = {}) {
       if (this.pretender) {
         this.pretender.shutdown();
       }
-      return Promise.resolve(afterEach).then(() => destroyApp(this.application));
+      return resolve(afterEach).then(() => destroyApp(this.application));
     }
   });
 }
