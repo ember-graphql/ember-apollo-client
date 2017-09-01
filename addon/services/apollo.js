@@ -6,6 +6,7 @@ const {
   A,
   copy,
   computed,
+  deprecate,
   isArray,
   isNone,
   isPresent,
@@ -144,10 +145,34 @@ export default Service.extend({
    * @method query
    * @param {!Object} opts The query options used in the Apollo Client watchQuery.
    * @param {String} resultKey The key that will be returned from the resulting response data. If null or undefined, the entire response data will be returned.
+   * @deprecated Use `watchQuery` instead.
    * @return {!Promise}
    * @public
    */
   query(opts, resultKey) {
+    deprecate(`Usage of \`query\` is deprecated, use \`watchQuery\` instead.`, false, {
+      id: 'ember-apollo-client.deprecate-query-for-watch-query',
+      until: '1.0.0',
+    });
+    return this.watchQuery(opts, resultKey);
+  },
+
+  /**
+   * Executes a `watchQuery` on the Apollo client. If updated data for this
+   * query is loaded into the store by another query, the resolved object will
+   * be updated with the new data.
+   *
+   * When using this method, it is important to call `apolloUnsubscribe()` on
+   * the resolved data when the route or component is torn down. That tells
+   * Apollo to stop trying to send updated data to a non-existent listener.
+   *
+   * @method watchQuery
+   * @param {!Object} opts The query options used in the Apollo Client watchQuery.
+   * @param {String} resultKey The key that will be returned from the resulting response data. If null or undefined, the entire response data will be returned.
+   * @return {!Promise}
+   * @public
+   */
+  watchQuery(opts, resultKey) {
     let obj, subscription;
     let _apolloUnsubscribe = function() {
       subscription.unsubscribe();

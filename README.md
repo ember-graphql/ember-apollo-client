@@ -73,7 +73,7 @@ export default Ember.Route.extend(UnsubscribeRoute, {
 
   model(params) {
     let variables = { id: params.id };
-    return this.get('apollo').query({ query, variables }, 'human');
+    return this.get('apollo').watchQuery({ query, variables }, 'human');
   }
 });
 ```
@@ -190,7 +190,7 @@ The `apollo` service has the following public API:
     }
   });
   ```
-* `query(options, resultKey)`: This calls the
+* `watchQuery(options, resultKey)`: This calls the
   [`ApolloClient.watchQuery`](http://dev.apollodata.com/core/apollo-client-api.html#ApolloClient\.watchQuery)
   method. It returns a promise that resolves with an `Ember.Object`. That object
   will be updated whenever the `watchQuery` subscription resolves with new data.
@@ -230,7 +230,7 @@ import UnsubscribeRoute from 'ember-apollo-client/mixins/unsubscribe-route';
 
 export default Ember.Route.extend(UnsubscribeRoute, {
   model() {
-    return this.get('apollo').query(...);
+    return this.get('apollo').watchQuery(...);
   }
 });
 ```
