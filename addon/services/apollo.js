@@ -98,7 +98,7 @@ export default Service.extend({
    * Executes a mutation on the Apollo client. The resolved object will
    * never be updated and does not have to be unsubscribed.
    *
-   * @method query
+   * @method mutate
    * @param {!Object} opts The query options used in the Apollo Client mutate.
    * @param {String} resultKey The key that will be returned from the resulting response data. If null or undefined, the entire response data will be returned.
    * @return {!Promise}

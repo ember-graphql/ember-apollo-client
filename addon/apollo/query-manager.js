@@ -12,14 +12,48 @@ export default EmberObject.extend({
     this.set('activeSubscriptions', A([]));
   },
 
+  /**
+   * Executes a mutation on the Apollo service. The resolved object will
+   * never be updated and does not have to be unsubscribed.
+   *
+   * @method mutate
+   * @param {!Object} opts The query options used in the Apollo Client mutate.
+   * @param {String} resultKey The key that will be returned from the resulting response data. If null or undefined, the entire response data will be returned.
+   * @return {!Promise}
+   * @public
+   */
   mutate(opts) {
     return this.get('apollo').mutate(opts);
   },
 
+  /**
+   * Executes a single `query` on the Apollo service. The resolved object will
+   * never be updated and does not have to be unsubscribed.
+   *
+   * @method queryOnce
+   * @param {!Object} opts The query options used in the Apollo Client query.
+   * @param {String} resultKey The key that will be returned from the resulting response data. If null or undefined, the entire response data will be returned.
+   * @return {!Promise}
+   * @public
+   */
   query(opts, resultKey) {
     return this.get('apollo').queryOnce(opts, resultKey);
   },
 
+  /**
+   * Executes a `watchQuery` on the Apollo service. If updated data for this
+   * query is loaded into the store by another query, the resolved object will
+   * be updated with the new data.
+   *
+   * This watch query is tracked by the QueryManager and will be unsubscribed
+   * (and no longer updated with new data) when unsubscribeAll() is called.
+   *
+   * @method watchQuery
+   * @param {!Object} opts The query options used in the Apollo Client watchQuery.
+   * @param {String} resultKey The key that will be returned from the resulting response data. If null or undefined, the entire response data will be returned.
+   * @return {!Promise}
+   * @public
+   */
   watchQuery(opts, resultKey) {
     return this.get('apollo').managedWatchQuery(this, opts, resultKey);
   },
@@ -36,6 +70,16 @@ export default EmberObject.extend({
     this.get('activeSubscriptions').pushObject(subscription);
   },
 
+  /**
+   * Unsubscribes from all actively tracked subscriptions initiated by calls to
+   * `watchQuery`. This is normally called automatically by the
+   * ComponentQueryManagerMixin when a component is torn down, or by the
+   * RouteQueryManagerMixin when `resetController` is called on the route.
+   *
+   * @method unsubscribeAll
+   * @return {!Promise}
+   * @public
+   */
   unsubscribeAll() {
     let subscriptions = this.get('activeSubscriptions');
     subscriptions.forEach(subscription => {
