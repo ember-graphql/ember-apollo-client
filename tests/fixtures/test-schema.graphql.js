@@ -12,6 +12,8 @@ type Query {
 
   search(text: String): [SearchResult]
 
+  characters(kind: String): [SearchResult]
+
   droid(id: ID!): Droid
 
   human(id: ID!): Human
