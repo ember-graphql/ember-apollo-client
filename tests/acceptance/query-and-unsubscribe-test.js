@@ -41,8 +41,8 @@ test('visiting /luke', function(assert) {
     click('.refetch-button');
 
     andThen(() => {
-      // Because we used query() (which uses apollo client's watchQuery) there
-      // should be an ongoing query in the apollo query manager:
+      // Because we used watchQuery() there should be an ongoing query in the
+      // apollo query manager:
       let queries = getQueries();
       assert.ok(Object.keys(queries).length, 'there is an active watchQuery');
 
