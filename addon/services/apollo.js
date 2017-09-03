@@ -1,5 +1,6 @@
 import Ember from 'ember';
 import ApolloClient, { createNetworkInterface } from 'apollo-client';
+import apolloObservableKey from 'ember-apollo-client';
 import QueryManager from 'ember-apollo-client/apollo/query-manager';
 
 const {
@@ -26,7 +27,8 @@ const { alias } = computed;
 
 function newDataFunc(observable, resultKey, resolve) {
   let obj;
-  let mergedProps = { _apolloObservable: observable };
+  let mergedProps = {};
+  mergedProps[apolloObservableKey] = observable;
 
   return ({ data }) => {
     let dataToSend = isNone(resultKey) ? data : get(data, resultKey);
