@@ -32,7 +32,7 @@ test('visiting /luke', function(assert) {
     Query: {
       human(obj, args) {
         assert.deepEqual(args, { id: '1000' });
-        return human;
+        return copy(human);
       },
     },
   });
@@ -48,16 +48,17 @@ test('visiting /luke', function(assert) {
 
     // try updating the mock, refetching the result (w/ queryOnce), and ensuring
     // that there are no errors:
-    human.name = 'Luke Skywalker II';
+    human.name = 'Lucas Skywalker';
     click('.refetch-button');
 
     andThen(() => {
+      assert.equal(find('.model-name').text(), 'Lucas Skywalker');
       // Because we used watchQuery() there should be an ongoing query in the
       // apollo query manager:
       let queries = getQueries();
       assert.ok(Object.keys(queries).length, 'there is an active watchQuery');
 
-      visit('/');
+      visit('/new-review');
 
       andThen(function() {
         // Now that we've gone to a route with no queries, the

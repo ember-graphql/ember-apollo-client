@@ -30,7 +30,7 @@ test('it unsubscribes from any watchQuery subscriptions', function(assert) {
   let apolloService = subject.get('apollo.apollo');
   apolloService.set('managedWatchQuery', (manager, opts) => {
     assert.deepEqual(opts, { query: 'fakeQuery' });
-    manager.get('activeSubscriptions').pushObject({
+    manager.trackSubscription({
       unsubscribe() {
         unsubscribeCalled++;
       },

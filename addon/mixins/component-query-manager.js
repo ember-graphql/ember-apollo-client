@@ -6,6 +6,6 @@ const { Mixin } = Ember;
 export default Mixin.create(BaseQueryManager, {
   willDestroyElement() {
     this._super(...arguments);
-    this.get('apollo').unsubscribeAll();
+    this.get('apollo').unsubscribeAll(false);
   },
 });

@@ -67,7 +67,21 @@ export default EmberObject.extend({
    * @private
    */
   trackSubscription(subscription) {
-    this.get('activeSubscriptions').pushObject(subscription);
+    this.get('activeSubscriptions').pushObject({ subscription, stale: false });
+  },
+
+  /**
+   * Marks all tracked subscriptions as being stale, such that they will be
+   * unsubscribed in `unsubscribeAll` even if `onlyStale` is true.
+   *
+   * @method markSubscriptionsStale
+   * @private
+   */
+  markSubscriptionsStale() {
+    let subscriptions = this.get('activeSubscriptions');
+    subscriptions.forEach(subscription => {
+      subscription.stale = true;
+    });
   },
 
   /**
@@ -77,13 +91,16 @@ export default EmberObject.extend({
    * RouteQueryManagerMixin when `resetController` is called on the route.
    *
    * @method unsubscribeAll
+   * @param {Boolean} onlyStale Whether to unsubscribe only from subscriptions which were previously marked as stale.
    * @return {!Promise}
    * @public
    */
-  unsubscribeAll() {
+  unsubscribeAll(onlyStale=false) {
     let subscriptions = this.get('activeSubscriptions');
     subscriptions.forEach(subscription => {
-      subscription.unsubscribe();
+      if (!onlyStale || subscription.stale) {
+        subscription.subscription.unsubscribe();
+      }
     });
     this.set('activeSubscriptions', A([]));
   },

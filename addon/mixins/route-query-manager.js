@@ -4,8 +4,13 @@ import BaseQueryManager from 'ember-apollo-client/mixins/base-query-manager';
 const { Mixin } = Ember;
 
 export default Mixin.create(BaseQueryManager, {
-  resetController() {
+  beforeModel() {
+    this.get('apollo').markSubscriptionsStale();
+    return this._super(...arguments);
+  },
+
+  resetController(_controller, isExiting) {
     this._super(...arguments);
-    this.get('apollo').unsubscribeAll();
+    this.get('apollo').unsubscribeAll(!isExiting);
   },
 });
