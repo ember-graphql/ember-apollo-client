@@ -103,6 +103,7 @@ test('visiting /characters', function(assert) {
   andThen(function() {
     assert.equal(currentURL(), '/characters?kind=human');
     assert.equal(find('.model-name').text(), 'Luke Skywalker');
+    assert.equal(find('.model-typename').text(), 'Human');
 
     andThen(() => {
       // Because we used watchQuery() there should be an ongoing query in the
