@@ -1,9 +1,14 @@
 import Ember from 'ember';
 
-const { Mixin } = Ember;
+const { deprecate, Mixin } = Ember;
 
 export default Mixin.create({
   resetController() {
+    deprecate(`The \`UnsubscribeRoute\` mixin is deprecated, use \`RouteQueryManager\` instead.`, false, {
+      id: 'ember-apollo-client.deprecate-unsubscribe-route',
+      until: '1.0.0',
+    });
+
     this._super(...arguments);
 
     // If the model came from an apollo query, it will have an

@@ -11,7 +11,7 @@ This addon includes the following dependencies:
 * [graphql-tag][graphql-tag-repo]
 * [graphql-tools][graphql-tools-repo]
 
-I have been using the non-addon version of this in my own app for a few months.
+I have been using the non-addon version of this in my own app for several months.
 Because I've actually used it to build a real app, I've encountered and solved
 a few real-world problems such as reliable testing and preventing resource leaks
 by unsubscribing from watch queries.
@@ -26,7 +26,7 @@ by unsubscribing from watch queries.
 
 ## Compatibility
 This addon is tested against the `release`, `beta`, and `canary` channels, as
-well as the latest LTS.
+well as the latest two LTS releases.
 
 ## Configuration
 
@@ -50,8 +50,8 @@ service and overriding the `clientOptions` property. See the
 
 ### Fetching data
 
-The addon makes available an `apollo` service. Inject it into your routes and
-you can then use it:
+GraphQL queries should be placed in external files, which are automatically
+made available for import:
 
 `app/gql/queries/human.graphql`
 ```graphql
@@ -62,36 +62,79 @@ query human($id: String!) {
 }
 ```
 
+Though it is not recommended, you can also use the `graphql-tag` package to
+write your queries within your JS file:
+
+```js
+import gql from "graphql-tag";
+
+const query = gql`
+  query human($id: String!) {
+    human(id: $id) {
+      name
+    }
+  }
+`;
+```
+
+Within your routes, you can query for data using the `RouteQueryManager`
+mixin and `watchQuery`:
+
 `app/routes/some-route.js`
 ```js
-import Ember from 'ember';
-import UnsubscribeRoute from 'ember-apollo-client/mixins/unsubscribe-route';
-import query from 'my-app/gql/queries/human';
+import Ember from "ember";
+import RouteQueryManager from "ember-apollo-client/mixins/route-query-manager";
+import query from "my-app/gql/queries/human";
 
-export default Ember.Route.extend(UnsubscribeRoute, {
-  apollo: Ember.inject.service(),
-
+export default Ember.Route.extend(RouteQueryManager, {
   model(params) {
     let variables = { id: params.id };
-    return this.get('apollo').query({ query, variables }, 'human');
+    return this.apollo.watchQuery({ query, variables }, "human");
   }
 });
 ```
 
-When you use the `query` method, ember-apollo is actually performing a
-`watchQuery` on the ApolloClient. The resulting object is an `Ember.Object` and
-therefore has full support for computed properties, observers, etc.
+This performs a [`watchQuery` on the ApolloClient][watch-query]. The resulting object is an
+`Ember.Object` and therefore has full support for computed properties,
+observers, etc.
 
 If a subsequent query (such as a mutation) happens to fetch the same data while
 this query's subscription is still active, the object will immediately receive
 the latest attributes (just like ember-data).
 
-Please note that when using `query`, you should unsubscribe when you're done
-with the query data. You can instead use `queryOnce` if you just want a single
-query with a POJO response and no watch updates.
+Please note that when using `watchQuery`, you must
+[unsubscribe][unsubscribing] when you're done with the query data. You should
+only have to worry about this if you're using the [Apollo
+service][apollo-service-api] directly. If you use the `RouteQueryManager`
+mixin in your routes, or the `ComponentQueryManager` in your data-loading
+components, all active watch queries are tracked and unsubscribed when the
+route is exited or the component destroyed. These mixins work by injecting a
+query manager named `apollo` that functions as a proxy to the `apollo`
+service.
 
-See the [API docs](#apollo-service-api)
-for more details.
+You can instead use `query` if you just want a single query with a POJO
+response and no watch updates.
+
+If you need to access the Apollo Client [ObservableQuery][observable-query],
+such as for pagination, you can retrieve it from a `watchQuery` result using
+`getObservable`:
+
+```js
+import { getObservable } from "ember-apollo-client";
+
+export default Ember.Route.extend(RouteQueryManager, {
+  model() {
+    let result = this.apollo.query(...);
+    let observable = getObservable(result);
+    observable.fetchMore(...) // utilize the ObservableQuery
+    ...
+  }
+});
+```
+
+See the [detailed query manager docs][query-manager-api] for more details on
+usage, or the [Apollo service API][apollo-service-api] if you need to use
+the service directly.
 
 ### Mutations and Fragments
 
@@ -125,8 +168,8 @@ mutation createReview($ep: Episode!, $review: ReviewInput!) {
 
 `app/routes/my-route.js`
 ```js
-import Ember from 'ember';
-import mutation from 'my-app/gql/mutations/create-review';
+import Ember from "ember";
+import mutation from "my-app/gql/mutations/create-review";
 
 export default Ember.Route.extend({
   apollo: Ember.inject.service(),
@@ -138,13 +181,39 @@ export default Ember.Route.extend({
   actions: {
     createReview(ep, review) {
       let variables = { ep, review };
-      return this.get('apollo').mutate({ mutation, variables }, 'review');
+      return this.get("apollo").mutate({ mutation, variables }, "review");
     }
   }
 });
 ```
 
+### Query manager API
+
+* `watchQuery(options, resultKey)`: This calls the
+  [`ApolloClient.watchQuery`][watch-query] method. It returns a promise that
+  resolves with an `Ember.Object`. That object will be updated whenever the
+  `watchQuery` subscription resolves with new data. As before, the `resultKey`
+  can be used to resolve beneath the root.
+
+  The query manager will automatically unsubscribe from this object.
+* `query(options, resultKey)`: This calls the
+  [`ApolloClient.query`](http://dev.apollodata.com/core/apollo-client-api.html#ApolloClient\.query)
+  method. It returns a promise that resolves with the raw POJO data that the
+  query returns. If you provide a `resultKey`, the resolved data is grabbed from
+  that key in the result.
+* `mutate(options, resultKey)`: This calls the
+  [`ApolloClient.mutate`](http://dev.apollodata.com/core/apollo-client-api.html#ApolloClient\.mutate)
+  method. It returns a promise that resolves with the raw POJO data that the
+  mutation returns. As with the query methods, the `resultKey` can be used to
+  resolve beneath the root.
+
 ### Apollo service API
+
+You should not need to use the Apollo service directly for most regular
+usage, instead utilizing the `RouteQueryManager` and `ComponentQueryManager`
+mixins. However, you will probably need to customize options on the `apollo`
+service, and might need to query it directly for some use cases (such as
+loading data from a service rather than a route or component).
 
 The `apollo` service has the following public API:
 
@@ -163,10 +232,10 @@ The `apollo` service has the following public API:
   ```
 * `middlewares`: This computed property provides a list of [middlewares](http://dev.apollodata.com/core/network.html#networkInterfaceMiddleware) to the network interface. You can use the macro `middlewares` to create your middlewares:
   ```js
-  import middlewares from 'ember-apollo-client/utils/middlewares';
+  import middlewares from "ember-apollo-client/utils/middlewares";
 
   const OverriddenService = ApolloService.extend({
-    middlewares: middlewares('authorize'),
+    middlewares: middlewares("authorize"),
 
     authorize(req, next) {
       // Authorization logic
@@ -190,15 +259,14 @@ The `apollo` service has the following public API:
     }
   });
   ```
-* `query(options, resultKey)`: This calls the
-  [`ApolloClient.watchQuery`](http://dev.apollodata.com/core/apollo-client-api.html#ApolloClient\.watchQuery)
-  method. It returns a promise that resolves with an `Ember.Object`. That object
-  will be updated whenever the `watchQuery` subscription resolves with new data.
-  As before, the `resultKey` can be used to resolve beneath the root.
+* `watchQuery(options, resultKey)`: This calls the
+  [`ApolloClient.watchQuery`][watch-query] method. It returns a promise that
+  resolves with an `Ember.Object`. That object will be updated whenever the
+  `watchQuery` subscription resolves with new data. As before, the
+  `resultKey` can be used to resolve beneath the root.
 
-  When using this method, **it is important to
-  [unsubscribe](#unsubscribing-from-watch-queries)** from the query when you're
-  done with it.
+  When using this method, **it is important to [unsubscribe][unsubscribing]**
+  from the query when you're done with it.
 * `queryOnce(options, resultKey)`: This calls the
   [`ApolloClient.query`](http://dev.apollodata.com/core/apollo-client-api.html#ApolloClient\.query)
   method. It returns a promise that resolves with the raw POJO data that the
@@ -212,49 +280,42 @@ The `apollo` service has the following public API:
 
 ### Unsubscribing from watch queries
 
-Apollo client's watchQuery will continue to update the query with new data
+Apollo Client's `watchQuery` will continue to update the query with new data
 whenever the store is updated with new data about the resolved objects. This
 happens until you explicitly unsubscribe from it.
 
-In ember-apollo-client, this is exposed on the result of `query` via a method
-`_apolloUnsubscribe`. You should call this method whenever you're done with the
-query. On a route, this can be done with the `resetController` hook. In a
-component, this cleanup is typically done with a `willDestroyElement` hook.
+In ember-apollo-client, most unsubscriptions are handled automatically by the
+`RouteQueryManager` and `ComponentQueryManager` mixins, so long as you use
+them.
 
-To make this easier on routes, this addon also provides a mixin called
-`UnsubscribeRoute`. You can use it in your route like this:
+If you're fetching data elsewhere, such as in an Ember Service, or if you use
+the Apollo service directly, you are responsible for unsubscribing from
+`watchQuery` results when you're done with them. This is exposed on the
+result of `query` via a method `_apolloUnsubscribe`.
 
+### Injecting the `RouteQueryManager` mixin into all routes
+
+ember-apollo-client does not automatically inject any dependencies into your
+routes. If you want to inject this mixin into all routes, you should utilize
+a base route class:
+
+`app/routes/base.js`
 ```js
-import Ember from 'ember';
-import UnsubscribeRoute from 'ember-apollo-client/mixins/unsubscribe-route';
+import Ember from "ember";
+import RouteQueryManager from "ember-apollo-client/mixins/route-query-manager";
 
-export default Ember.Route.extend(UnsubscribeRoute, {
-  model() {
-    return this.get('apollo').query(...);
-  }
-});
+export default Ember.Route.extend(RouteQueryManager);
 ```
 
-The mixin will call `_apolloUnsubscribe` on the `model` (if it is set) when the
-model changes or the route deactivates. For now, this only works if your model
-was resolved directly from the apollo service. It does not work if your `model`
-hook returns an `RSVP.hash` of multiple queries, or something of that sort.
-You'd have to clean up manually in that scenario.
+Then extend from that in your other routes:
 
-### Injecting the apollo service into all routes
-
-The apollo service is not automatically injected into your routes, but you can
-do so easily with an initializer like this one:
-
+`app/routes/a-real-route.js`
 ```js
-export function initialize(application) {
-  application.inject('route', 'apollo', 'service:apollo');
-}
+import Base from "my-app/routes/base";
 
-export default {
-  name: 'apollo',
-  initialize
-};
+export default Base.extend(
+  ...
+)
 ```
 
 ### Testing
@@ -307,4 +368,8 @@ A special thanks to the following contributors:
 
 [ac-constructor]: http://dev.apollodata.com/core/apollo-client-api.html#ApolloClient\.constructor
 [apollo-client]: https://github.com/apollostack/apollo-client
-[apollo-service-api]: https://github.com/bgentry/ember-apollo-client#apollo-service-api
+[apollo-service-api]: #apollo-service-api
+[observable-query]: http://dev.apollodata.com/core/apollo-client-api.html#ObservableQuery
+[query-manager-api]: #query-manager-api
+[unsubscribing]: #unsubscribing-from-watch-queries
+[watch-query]: http://dev.apollodata.com/core/apollo-client-api.html#ApolloClient\.watchQuery

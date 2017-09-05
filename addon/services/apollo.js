@@ -1,13 +1,17 @@
 import Ember from 'ember';
 import ApolloClient, { createNetworkInterface } from 'apollo-client';
+import apolloObservableKey from 'ember-apollo-client';
+import QueryManager from 'ember-apollo-client/apollo/query-manager';
 
 const {
   A,
   copy,
   computed,
+  deprecate,
   isArray,
   isNone,
   isPresent,
+  get,
   getOwner,
   merge,
   Object: EmberObject,
@@ -20,6 +24,32 @@ const {
 } = Ember;
 
 const { alias } = computed;
+
+function newDataFunc(observable, resultKey, resolve) {
+  let obj;
+  let mergedProps = {};
+  mergedProps[apolloObservableKey] = observable;
+
+  return ({ data }) => {
+    let dataToSend = isNone(resultKey) ? data : get(data, resultKey);
+    dataToSend = copy(dataToSend, true);
+    if (isNone(obj)) {
+      if (isArray(dataToSend)) {
+        obj = A(dataToSend);
+        obj.setProperties(mergedProps);
+      } else {
+        obj = EmberObject.create(merge(dataToSend, mergedProps));
+      }
+      return resolve(obj);
+    }
+
+    run(() => {
+      isArray(obj)
+        ? obj.setObjects(dataToSend)
+        : setProperties(obj, dataToSend);
+    });
+  };
+}
 
 export default Service.extend({
   client: null,
@@ -70,7 +100,7 @@ export default Service.extend({
    * Executes a mutation on the Apollo client. The resolved object will
    * never be updated and does not have to be unsubscribed.
    *
-   * @method query
+   * @method mutate
    * @param {!Object} opts The query options used in the Apollo Client mutate.
    * @param {String} resultKey The key that will be returned from the resulting response data. If null or undefined, the entire response data will be returned.
    * @return {!Promise}
@@ -117,10 +147,34 @@ export default Service.extend({
    * @method query
    * @param {!Object} opts The query options used in the Apollo Client watchQuery.
    * @param {String} resultKey The key that will be returned from the resulting response data. If null or undefined, the entire response data will be returned.
+   * @deprecated Use `watchQuery` instead.
    * @return {!Promise}
    * @public
    */
   query(opts, resultKey) {
+    deprecate(`Usage of \`query\` is deprecated, use \`watchQuery\` instead.`, false, {
+      id: 'ember-apollo-client.deprecate-query-for-watch-query',
+      until: '1.0.0',
+    });
+    return this.watchQuery(opts, resultKey);
+  },
+
+  /**
+   * Executes a `watchQuery` on the Apollo client. If updated data for this
+   * query is loaded into the store by another query, the resolved object will
+   * be updated with the new data.
+   *
+   * When using this method, it is important to call `apolloUnsubscribe()` on
+   * the resolved data when the route or component is torn down. That tells
+   * Apollo to stop trying to send updated data to a non-existent listener.
+   *
+   * @method watchQuery
+   * @param {!Object} opts The query options used in the Apollo Client watchQuery.
+   * @param {String} resultKey The key that will be returned from the resulting response data. If null or undefined, the entire response data will be returned.
+   * @return {!Promise}
+   * @public
+   */
+  watchQuery(opts, resultKey) {
     let obj, subscription;
     let _apolloUnsubscribe = function() {
       subscription.unsubscribe();
@@ -128,7 +182,7 @@ export default Service.extend({
     return this._waitFor(
       new RSVP.Promise((resolve, reject) => {
         let newData = ({ data }) => {
-          let dataToSend = isNone(resultKey) ? data : data[resultKey];
+          let dataToSend = isNone(resultKey) ? data : get(data, resultKey);
           dataToSend = copy(dataToSend, true);
           if (isNone(obj)) {
             if (isArray(dataToSend)) {
@@ -155,7 +209,6 @@ export default Service.extend({
             reject(e);
           },
         });
-        return subscription;
       })
     );
   },
@@ -180,6 +233,37 @@ export default Service.extend({
         return RSVP.resolve(copy(response, true));
       })
     );
+  },
+
+  /**
+   * Executes a `watchQuery` on the Apollo client and tracks the resulting
+   * subscription on the provided query manager.
+   *
+   * @method managedWatchQuery
+   * @param {!Object} manager A QueryManager that should track this active watchQuery.
+   * @param {!Object} opts The query options used in the Apollo Client watchQuery.
+   * @param {String} resultKey The key that will be returned from the resulting response data. If null or undefined, the entire response data will be returned.
+   * @return {!Promise}
+   * @private
+   */
+  managedWatchQuery(manager, opts, resultKey) {
+    let observable = this.client.watchQuery(opts);
+
+    return this._waitFor(
+      new RSVP.Promise((resolve, reject) => {
+        let subscription = observable.subscribe({
+          next: newDataFunc(observable, resultKey, resolve),
+          error(e) {
+            reject(e);
+          },
+        });
+        manager.trackSubscription(subscription);
+      })
+    );
+  },
+
+  createQueryManager() {
+    return QueryManager.create({ apollo: this });
   },
 
   /**
