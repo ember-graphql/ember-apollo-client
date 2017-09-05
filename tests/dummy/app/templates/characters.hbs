@@ -1,5 +1,8 @@
 <ul>
   {{#each model as |item|}}
-    <li class='model-name'>{{item.name}}</li>
+    <li>
+      <span class='model-name'>{{item.name}}</span>:
+      <span class='model-typename'>{{item.__typename}}</span>
+    </li>
   {{/each}}
 </ul>

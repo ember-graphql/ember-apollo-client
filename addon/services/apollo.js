@@ -2,6 +2,7 @@ import Ember from 'ember';
 import ApolloClient, { createNetworkInterface } from 'apollo-client';
 import apolloObservableKey from 'ember-apollo-client';
 import QueryManager from 'ember-apollo-client/apollo/query-manager';
+import copyWithExtras from 'ember-apollo-client/utils/copy-with-extras';
 
 const {
   A,
@@ -31,8 +32,8 @@ function newDataFunc(observable, resultKey, resolve) {
   mergedProps[apolloObservableKey] = observable;
 
   return ({ data }) => {
-    let dataToSend = isNone(resultKey) ? data : get(data, resultKey);
-    dataToSend = copy(dataToSend, true);
+    let keyedData = isNone(resultKey) ? data : get(data, resultKey);
+    let dataToSend = copyWithExtras(keyedData, [], []);
     if (isNone(obj)) {
       if (isArray(dataToSend)) {
         obj = A(dataToSend);
