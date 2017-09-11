@@ -124,7 +124,7 @@ import { getObservable } from "ember-apollo-client";
 
 export default Ember.Route.extend(RouteQueryManager, {
   model() {
-    let result = this.apollo.query(...);
+    let result = this.apollo.watchQuery(...);
     let observable = getObservable(result);
     observable.fetchMore(...) // utilize the ObservableQuery
     ...
