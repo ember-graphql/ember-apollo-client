@@ -1,10 +1,24 @@
 import Ember from 'ember';
 import Pretender from 'pretender';
 import { graphql } from 'graphql';
-import { addMockFunctionsToSchema, makeExecutableSchema } from 'graphql-tools';
+import {
+  addMockFunctionsToSchema,
+  addResolveFunctionsToSchema,
+  makeExecutableSchema,
+} from 'graphql-tools';
 import schemaString from '../fixtures/test-schema.graphql';
 
 const { RSVP } = Ember;
+
+const interfaceResolveType = {
+  __resolveType(data) {
+    // Explicitly resolve the type of any interface type based on the
+    // special attribute __typename, which should be provided in mocks of
+    // these types. Otherwise fallback to the data.typename.name, which
+    // comes from built-in mocks.
+    return data.__typename || data.typename.name;
+  },
+};
 
 export default function startPretender() {
   let resolvers = {
@@ -23,6 +37,14 @@ export default function startPretender() {
     //   }
     // },
   };
+  let typeResolvers = {
+    // This is where you can declare custom type resolvers, such as those
+    // necessary to infer the specific object type of a union type.
+
+    // We use this interface type in test mocks, need to teach Apollo Client how
+    // to resolve its type:
+    SearchResult: interfaceResolveType,
+  };
   let mocks = {
     // This is where you tell graphql-tools how to generate a mock for a custom
     // scalar type:
@@ -33,7 +55,8 @@ export default function startPretender() {
   };
 
   let schema = makeExecutableSchema({ typeDefs: schemaString, resolvers });
-  addMockFunctionsToSchema({ schema, mocks });
+  addResolveFunctionsToSchema(schema, typeResolvers);
+  addMockFunctionsToSchema({ schema, mocks, preserveResolvers: true });
 
   let pretender = new Pretender(function() {
     this.unhandledRequest = function(verb, path) {
