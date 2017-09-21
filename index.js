@@ -2,6 +2,11 @@
 'use strict';
 
 module.exports = {
+  options: {
+    babel: {
+      plugins: ['transform-object-rest-spread']
+    }
+  },
   name: 'ember-apollo-client',
 
   included() {
