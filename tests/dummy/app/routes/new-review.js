@@ -2,14 +2,11 @@ import Ember from 'ember';
 import mutation from 'dummy/gql/mutations/create-review';
 
 const {
-  inject: { service },
   Object: EmberObject,
   Route
 } = Ember;
 
 export default Route.extend({
-  apollo: service(),
-
   model() {
     return EmberObject.create({});
   },
