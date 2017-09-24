@@ -4,38 +4,29 @@ import ApolloService from 'ember-apollo-client/services/apollo';
 
 const { computed } = Ember;
 
-let options;
-
 moduleFor('service:apollo', 'Unit | Service | apollo', {
-  beforeEach() {
-    options = {
-      apiURL: 'https://test.example/graphql',
-    };
-  },
+  needs: ['config:environment'],
 });
 
 test('it exists', function(assert) {
+  let options = {
+    apiURL: 'https://test.example/graphql',
+  };
   let service = this.subject({ options });
   assert.ok(service);
 });
 
 test('it uses clientOptions', function(assert) {
   let customDataIdFromObject = o => o.name;
-  let OverriddenService = ApolloService.extend({
-    // Need this here because apollo requires a uri, but our initializer doesn't
-    // run in unit tests.
-    options: {
-      apiURL: 'https://this-should-be-set-from-environment.example',
-    },
-
+  this.register('service:overridden-apollo', ApolloService.extend({
     // Override the clientOptions.
     clientOptions: computed(function() {
       let opts = this._super(...arguments);
       opts.dataIdFromObject = customDataIdFromObject;
       return opts;
     }),
-  });
-  let service = OverriddenService.create({});
+  }));
+  let service = this.container.lookup('service:overridden-apollo')
 
   // make sure the override was used.
   assert.equal(service.get('apollo.dataIdFromObject', customDataIdFromObject));

@@ -7,13 +7,7 @@ const { getOwner, Object: EmberObject } = Ember;
 moduleFor(
   'mixin:component-query-manager',
   'Unit | Mixin | component query manager', {
-    needs: ['service:apollo'],
-    beforeEach() {
-      // needed to set up config since initializers don't run here
-      const options = { apiURL: 'https://test.example/graphql' };
-      this.register('config:apollo', options, { instantiate: false });
-      getOwner(this).inject('service:apollo', 'options', 'config:apollo');
-    },
+    needs: ['config:environment', 'service:apollo'],
     subject() {
       let TestObject = EmberObject.extend(ComponentQueryManagerMixin);
       this.register('test-container:test-object', TestObject);
