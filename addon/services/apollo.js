@@ -56,8 +56,11 @@ export default Service.extend({
   client: null,
   apiURL: alias('options.apiURL'),
 
-  // options are injected by an initializer and configured in your environment.js.
-  options: { apiURL: null },
+  // options are configured in your environment.js.
+  options: computed(function() {
+    const config = getOwner(this).resolveRegistration('config:environment');
+    return config.apollo;
+  }),
 
   init() {
     this._super(...arguments);
