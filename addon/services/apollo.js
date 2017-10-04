@@ -52,14 +52,25 @@ function newDataFunc(observable, resultKey, resolve) {
   };
 }
 
+// used in environments without injected `config:environment` (i.e. unit tests):
+const defaultOptions = {
+  apiURL: "http://testserver.example/v1/graph",
+};
+
 export default Service.extend({
   client: null,
   apiURL: alias('options.apiURL'),
 
   // options are configured in your environment.js.
   options: computed(function() {
-    const config = getOwner(this).resolveRegistration('config:environment');
-    return config.apollo;
+    // config:environment not injected into tests, so try to handle that gracefully.
+    let config = getOwner(this).resolveRegistration("config:environment");
+    if (config && config.apollo) {
+      return config.apollo;
+    } else if (testing) {
+      return defaultOptions;
+    }
+    throw new Error("no Apollo service options defined");
   }),
 
   init() {
