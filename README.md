@@ -36,7 +36,9 @@ In your app's `config/environment.js`, configure the URL for the GraphQL API:
 var ENV = {
   ...
   apollo: {
-    apiURL: 'https://test.example/graphql'
+    apiURL: 'https://test.example/graphql',
+    // credentials: 'same-origin',
+    // credentials: 'include',
   },
   ...
 }
@@ -226,7 +228,7 @@ The `apollo` service has the following public API:
       let opts = this._super(...arguments);
       return merge(opts, {
         dataIdFromObject: customDataIdFromObject
-      };
+      });
     }),
   });
   ```
