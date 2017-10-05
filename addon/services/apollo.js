@@ -55,6 +55,8 @@ function newDataFunc(observable, resultKey, resolve) {
 export default Service.extend({
   client: null,
   apiURL: alias('options.apiURL'),
+  credentials: alias('options.credentials'),
+
 
   // options are configured in your environment.js.
   options: computed(function() {
@@ -86,10 +88,18 @@ export default Service.extend({
    * @return {!Object}
    * @public
    */
-  clientOptions: computed(function() {
+   clientOptions: computed(function() {
     const apiURL = this.get('apiURL');
+    const credentials = this.get('credentials');
     const middlewares = this.get('middlewares');
-    const networkInterface = createNetworkInterface({ uri: apiURL });
+    const networkInterfaceOptions = {
+      uri: apiURL,
+      opts: {}
+    }
+    if (isPresent(credentials) {
+      networkInterfaceOptions.opts.credentials = credentials;
+    }
+    const networkInterface = createNetworkInterface(networkInterfaceOptions);
 
     if (isPresent(middlewares)) {
       networkInterface.use(middlewares);
