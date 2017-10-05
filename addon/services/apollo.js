@@ -67,6 +67,7 @@ const defaultOptions = {
 export default Service.extend({
   client: null,
   apiURL: alias('options.apiURL'),
+  requestCredentials: alias('options.credentials'),
 
   // options are configured in your environment.js.
   options: computed(function() {
@@ -106,8 +107,16 @@ export default Service.extend({
    */
   clientOptions: computed(function() {
     const apiURL = this.get('apiURL');
+    const requestCredentials = this.get('requestCredentials');
     const middlewares = this.get('middlewares');
-    const networkInterface = createNetworkInterface({ uri: apiURL });
+    const networkInterfaceOptions = {
+      uri: apiURL,
+      opts: {},
+    }
+    if (isPresent(requestCredentials)) {
+      networkInterfaceOptions.opts.credentials = requestCredentials;
+    }
+    const networkInterface = createNetworkInterface(networkInterfaceOptions);
 
     if (isPresent(middlewares)) {
       networkInterface.use(middlewares);

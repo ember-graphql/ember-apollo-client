@@ -36,7 +36,10 @@ In your app's `config/environment.js`, configure the URL for the GraphQL API:
 var ENV = {
   ...
   apollo: {
-    apiURL: 'https://test.example/graphql'
+    apiURL: 'https://test.example/graphql',
+    // Optionally, set the credentials property of the Fetch Request interface
+    // to control when a cookie is sent:
+    // requestCredentials: 'same-origin', // other choices: 'include', 'omit'
   },
   ...
 }
@@ -226,7 +229,7 @@ The `apollo` service has the following public API:
       let opts = this._super(...arguments);
       return merge(opts, {
         dataIdFromObject: customDataIdFromObject
-      };
+      });
     }),
   });
   ```
@@ -365,6 +368,7 @@ A special thanks to the following contributors:
 * Dan Freeman ([@dfreeman](https://github.com/dfreeman))
 * Vinícius Sales ([@viniciussbs](https://github.com/viniciussbs))
 * Laurin Quast ([@n1ru4l](https://github.com/n1ru4l))
+* Elias Balafoutis ([@balaf](https://github.com/balaf))
 
 [ac-constructor]: http://dev.apollodata.com/core/apollo-client-api.html#ApolloClient\.constructor
 [apollo-client]: https://github.com/apollostack/apollo-client
