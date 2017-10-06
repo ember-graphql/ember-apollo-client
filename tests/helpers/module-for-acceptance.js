@@ -3,7 +3,7 @@ import Ember from 'ember';
 import startApp from '../helpers/start-app';
 import destroyApp from '../helpers/destroy-app';
 import startPretender from '../helpers/start-pretender';
-import fetch from 'ember-network/fetch';
+import fetch from 'fetch';
 
 const { RSVP: { resolve } } = Ember;
 
