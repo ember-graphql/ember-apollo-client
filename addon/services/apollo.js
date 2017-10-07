@@ -106,7 +106,7 @@ export default Service.extend({
    * @return {!Object}
    * @public
    */
-  clientOptions: computed(function() {
+   clientOptions: computed(function() {
     const apiURL = this.get('apiURL');
     const requestCredentials = this.get('requestCredentials');
     const middlewares = this.get('middlewares');
