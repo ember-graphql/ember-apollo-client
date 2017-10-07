@@ -1,5 +1,6 @@
 import Ember from 'ember';
-import ApolloClient, { createNetworkInterface } from 'apollo-client';
+import ApolloClient from 'apollo-client';
+import FetchNetworkInterface from '../utils/fetch-network-interface';
 import { apolloObservableKey } from 'ember-apollo-client';
 import QueryManager from 'ember-apollo-client/apollo/query-manager';
 import copyWithExtras from 'ember-apollo-client/utils/copy-with-extras';
@@ -100,7 +101,7 @@ export default Service.extend({
   clientOptions: computed(function() {
     const apiURL = this.get('apiURL');
     const middlewares = this.get('middlewares');
-    const networkInterface = createNetworkInterface({ uri: apiURL });
+    const networkInterface = new FetchNetworkInterface(apiURL);
 
     if (isPresent(middlewares)) {
       networkInterface.use(middlewares);
@@ -202,7 +203,7 @@ export default Service.extend({
           if (isNone(obj)) {
             if (isArray(dataToSend)) {
               obj = A(dataToSend);
-              obj.setProperties({ _apolloUnsubscribe });
+              setProperties(obj, { _apolloUnsubscribe });
             } else {
               obj = EmberObject.create(
                 merge(dataToSend, { _apolloUnsubscribe })

@@ -2,7 +2,12 @@
   "name": "ember-apollo-client",
   "version": "0.4.5",
   "description": "An ember-cli addon for the Apollo GraphQL Client.",
-  "keywords": ["ember-addon", "apollo-client", "apollo", "graphql"],
+  "keywords": [
+    "ember-addon",
+    "apollo-client",
+    "apollo",
+    "graphql"
+  ],
   "license": "MIT",
   "author": "Blake Gentry",
   "directories": {
@@ -25,6 +30,7 @@
     "webpack": "^2.2.1"
   },
   "devDependencies": {
+    "babel-plugin-transform-object-rest-spread": "^6.26.0",
     "broccoli-asset-rev": "^2.4.5",
     "ember-ajax": "^3.0.0",
     "ember-cli": "~2.14.2",
@@ -41,6 +47,7 @@
     "ember-common-tags": "0.1.2",
     "ember-disable-prototype-extensions": "^1.1.2",
     "ember-export-application-global": "^2.0.0",
+    "ember-fetch": "3.3.1",
     "ember-load-initializers": "^1.0.0",
     "ember-network": "0.3.1",
     "ember-resolver": "^4.0.0",
