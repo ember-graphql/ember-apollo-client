@@ -37,8 +37,10 @@ var ENV = {
   ...
   apollo: {
     apiURL: 'https://test.example/graphql',
-    // credentials: 'same-origin',
-    // credentials: 'include',
+    // Set the credentials property of the Fetch Request interface to control when a cookie is sent
+    // requestCredentials: 'same-origin', //-> send cookie ONLY if apiURL is in the same origin
+    // requestCredentials: 'include', //-> send cookie for cross origin calls
+    // requestCredentials: 'omit', //-> never send cookies (default)
   },
   ...
 }
@@ -367,6 +369,7 @@ A special thanks to the following contributors:
 * Dan Freeman ([@dfreeman](https://github.com/dfreeman))
 * Vinícius Sales ([@viniciussbs](https://github.com/viniciussbs))
 * Laurin Quast ([@n1ru4l](https://github.com/n1ru4l))
+* Elias Balafoutis ([@balaf](https://github.com/balaf))
 
 [ac-constructor]: http://dev.apollodata.com/core/apollo-client-api.html#ApolloClient\.constructor
 [apollo-client]: https://github.com/apollostack/apollo-client
