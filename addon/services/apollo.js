@@ -31,7 +31,15 @@ function newDataFunc(observable, resultKey, resolve) {
   let mergedProps = {};
   mergedProps[apolloObservableKey] = observable;
 
-  return ({ data }) => {
+  return ({ data, loading }) => {
+    if (loading && data === undefined) {
+      // This happens when the cache has no data and the data is still loading
+      // from the server. We don't want to resolve the promise with empty data
+      // so we instead just bail out.
+      //
+      // See https://github.com/bgentry/ember-apollo-client/issues/45
+      return;
+    }
     let keyedData = isNone(resultKey) ? data : get(data, resultKey);
     let dataToSend = copyWithExtras(keyedData, [], []);
     if (isNone(obj)) {

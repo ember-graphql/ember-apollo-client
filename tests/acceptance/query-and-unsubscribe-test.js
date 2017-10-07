@@ -127,4 +127,4 @@ test('visiting /characters', function(assert) {
       });
     });
   });
-})
+});
