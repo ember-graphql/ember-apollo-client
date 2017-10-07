@@ -39,7 +39,7 @@ function newDataFunc(observable, resultKey, resolve) {
         obj = A(dataToSend);
         obj.setProperties(mergedProps);
       } else {
-        obj = EmberObject.create(merge(dataToSend, mergedProps));
+        obj = EmberObject.create(merge((dataToSend || {}), mergedProps));
       }
       return resolve(obj);
     }
