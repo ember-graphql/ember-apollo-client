@@ -26,9 +26,8 @@ const {
 
 const { alias } = computed;
 
-function newDataFunc(observable, resultKey, resolve) {
+function newDataFunc(observable, resultKey, resolve, mergedProps = {}) {
   let obj;
-  let mergedProps = {};
   mergedProps[apolloObservableKey] = observable;
 
   return ({ data, loading }) => {
@@ -198,36 +197,21 @@ export default Service.extend({
    * @public
    */
   watchQuery(opts, resultKey) {
-    let obj, subscription;
-    let _apolloUnsubscribe = function() {
-      subscription.unsubscribe();
+    let observable = this.client.watchQuery(opts);
+    let subscription;
+
+    let mergedProps = {
+      _apolloUnsubscribe() {
+        subscription.unsubscribe();
+      },
     };
+    mergedProps[apolloObservableKey] = observable;
+
     return this._waitFor(
       new RSVP.Promise((resolve, reject) => {
-        let newData = ({ data }) => {
-          let dataToSend = isNone(resultKey) ? data : get(data, resultKey);
-          dataToSend = copy(dataToSend, true);
-          if (isNone(obj)) {
-            if (isArray(dataToSend)) {
-              obj = A(dataToSend);
-              obj.setProperties({ _apolloUnsubscribe });
-            } else {
-              obj = EmberObject.create(
-                merge(dataToSend, { _apolloUnsubscribe })
-              );
-            }
-            resolve(obj);
-          } else {
-            run(() => {
-              isArray(obj)
-                ? obj.setObjects(dataToSend)
-                : setProperties(obj, dataToSend);
-            });
-          }
-        };
         // TODO: add an error function here for handling errors
-        subscription = this.client.watchQuery(opts).subscribe({
-          next: newData,
+        subscription = observable.subscribe({
+          next: newDataFunc(observable, resultKey, resolve, mergedProps),
           error(e) {
             reject(e);
           },
