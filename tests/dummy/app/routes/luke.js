@@ -6,7 +6,11 @@ const variables = { id: '1000' };
 
 export default Ember.Route.extend(RouteQueryManager, {
   model() {
-    return this.apollo.watchQuery({ query, variables }, 'human');
+    return this.apollo.watchQuery({
+      query,
+      variables,
+      fetchPolicy: 'cache-and-network',
+    }, 'human');
   },
 
   actions: {
