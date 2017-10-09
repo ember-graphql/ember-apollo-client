@@ -67,7 +67,7 @@ const defaultOptions = {
 export default Service.extend({
   client: null,
   apiURL: alias('options.apiURL'),
-  requestCredentials: alias('options.credentials'),
+  requestCredentials: alias('options.requestCredentials'),
 
   // options are configured in your environment.js.
   options: computed(function() {
