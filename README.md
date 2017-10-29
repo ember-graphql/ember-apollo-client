@@ -28,6 +28,11 @@ by unsubscribing from watch queries.
 This addon is tested against the `release`, `beta`, and `canary` channels, as
 well as the latest two LTS releases.
 
+## Example App
+If you are looking for a full tutorial using `ember-apollo-client` check out the tutorial on [How To GraphQL](https://howtographql.com), written by [DevanB](https://github.com/DevanB).
+
+The application built in the tutorial is also available on the [How To GraphQL repository](http://github.com/howtographql/ember-apollo).
+
 ## Configuration
 
 In your app's `config/environment.js`, configure the URL for the GraphQL API:
