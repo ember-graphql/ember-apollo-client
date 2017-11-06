@@ -1,15 +1,15 @@
 import Ember from 'ember';
-import EmberObjectQueryManagerMixin from 'ember-apollo-client/mixins/ember-object-query-manager';
+import ObjectQueryManagerMixin from 'ember-apollo-client/mixins/object-query-manager';
 import { moduleFor, test } from 'ember-qunit';
 
 const { getOwner, Object: EmberObject } = Ember;
 
 moduleFor(
-  'mixin:ember-object-query-manager',
+  'mixin:object-query-manager',
   'Unit | Mixin | ember object query manager', {
     needs: ['config:environment', 'service:apollo'],
     subject() {
-      let TestObject = EmberObject.extend(EmberObjectQueryManagerMixin);
+      let TestObject = EmberObject.extend(ObjectQueryManagerMixin);
       this.register('test-container:test-object', TestObject);
       return getOwner(this).lookup('test-container:test-object');
     },
