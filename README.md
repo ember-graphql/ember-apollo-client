@@ -115,9 +115,7 @@ Please note that when using `watchQuery`, you must
 only have to worry about this if you're using the [Apollo
 service][apollo-service-api] directly. If you use the `RouteQueryManager`
 mixin in your routes, or the `ComponentQueryManager` in your data-loading
-components, all active watch queries are tracked and unsubscribed when the
-route is exited or the component destroyed. These mixins work by injecting a
-query manager named `apollo` that functions as a proxy to the `apollo`
+components, or the `ObjectQueryManager` in your data-loading on service or class that extend `Ember.Object`, all active watch queries are tracked and unsubscribed when the route is exited or the component and Ember.Object is destroyed. These mixins work by injecting a query manager named `apollo` that functions as a proxy to the `apollo`
 service.
 
 You can instead use `query` if you just want a single query with a POJO
@@ -218,9 +216,7 @@ export default Ember.Route.extend({
 ### Apollo service API
 
 You should not need to use the Apollo service directly for most regular
-usage, instead utilizing the `RouteQueryManager` and `ComponentQueryManager`
-mixins. However, you will probably need to customize options on the `apollo`
-service, and might need to query it directly for some use cases (such as
+usage, instead utilizing the `RouteQueryManager`, `ObjectQueryManager` and `ComponentQueryManager` mixins. However, you will probably need to customize options on the `apollo` service, and might need to query it directly for some use cases (such as
 loading data from a service rather than a route or component).
 
 The `apollo` service has the following public API:
@@ -293,8 +289,7 @@ whenever the store is updated with new data about the resolved objects. This
 happens until you explicitly unsubscribe from it.
 
 In ember-apollo-client, most unsubscriptions are handled automatically by the
-`RouteQueryManager` and `ComponentQueryManager` mixins, so long as you use
-them.
+`RouteQueryManager`, `ObjectQueryManager` and `ComponentQueryManager` mixins, so long as you use them.
 
 If you're fetching data elsewhere, such as in an Ember Service, or if you use
 the Apollo service directly, you are responsible for unsubscribing from
