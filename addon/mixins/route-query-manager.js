@@ -15,7 +15,10 @@ export default Mixin.create(BaseQueryManager, {
   },
 
   willDestroy() {
-    this.get('apollo').unsubscribeAll(false);
+    let apollo = this.get('apollo')
+    if (apollo.unsubscribeAll) {
+      this.get('apollo').unsubscribeAll(false);
+    }
     this._super(...arguments);
   }
 });
