@@ -1,6 +1,4 @@
-import Ember from 'ember';
-
-const { computed } = Ember;
+import { computed } from "@ember/object";
 
 export default function middlewares(...middlewares) {
   return computed(function() {

@@ -1,7 +1,5 @@
-import Ember from 'ember';
+import Mixin from "@ember/object/mixin";
 import BaseQueryManager from 'ember-apollo-client/mixins/base-query-manager';
-
-const { Mixin } = Ember;
 
 export default Mixin.create(BaseQueryManager, {
   beforeModel() {

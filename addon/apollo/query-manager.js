@@ -1,6 +1,6 @@
-import Ember from 'ember';
-
-const { A, inject: { service }, Object: EmberObject } = Ember;
+import { inject as service } from "@ember/service";
+import EmberObject from "@ember/object";
+import { A } from "@ember/array";
 
 export default EmberObject.extend({
   apollo: service(),
