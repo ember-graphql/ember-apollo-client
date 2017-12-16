@@ -1,30 +1,25 @@
 import Ember from 'ember';
+import Service from "@ember/service"
+import EmberObject, { get, setProperties, computed } from "@ember/object";
+import { A } from "@ember/array";
+import { copy } from "@ember/object/internals";
+import { deprecate } from "@ember/application/deprecations";
+import { isArray } from "@ember/array";
+import { isNone, isPresent } from "@ember/utils";
+import { getOwner } from "@ember/application";
+import { merge } from '@ember/polyfills';
+import RSVP from "rsvp";
+import { run } from "@ember/runloop";
+import { alias } from "@ember/object/computed";
 import ApolloClient, { createNetworkInterface } from 'apollo-client';
 import { apolloObservableKey } from 'ember-apollo-client';
 import QueryManager from 'ember-apollo-client/apollo/query-manager';
 import copyWithExtras from 'ember-apollo-client/utils/copy-with-extras';
 
 const {
-  A,
-  copy,
-  computed,
-  deprecate,
-  isArray,
-  isNone,
-  isPresent,
-  get,
-  getOwner,
-  merge,
-  Object: EmberObject,
-  RSVP,
-  run,
-  Service,
-  setProperties,
   Test,
   testing,
 } = Ember;
-
-const { alias } = computed;
 
 function newDataFunc(observable, resultKey, resolve, mergedProps = {}) {
   let obj;
