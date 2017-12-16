@@ -342,7 +342,7 @@ The tests also contain a sample Star Wars GraphQL schema with an
 
 * `git clone https://github.com/bgentry/ember-apollo-client` this repository
 * `cd ember-apollo-client`
-* `npm install`
+* `yarn install`
 
 ### Running
 
@@ -351,7 +351,7 @@ The tests also contain a sample Star Wars GraphQL schema with an
 
 ### Running Tests
 
-* `npm test` (Runs `ember try:each` to test your addon against multiple Ember versions)
+* `yarn test` (Runs `ember try:each` to test your addon against multiple Ember versions)
 * `ember test`
 * `ember test --server`
 
