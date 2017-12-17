@@ -17,10 +17,6 @@ import QueryManager from 'ember-apollo-client/apollo/query-manager';
 import copyWithExtras from 'ember-apollo-client/utils/copy-with-extras';
 import { registerWaiter } from '@ember/test';
 
-const {
-  testing,
-} = Ember;
-
 function newDataFunc(observable, resultKey, resolve, mergedProps = {}) {
   let obj;
   mergedProps[apolloObservableKey] = observable;
@@ -70,7 +66,7 @@ export default Service.extend({
     let config = getOwner(this).resolveRegistration("config:environment");
     if (config && config.apollo) {
       return config.apollo;
-    } else if (testing) {
+    } else if (Ember.testing) {
       return defaultOptions;
     }
     throw new Error("no Apollo service options defined");
@@ -87,7 +83,7 @@ export default Service.extend({
     let client = new ApolloClient(this.get('clientOptions'));
     this.set('client', client);
 
-    if (testing) {
+    if (Ember.testing) {
       this._registerWaiter();
     }
   },
