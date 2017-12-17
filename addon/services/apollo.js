@@ -15,9 +15,9 @@ import ApolloClient, { createNetworkInterface } from 'apollo-client';
 import { apolloObservableKey } from 'ember-apollo-client';
 import QueryManager from 'ember-apollo-client/apollo/query-manager';
 import copyWithExtras from 'ember-apollo-client/utils/copy-with-extras';
+import { registerWaiter } from '@ember/test';
 
 const {
-  Test,
   testing,
 } = Ember;
 
@@ -316,6 +316,6 @@ export default Service.extend({
     this._waiter = () => {
       return this._shouldWait();
     };
-    Test.registerWaiter(this._waiter);
+    registerWaiter(this._waiter);
   },
 });
