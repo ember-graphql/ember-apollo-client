@@ -60,9 +60,9 @@ test('visiting /luke', function(assert) {
       visit('/new-review');
 
       andThen(function() {
-        // Now that we've gone to a route with no queries, the
-        // UnsubscribeRouteMixin should have unsubscribed from the watcyQuery andThen
-        // there should be no ongoing queries:
+        // Now that we've gone to a route with no queries, the RouteQueryManager
+        // should have unsubscribed from the watchQuery and there should be no
+        // ongoing queries:
         let queries = getQueries();
         assert.notOk(
           Object.keys(queries).length,
