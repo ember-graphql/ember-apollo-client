@@ -17,10 +17,15 @@ module.exports = {
     return new WebpackDependencyPlugin({
       outputName: 'apollo-client',
       expose: [
+        'apollo-cache',
+        'apollo-cache-inmemory',
+        'apollo-client',
+        'apollo-link',
+        'apollo-link-context',
+        'apollo-link-http',
         'graphql',
         'graphql-tools',
-        'graphql-tag',
-        'apollo-client'
+        'graphql-tag'
       ]
     });
   },

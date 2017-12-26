@@ -7,15 +7,17 @@ import { deprecate } from "@ember/application/deprecations";
 import { isArray } from "@ember/array";
 import { isNone, isPresent } from "@ember/utils";
 import { getOwner } from "@ember/application";
-import { merge } from '@ember/polyfills';
+import { merge } from "@ember/polyfills";
 import RSVP from "rsvp";
 import { run } from "@ember/runloop";
 import { alias } from "@ember/object/computed";
-import ApolloClient, { createNetworkInterface } from 'apollo-client';
-import { apolloObservableKey } from 'ember-apollo-client';
-import QueryManager from 'ember-apollo-client/apollo/query-manager';
-import copyWithExtras from 'ember-apollo-client/utils/copy-with-extras';
-import { registerWaiter } from '@ember/test';
+import { ApolloClient } from "apollo-client";
+import { createHttpLink } from "apollo-link-http";
+import { InMemoryCache } from "apollo-cache-inmemory";
+import { apolloObservableKey } from "ember-apollo-client";
+import QueryManager from "ember-apollo-client/apollo/query-manager";
+import copyWithExtras from "ember-apollo-client/utils/copy-with-extras";
+import { registerWaiter } from "@ember/test";
 
 function newDataFunc(observable, resultKey, resolve, mergedProps = {}) {
   let obj;
@@ -97,25 +99,37 @@ export default Service.extend({
    * @public
    */
   clientOptions: computed(function() {
-    const apiURL = this.get('apiURL');
-    const requestCredentials = this.get('requestCredentials');
-    const middlewares = this.get('middlewares');
-    const networkInterfaceOptions = {
+    return {
+      link: this.get("link"),
+      cache: this.get("cache"),
+    };
+  }),
+
+  cache: computed(function() {
+    return new InMemoryCache();
+  }),
+
+  link: computed(function() {
+    let apiURL = this.get('apiURL');
+    let requestCredentials = this.get('requestCredentials');
+
+    const linkOptions = {
       uri: apiURL,
-      opts: {},
     }
     if (isPresent(requestCredentials)) {
-      networkInterfaceOptions.opts.credentials = requestCredentials;
+      linkOptions.credentials = requestCredentials;
     }
-    const networkInterface = createNetworkInterface(networkInterfaceOptions);
+    let link = createHttpLink(linkOptions);
 
+    let middlewares = this.get('middlewares');
     if (isPresent(middlewares)) {
-      networkInterface.use(middlewares);
+      deprecate(`The \`middlewares\` option is deprecated, override \`link\` instead.`, false, {
+        id: 'ember-apollo-client.deprecate-middlewares-for-link',
+        until: '1.0.0',
+      });
     }
 
-    return {
-      networkInterface,
-    };
+    return link;
   }),
 
   /**
