@@ -22,8 +22,8 @@ export default EmberObject.extend({
    * @return {!Promise}
    * @public
    */
-  mutate(opts) {
-    return this.get('apollo').mutate(opts);
+  mutate(opts, resultKey) {
+    return this.get('apollo').mutate(opts, resultKey);
   },
 
   /**
