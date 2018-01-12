@@ -22,7 +22,11 @@ by unsubscribing from watch queries.
 
 ## Installation
 
-* `ember install ember-apollo-client`
+```
+ember install ember-apollo-client
+```
+
+This should also automatically install `ember-fetch`.
 
 ## Compatibility
 This addon is tested against the `release`, `beta`, and `canary` channels, as
