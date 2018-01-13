@@ -18,6 +18,7 @@ import { apolloObservableKey } from "ember-apollo-client";
 import QueryManager from "ember-apollo-client/apollo/query-manager";
 import copyWithExtras from "ember-apollo-client/utils/copy-with-extras";
 import { registerWaiter } from "@ember/test";
+import fetch from 'fetch';
 
 function newDataFunc(observable, resultKey, resolve, mergedProps = {}) {
   let obj;
@@ -115,6 +116,7 @@ export default Service.extend({
 
     const linkOptions = {
       uri: apiURL,
+      fetch
     }
     if (isPresent(requestCredentials)) {
       linkOptions.credentials = requestCredentials;
