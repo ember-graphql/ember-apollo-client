@@ -136,7 +136,7 @@ export default Service.extend({
           .then(result => {
             let dataToSend = isNone(resultKey)
               ? result.data
-              : result.data[resultKey];
+              : get(result.data, resultKey);
             dataToSend = copy(dataToSend, true);
             return resolve(dataToSend);
           })
@@ -235,7 +235,7 @@ export default Service.extend({
       this.client.query(opts).then(result => {
         let response = result.data;
         if (!isNone(resultKey)) {
-          response = response[resultKey];
+          response = get(response, resultKey);
         }
         return RSVP.resolve(copy(response, true));
       })
