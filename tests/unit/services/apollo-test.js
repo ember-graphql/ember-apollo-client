@@ -1,8 +1,6 @@
 import { moduleFor, test } from 'ember-qunit';
-import Ember from 'ember';
+import { computed } from '@ember/object';
 import ApolloService from 'ember-apollo-client/services/apollo';
-
-const { computed } = Ember;
 
 moduleFor('service:apollo', 'Unit | Service | apollo', {
   needs: ['config:environment'],

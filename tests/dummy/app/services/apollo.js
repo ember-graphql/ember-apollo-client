@@ -1,9 +1,8 @@
 import ApolloService from "ember-apollo-client/services/apollo";
-import Ember from "ember";
+import { computed } from "@ember/object";
+import { merge } from "@ember/polyfills";
 import { IntrospectionFragmentMatcher } from "apollo-client";
 import TypeIntrospectionQuery from "dummy/utils/graphql-type-query";
-
-const { computed, merge } = Ember;
 
 export default ApolloService.extend({
   clientOptions: computed(function() {

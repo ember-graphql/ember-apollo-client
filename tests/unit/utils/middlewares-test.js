@@ -1,8 +1,6 @@
 import middlewares from 'ember-apollo-client/utils/middlewares';
 import { module, test } from 'qunit';
-import Ember from 'ember';
-
-const { Object: EmberObject } = Ember;
+import EmberObject from '@ember/object';
 
 module('Unit | Utility | middlewares');
 
