@@ -1,8 +1,6 @@
+import EmberObject from '@ember/object';
 import { getObservable } from 'ember-apollo-client';
 import { module, test } from 'qunit';
-import Ember from 'ember';
-
-const { Object: EmberObject } = Ember;
 
 module('Unit | getObservable');
 

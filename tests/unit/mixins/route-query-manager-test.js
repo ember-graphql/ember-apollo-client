@@ -1,8 +1,7 @@
-import Ember from 'ember';
+import { getOwner } from '@ember/application';
+import EmberObject from '@ember/object';
 import RouteQueryManagerMixin from 'ember-apollo-client/mixins/route-query-manager';
 import { moduleFor, test } from 'ember-qunit';
-
-const { getOwner, Object: EmberObject } = Ember;
 
 moduleFor(
   'mixin:route-query-manager',

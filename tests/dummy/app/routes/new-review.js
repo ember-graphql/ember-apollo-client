@@ -1,10 +1,6 @@
-import Ember from 'ember';
+import Route from '@ember/routing/route';
+import EmberObject from '@ember/object';
 import mutation from 'dummy/gql/mutations/create-review';
-
-const {
-  Object: EmberObject,
-  Route
-} = Ember;
 
 export default Route.extend({
   model() {

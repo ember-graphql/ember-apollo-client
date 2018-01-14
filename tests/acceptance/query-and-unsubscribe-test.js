@@ -1,9 +1,8 @@
 import { test } from 'qunit';
 import moduleForAcceptance from '../../tests/helpers/module-for-acceptance';
 import { addResolveFunctionsToSchema } from 'graphql-tools';
-import Ember from 'ember';
+import { copy } from '@ember/object/internals';
 
-let { copy } = Ember;
 let application;
 
 moduleForAcceptance('Acceptance | main', {

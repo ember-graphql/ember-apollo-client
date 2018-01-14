@@ -1,9 +1,7 @@
 import { moduleFor, test } from 'ember-qunit';
-import Ember from 'ember';
+import { run } from '@ember/runloop';
 import { print } from 'graphql';
 import { stripIndent } from 'common-tags';
-
-const { run } = Ember;
 
 moduleFor('route:new-review', 'Unit | Route | new-review', {
   needs: ['service:apollo']

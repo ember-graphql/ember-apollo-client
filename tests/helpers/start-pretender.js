@@ -1,4 +1,4 @@
-import Ember from 'ember';
+import RSVP from 'rsvp'
 import Pretender from 'pretender';
 import { graphql } from 'graphql';
 import {
@@ -7,8 +7,6 @@ import {
   makeExecutableSchema,
 } from 'graphql-tools';
 import schemaString from '../fixtures/test-schema.graphql';
-
-const { RSVP } = Ember;
 
 const interfaceResolveType = {
   __resolveType(data) {
