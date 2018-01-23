@@ -22,7 +22,11 @@ by unsubscribing from watch queries.
 
 ## Installation
 
-* `ember install ember-apollo-client`
+```
+ember install ember-apollo-client
+```
+
+This should also automatically install `ember-fetch`.
 
 ## Compatibility
 This addon is tested against the `release`, `beta`, and `canary` channels, as
@@ -234,35 +238,6 @@ The `apollo` service has the following public API:
     }),
   });
   ```
-* `middlewares`: This computed property provides a list of [middlewares](http://dev.apollodata.com/core/network.html#networkInterfaceMiddleware) to the network interface. You can use the macro `middlewares` to create your middlewares:
-  ```js
-  import middlewares from "ember-apollo-client/utils/middlewares";
-
-  const OverriddenService = ApolloService.extend({
-    middlewares: middlewares("authorize"),
-
-    authorize(req, next) {
-      // Authorization logic
-      next();
-    }
-  });
-  ```
-
-  Or create them on your own:
-  ```js
-  const OverriddenService = ApolloService.extend({
-    middlewares: computed(function() {
-      return [
-        { applyMiddleware: (req, next) => this.authorize(req, next) }
-      ];
-    }),
-
-    authorize(req, next) {
-      // Authorization logic
-      next();
-    }
-  });
-  ```
 * `watchQuery(options, resultKey)`: This calls the
   [`ApolloClient.watchQuery`][watch-query] method. It returns a promise that
   resolves with an `Ember.Object`. That object will be updated whenever the
@@ -365,6 +340,7 @@ For more information on using ember-cli, visit [https://ember-cli.com/](https://
 
 A special thanks to the following contributors:
 
+* Michael Villander ([@villander](https://github.com/villander))
 * Dan Freeman ([@dfreeman](https://github.com/dfreeman))
 * Vinícius Sales ([@viniciussbs](https://github.com/viniciussbs))
 * Laurin Quast ([@n1ru4l](https://github.com/n1ru4l))
