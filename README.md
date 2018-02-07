@@ -243,6 +243,10 @@ The `apollo` service has the following public API:
 
     authorize(req, next) {
       // Authorization logic
+      if (!req.options.headers) {
+        req.options.headers = {};
+      }
+      req.options.headers.authorization = "Bearer my-actual-auth-token";
       next();
     }
   });
