@@ -42,7 +42,7 @@ The application built in the tutorial is also available on the [How To GraphQL r
 In your app's `config/environment.js`, configure the URL for the GraphQL API:
 
 ```js
-var ENV = {
+let ENV = {
   ...
   apollo: {
     apiURL: 'https://test.example/graphql',
@@ -94,11 +94,11 @@ mixin and `watchQuery`:
 
 `app/routes/some-route.js`
 ```js
-import Ember from "ember";
+import Route from "@ember/routing/route"
 import RouteQueryManager from "ember-apollo-client/mixins/route-query-manager";
 import query from "my-app/gql/queries/human";
 
-export default Ember.Route.extend(RouteQueryManager, {
+export default Route.extend(RouteQueryManager, {
   model(params) {
     let variables = { id: params.id };
     return this.apollo.watchQuery({ query, variables }, "human");
@@ -130,9 +130,10 @@ such as for pagination, you can retrieve it from a `watchQuery` result using
 `getObservable`:
 
 ```js
+import Route from "@ember/routing/route"
 import { getObservable } from "ember-apollo-client";
 
-export default Ember.Route.extend(RouteQueryManager, {
+export default Route.extend(RouteQueryManager, {
   model() {
     let result = this.apollo.watchQuery(...);
     let observable = getObservable(result);
@@ -178,14 +179,16 @@ mutation createReview($ep: Episode!, $review: ReviewInput!) {
 
 `app/routes/my-route.js`
 ```js
-import Ember from "ember";
+import Route from "@ember/routing/route";
+import { inject as service } from "@ember/service";
+import EmberObject from "@ember/object";
 import mutation from "my-app/gql/mutations/create-review";
 
-export default Ember.Route.extend({
-  apollo: Ember.inject.service(),
+export default Route.extend({
+  apollo: service(),
 
   model() {
-    return Ember.Object.create({});
+    return EmberObject.create({});
   },
 
   actions: {
