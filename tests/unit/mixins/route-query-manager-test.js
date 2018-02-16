@@ -32,8 +32,8 @@ test('it unsubscribes from any watchQuery subscriptions with isExiting=true', fu
     return {};
   });
 
-  subject.apollo.watchQuery({ query: 'fakeQuery' });
-  subject.apollo.watchQuery({ query: 'fakeQuery' });
+  subject.get('apollo').watchQuery({ query: 'fakeQuery' });
+  subject.get('apollo').watchQuery({ query: 'fakeQuery' });
 
   subject.beforeModel();
   subject.resetController({}, true);
@@ -61,11 +61,11 @@ test('it only unsubscribes from stale watchQuery subscriptions with isExiting=fa
     return {};
   });
 
-  subject.apollo.watchQuery({ query: 'fakeQuery' });
+  subject.get('apollo').watchQuery({ query: 'fakeQuery' });
 
   // simulate data being re-fetched, as when query params change
   subject.beforeModel();
-  subject.apollo.watchQuery({ query: 'fakeQuery' });
+  subject.get('apollo').watchQuery({ query: 'fakeQuery' });
 
   subject.resetController({}, false);
   assert.equal(
@@ -93,8 +93,8 @@ test('it unsubscribes from any watchQuery subscriptions on willDestroy', functio
     return {};
   });
 
-  subject.apollo.watchQuery({ query: 'fakeQuery' });
-  subject.apollo.watchQuery({ query: 'fakeQuery' });
+  subject.get('apollo').watchQuery({ query: 'fakeQuery' });
+  subject.get('apollo').watchQuery({ query: 'fakeQuery' });
 
   subject.beforeModel();
   subject.willDestroy();
