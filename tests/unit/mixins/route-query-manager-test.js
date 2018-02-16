@@ -93,8 +93,8 @@ test('it unsubscribes from any watchQuery subscriptions on willDestroy', functio
     return {};
   });
 
-  subject.apollo.watchQuery({ query: 'fakeQuery' });
-  subject.apollo.watchQuery({ query: 'fakeQuery' });
+  subject.get('apollo').watchQuery({ query: 'fakeQuery' });
+  subject.get('apollo').watchQuery({ query: 'fakeQuery' });
 
   subject.beforeModel();
   subject.willDestroy();

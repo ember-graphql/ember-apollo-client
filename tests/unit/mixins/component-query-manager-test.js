@@ -31,8 +31,8 @@ test('it unsubscribes from any watchQuery subscriptions', function(assert) {
     return {};
   });
 
-  subject.apollo.watchQuery({ query: 'fakeQuery' });
-  subject.apollo.watchQuery({ query: 'fakeQuery' });
+  subject.get('apollo').watchQuery({ query: 'fakeQuery' });
+  subject.get('apollo').watchQuery({ query: 'fakeQuery' });
 
   subject.willDestroyElement();
   assert.equal(
