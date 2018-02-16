@@ -45,7 +45,7 @@ test('visiting /luke', function(assert) {
     assert.equal(currentURL(), '/luke');
     assert.equal(find('.model-name').text(), 'Luke Skywalker');
 
-    // try updating the mock, refetching the result (w/ queryOnce), and ensuring
+    // try updating the mock, refetching the result (w/ query), and ensuring
     // that there are no errors:
     human.name = 'Lucas Skywalker';
     click('.refetch-button');

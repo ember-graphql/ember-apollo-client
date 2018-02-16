@@ -182,30 +182,6 @@ export default Service.extend({
    * the resolved data when the route or component is torn down. That tells
    * Apollo to stop trying to send updated data to a non-existent listener.
    *
-   * @method query
-   * @param {!Object} opts The query options used in the Apollo Client watchQuery.
-   * @param {String} resultKey The key that will be returned from the resulting response data. If null or undefined, the entire response data will be returned.
-   * @deprecated Use `watchQuery` instead.
-   * @return {!Promise}
-   * @public
-   */
-  query(opts, resultKey) {
-    deprecate(`Usage of \`query\` is deprecated, use \`watchQuery\` instead.`, false, {
-      id: 'ember-apollo-client.deprecate-query-for-watch-query',
-      until: '1.0.0',
-    });
-    return this.watchQuery(opts, resultKey);
-  },
-
-  /**
-   * Executes a `watchQuery` on the Apollo client. If updated data for this
-   * query is loaded into the store by another query, the resolved object will
-   * be updated with the new data.
-   *
-   * When using this method, it is important to call `apolloUnsubscribe()` on
-   * the resolved data when the route or component is torn down. That tells
-   * Apollo to stop trying to send updated data to a non-existent listener.
-   *
    * @method watchQuery
    * @param {!Object} opts The query options used in the Apollo Client watchQuery.
    * @param {String} resultKey The key that will be returned from the resulting response data. If null or undefined, the entire response data will be returned.
@@ -240,13 +216,13 @@ export default Service.extend({
    * Executes a single `query` on the Apollo client. The resolved object will
    * never be updated and does not have to be unsubscribed.
    *
-   * @method queryOnce
+   * @method query
    * @param {!Object} opts The query options used in the Apollo Client query.
    * @param {String} resultKey The key that will be returned from the resulting response data. If null or undefined, the entire response data will be returned.
    * @return {!Promise}
    * @public
    */
-  queryOnce(opts, resultKey) {
+  query(opts, resultKey) {
     return this._waitFor(
       this.client.query(opts).then(result => {
         let response = result.data;
