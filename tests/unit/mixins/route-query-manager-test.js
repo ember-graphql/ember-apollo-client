@@ -32,8 +32,8 @@ test('it unsubscribes from any watchQuery subscriptions with isExiting=true', fu
     return {};
   });
 
-  subject.apollo.watchQuery({ query: 'fakeQuery' });
-  subject.apollo.watchQuery({ query: 'fakeQuery' });
+  subject.get('apollo').watchQuery({ query: 'fakeQuery' });
+  subject.get('apollo').watchQuery({ query: 'fakeQuery' });
 
   subject.beforeModel();
   subject.resetController({}, true);
