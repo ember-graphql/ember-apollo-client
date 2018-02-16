@@ -6,7 +6,7 @@ const variables = { id: '1000' };
 
 export default Route.extend(RouteQueryManager, {
   model() {
-    return this.apollo.watchQuery({
+    return this.get('apollo').watchQuery({
       query,
       variables,
       fetchPolicy: 'cache-and-network',
@@ -15,7 +15,7 @@ export default Route.extend(RouteQueryManager, {
 
   actions: {
     refetchModel() {
-      this.apollo.query({
+      this.get('apollo').query({
         query,
         variables,
         fetchPolicy: 'network-only',

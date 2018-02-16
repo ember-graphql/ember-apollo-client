@@ -22,7 +22,11 @@ by unsubscribing from watch queries.
 
 ## Installation
 
-* `ember install ember-apollo-client`
+```
+ember install ember-apollo-client
+```
+
+This should also automatically install `ember-fetch`.
 
 ## Compatibility
 This addon is tested against the `release`, `beta`, and `canary` channels, as
@@ -38,7 +42,7 @@ The application built in the tutorial is also available on the [How To GraphQL r
 In your app's `config/environment.js`, configure the URL for the GraphQL API:
 
 ```js
-var ENV = {
+let ENV = {
   ...
   apollo: {
     apiURL: 'https://test.example/graphql',
@@ -90,11 +94,11 @@ mixin and `watchQuery`:
 
 `app/routes/some-route.js`
 ```js
-import Ember from "ember";
+import Route from "@ember/routing/route";
 import RouteQueryManager from "ember-apollo-client/mixins/route-query-manager";
 import query from "my-app/gql/queries/human";
 
-export default Ember.Route.extend(RouteQueryManager, {
+export default Route.extend(RouteQueryManager, {
   model(params) {
     let variables = { id: params.id };
     return this.apollo.watchQuery({ query, variables }, "human");
@@ -126,9 +130,10 @@ such as for pagination, you can retrieve it from a `watchQuery` result using
 `getObservable`:
 
 ```js
+import Route from "@ember/routing/route";
 import { getObservable } from "ember-apollo-client";
 
-export default Ember.Route.extend(RouteQueryManager, {
+export default Route.extend(RouteQueryManager, {
   model() {
     let result = this.apollo.watchQuery(...);
     let observable = getObservable(result);
@@ -174,14 +179,16 @@ mutation createReview($ep: Episode!, $review: ReviewInput!) {
 
 `app/routes/my-route.js`
 ```js
-import Ember from "ember";
+import Route from "@ember/routing/route";
+import { inject as service } from "@ember/service";
+import EmberObject from "@ember/object";
 import mutation from "my-app/gql/mutations/create-review";
 
-export default Ember.Route.extend({
-  apollo: Ember.inject.service(),
+export default Route.extend({
+  apollo: service(),
 
   model() {
-    return Ember.Object.create({});
+    return EmberObject.create({});
   },
 
   actions: {
@@ -227,40 +234,67 @@ The `apollo` service has the following public API:
   ```js
   const OverriddenService = ApolloService.extend({
     clientOptions: computed(function() {
-      let opts = this._super(...arguments);
-      return merge(opts, {
-        dataIdFromObject: customDataIdFromObject
+      return {
+        link: this.get("link"),
+        cache: this.get("cache"),
+      };
+    }),
+  });
+  ```
+* `link`: This computed property provides a list of [middlewares and afterwares](https://www.apollographql.com/docs/react/basics/network-layer.html#network-interfaces) to the [Apollo Link](https://www.apollographql.com/docs/link/) the interface for fetching and modifying control flow of GraphQL requests. To create your middlewares:
+  ```js
+    link: computed(function() {
+      let httpLink = this._super(...arguments);
+
+      let authMiddleware = setContext(async request => {
+        if (!token) {
+          token = await localStorage.getItem('token') || null;
+        }
+        return {
+          headers: {
+            authorization: token
+          }
+        };
       });
+
+      return authMiddleware.concat(httpLink);
     }),
-  });
-  ```
-* `middlewares`: This computed property provides a list of [middlewares](http://dev.apollodata.com/core/network.html#networkInterfaceMiddleware) to the network interface. You can use the macro `middlewares` to create your middlewares:
-  ```js
-  import middlewares from "ember-apollo-client/utils/middlewares";
-
-  const OverriddenService = ApolloService.extend({
-    middlewares: middlewares("authorize"),
-
-    authorize(req, next) {
-      // Authorization logic
-      next();
-    }
-  });
   ```
 
-  Or create them on your own:
+  Example with ESA:
   ```js
+  import { computed } from "@ember/object";
+  import { inject as service } from "@ember/service";
+  import ApolloService from "ember-apollo-client/services/apollo";
+  import { setContext } from "apollo-link-context";
+  import { Promise as RSVPPromise } from "rsvp";
+
   const OverriddenService = ApolloService.extend({
-    middlewares: computed(function() {
-      return [
-        { applyMiddleware: (req, next) => this.authorize(req, next) }
-      ];
+    session: service(),
+
+    link: computed(function() {
+      let httpLink = this._super(...arguments);
+
+      let authLink = setContext((request, context) => {
+        return this._runAuthorize(request, context);
+      });
+      return authLink.concat(httpLink);
     }),
 
-    authorize(req, next) {
-      // Authorization logic
-      next();
-    }
+    _runAuthorize() {
+      if (!this.get("session.isAuthenticated")) {
+        return {};
+      }
+      return new RSVPPromise(success => {
+        this.get(
+          "session"
+        ).authorize("authorizer:oauth2", (headerName, headerContent) => {
+          let headers = {};
+          headers[headerName] = headerContent;
+          success({ headers });
+        });
+      });
+    },
   });
   ```
 * `watchQuery(options, resultKey)`: This calls the
@@ -271,7 +305,7 @@ The `apollo` service has the following public API:
 
   When using this method, **it is important to [unsubscribe][unsubscribing]**
   from the query when you're done with it.
-* `queryOnce(options, resultKey)`: This calls the
+* `query(options, resultKey)`: This calls the
   [`ApolloClient.query`](http://dev.apollodata.com/core/apollo-client-api.html#ApolloClient\.query)
   method. It returns a promise that resolves with the raw POJO data that the
   query returns. If you provide a `resultKey`, the resolved data is grabbed from
@@ -304,10 +338,10 @@ a base route class:
 
 `app/routes/base.js`
 ```js
-import Ember from "ember";
+import Route from "@ember/routing/route";
 import RouteQueryManager from "ember-apollo-client/mixins/route-query-manager";
 
-export default Ember.Route.extend(RouteQueryManager);
+export default Route.extend(RouteQueryManager);
 ```
 
 Then extend from that in your other routes:
@@ -320,6 +354,23 @@ export default Base.extend(
   ...
 )
 ```
+
+
+### Use with Fastboot
+Ember Apollo Client works with FastBoot out of the box as long that SSR is enabled. In order to enable SSR, define it on apollo service:
+
+Example:
+```js
+  const OverriddenService = ApolloService.extend({
+    clientOptions: computed(function() {
+      return {
+        ssrMode: true,
+        link: this.get("link"),
+        cache: this.get("cache"),
+      };
+    }),
+  });
+  ```
 
 ### Testing
 
@@ -365,6 +416,7 @@ For more information on using ember-cli, visit [https://ember-cli.com/](https://
 
 A special thanks to the following contributors:
 
+* Michael Villander ([@villander](https://github.com/villander))
 * Dan Freeman ([@dfreeman](https://github.com/dfreeman))
 * Vinícius Sales ([@viniciussbs](https://github.com/viniciussbs))
 * Laurin Quast ([@n1ru4l](https://github.com/n1ru4l))

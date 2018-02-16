@@ -30,14 +30,14 @@ export default EmberObject.extend({
    * Executes a single `query` on the Apollo service. The resolved object will
    * never be updated and does not have to be unsubscribed.
    *
-   * @method queryOnce
+   * @method query
    * @param {!Object} opts The query options used in the Apollo Client query.
    * @param {String} resultKey The key that will be returned from the resulting response data. If null or undefined, the entire response data will be returned.
    * @return {!Promise}
    * @public
    */
   query(opts, resultKey) {
-    return this.get('apollo').queryOnce(opts, resultKey);
+    return this.get('apollo').query(opts, resultKey);
   },
 
   /**

@@ -45,7 +45,7 @@ test('visiting /luke', function(assert) {
     assert.equal(currentURL(), '/luke');
     assert.equal(find('.model-name').text(), 'Luke Skywalker');
 
-    // try updating the mock, refetching the result (w/ queryOnce), and ensuring
+    // try updating the mock, refetching the result (w/ query), and ensuring
     // that there are no errors:
     human.name = 'Lucas Skywalker';
     click('.refetch-button');
@@ -60,9 +60,9 @@ test('visiting /luke', function(assert) {
       visit('/new-review');
 
       andThen(function() {
-        // Now that we've gone to a route with no queries, the
-        // UnsubscribeRouteMixin should have unsubscribed from the watcyQuery andThen
-        // there should be no ongoing queries:
+        // Now that we've gone to a route with no queries, the RouteQueryManager
+        // should have unsubscribed from the watchQuery and there should be no
+        // ongoing queries:
         let queries = getQueries();
         assert.notOk(
           Object.keys(queries).length,
