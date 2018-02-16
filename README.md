@@ -305,7 +305,7 @@ The `apollo` service has the following public API:
 
   When using this method, **it is important to [unsubscribe][unsubscribing]**
   from the query when you're done with it.
-* `queryOnce(options, resultKey)`: This calls the
+* `query(options, resultKey)`: This calls the
   [`ApolloClient.query`](http://dev.apollodata.com/core/apollo-client-api.html#ApolloClient\.query)
   method. It returns a promise that resolves with the raw POJO data that the
   query returns. If you provide a `resultKey`, the resolved data is grabbed from
