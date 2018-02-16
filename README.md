@@ -94,7 +94,7 @@ mixin and `watchQuery`:
 
 `app/routes/some-route.js`
 ```js
-import Route from "@ember/routing/route"
+import Route from "@ember/routing/route";
 import RouteQueryManager from "ember-apollo-client/mixins/route-query-manager";
 import query from "my-app/gql/queries/human";
 
@@ -130,7 +130,7 @@ such as for pagination, you can retrieve it from a `watchQuery` result using
 `getObservable`:
 
 ```js
-import Route from "@ember/routing/route"
+import Route from "@ember/routing/route";
 import { getObservable } from "ember-apollo-client";
 
 export default Route.extend(RouteQueryManager, {
@@ -234,11 +234,67 @@ The `apollo` service has the following public API:
   ```js
   const OverriddenService = ApolloService.extend({
     clientOptions: computed(function() {
-      let opts = this._super(...arguments);
-      return merge(opts, {
-        dataIdFromObject: customDataIdFromObject
-      });
+      return {
+        link: this.get("link"),
+        cache: this.get("cache"),
+      };
     }),
+  });
+  ```
+* `link`: This computed property provides a list of [middlewares and afterwares](https://www.apollographql.com/docs/react/basics/network-layer.html#network-interfaces) to the [Apollo Link](https://www.apollographql.com/docs/link/) the interface for fetching and modifying control flow of GraphQL requests. To create your middlewares:
+  ```js
+    link: computed(function() {
+      let httpLink = this._super(...arguments);
+
+      let authMiddleware = setContext(async request => {
+        if (!token) {
+          token = await localStorage.getItem('token') || null;
+        }
+        return {
+          headers: {
+            authorization: token
+          }
+        };
+      });
+
+      return authMiddleware.concat(httpLink);
+    }),
+  ```
+
+  Example with ESA:
+  ```js
+  import { computed } from "@ember/object";
+  import { inject as service } from "@ember/service";
+  import ApolloService from "ember-apollo-client/services/apollo";
+  import { setContext } from "apollo-link-context";
+  import { Promise as RSVPPromise } from "rsvp";
+
+  const OverriddenService = ApolloService.extend({
+    session: service(),
+
+    link: computed(function() {
+      let httpLink = this._super(...arguments);
+
+      let authLink = setContext((request, context) => {
+        return this._runAuthorize(request, context);
+      });
+      return authLink.concat(httpLink);
+    }),
+
+    _runAuthorize() {
+      if (!this.get("session.isAuthenticated")) {
+        return {};
+      }
+      return new RSVPPromise(success => {
+        this.get(
+          "session"
+        ).authorize("authorizer:oauth2", (headerName, headerContent) => {
+          let headers = {};
+          headers[headerName] = headerContent;
+          success({ headers });
+        });
+      });
+    },
   });
   ```
 * `watchQuery(options, resultKey)`: This calls the
@@ -282,10 +338,10 @@ a base route class:
 
 `app/routes/base.js`
 ```js
-import Ember from "ember";
+import Route from "@ember/routing/route";
 import RouteQueryManager from "ember-apollo-client/mixins/route-query-manager";
 
-export default Ember.Route.extend(RouteQueryManager);
+export default Route.extend(RouteQueryManager);
 ```
 
 Then extend from that in your other routes:
@@ -298,6 +354,23 @@ export default Base.extend(
   ...
 )
 ```
+
+
+### Use with Fastboot
+Ember Apollo Client works with FastBoot out of the box as long that SSR is enabled. In order to enable SSR, define it on apollo service:
+
+Example:
+```js
+  const OverriddenService = ApolloService.extend({
+    clientOptions: computed(function() {
+      return {
+        ssrMode: true,
+        link: this.get("link"),
+        cache: this.get("cache"),
+      };
+    }),
+  });
+  ```
 
 ### Testing
 
