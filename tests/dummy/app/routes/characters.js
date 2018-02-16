@@ -10,6 +10,6 @@ export default Route.extend(RouteQueryManager, {
   },
 
   model(variables) {
-    return this.apollo.watchQuery({ query, variables }, 'characters');
+    return this.get('apollo').watchQuery({ query, variables }, 'characters');
   }
 });
