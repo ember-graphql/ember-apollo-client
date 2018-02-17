@@ -253,11 +253,12 @@ The `apollo` service has the following public API:
     }),
   });
   ```
-* `link`: This computed property provides a list of [middlewares and afterwares](https://www.apollographql.com/docs/react/basics/network-layer.html#network-interfaces) to the [Apollo Link](https://www.apollographql.com/docs/link/) the interface for fetching and modifying control flow of GraphQL requests. To create your middlewares:
+* `link`: This computed property provides a list of [middlewares and afterwares](https://www.apollographql.com/docs/react/basics/network-layer.html#network-interfaces) to the [Apollo Link](https://www.apollographql.com/docs/link/) the interface for fetching and modifying control flow of GraphQL requests. To create your middlewares/afterwares:
   ```js
     link: computed(function() {
       let httpLink = this._super(...arguments);
 
+      // Middleware
       let authMiddleware = setContext(async request => {
         if (!token) {
           token = await localStorage.getItem('token') || null;
@@ -269,7 +270,17 @@ The `apollo` service has the following public API:
         };
       });
 
-      return authMiddleware.concat(httpLink);
+      // Afterware
+      const resetToken = onError(({ networkError }) => {
+        if (networkError && networkError.statusCode === 401) {
+          // remove cached token on 401 from the server
+          token = undefined;
+        }
+      });
+
+      const authFlowLink = authMiddleware.concat(resetToken);
+
+      return authFlowLink.concat(httpLink);
     }),
   ```
 
