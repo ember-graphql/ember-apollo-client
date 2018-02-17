@@ -111,13 +111,10 @@ export default Service.extend({
   }),
 
   link: computed(function() {
-    let apiURL = this.get('apiURL');
+    let uri = this.get('apiURL');
     let requestCredentials = this.get('requestCredentials');
+    const linkOptions = { uri, fetch };
 
-    const linkOptions = {
-      uri: apiURL,
-      fetch
-    }
     if (isPresent(requestCredentials)) {
       linkOptions.credentials = requestCredentials;
     }
@@ -128,6 +125,7 @@ export default Service.extend({
       deprecate(`The \`middlewares\` option is deprecated, override \`link\` instead.`, false, {
         id: 'ember-apollo-client.deprecate-middlewares-for-link',
         until: '1.0.0',
+        url: 'https://github.com/apollographql/apollo-client/blob/master/docs/source/2.0-migration.md#network-middleware-and-afterware'
       });
     }
 
