@@ -41,8 +41,10 @@ This should also automatically install `ember-fetch`.
 Install the [Apollo Client Developer tools for Chrome](https://chrome.google.com/webstore/detail/apollo-client-developer-t/jdkknkkbebbapilgoeccciglkfbmbnfm) for a great GraphQL developer experience!
 
 ## Compatibility
-This addon is tested against the `release`, `beta`, and `canary` channels, as
-well as the latest two LTS releases.
+This addon works and is fully tested with:
+
+* Ember.js 2.12+
+* FastBoot 1.0+
 
 ## Example App
 If you are looking for a full tutorial using `ember-apollo-client` check out the tutorial on [How To GraphQL](https://howtographql.com), written by [DevanB](https://github.com/DevanB).
