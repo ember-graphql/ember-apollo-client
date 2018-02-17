@@ -7,6 +7,11 @@
 This addon exposes the following dependencies to an ember application:
 
 * [apollo-client][apollo-client]
+* [apollo-cache][apollo-cache]
+* [apollo-cache-inmemory][apollo-cache-inmemory]
+* [apollo-link][apollo-link]
+* [apollo-link-context][apollo-link-context]
+* [apollo-link-http][apollo-link-http]
 * [graphql][graphql-repo]
 * [graphql-tag][graphql-tag-repo]
 * [graphql-tools][graphql-tools-repo]
@@ -19,6 +24,11 @@ by unsubscribing from watch queries.
 [graphql-repo]: https://github.com/graphql/graphql-js "GraphQL"
 [graphql-tag-repo]: https://github.com/apollostack/graphql-tag "graphql-tag"
 [graphql-tools-repo]: https://github.com/apollostack/graphql-tools "graphql-tools"
+[apollo-cache]: https://www.npmjs.com/package/apollo-cache
+[apollo-cache-inmemory]: https://www.npmjs.com/package/apollo-cache-inmemory
+[apollo-link]: https://github.com/apollographql/apollo-link
+[apollo-link-context]: https://www.npmjs.com/package/apollo-link-context
+[apollo-link-http]: https://www.npmjs.com/package/apollo-link-http
 
 ## Installation
 
@@ -27,6 +37,8 @@ ember install ember-apollo-client
 ```
 
 This should also automatically install `ember-fetch`.
+
+Install the [Apollo Client Developer tools for Chrome](https://chrome.google.com/webstore/detail/apollo-client-developer-t/jdkknkkbebbapilgoeccciglkfbmbnfm) for a great GraphQL developer experience!
 
 ## Compatibility
 This addon is tested against the `release`, `beta`, and `canary` channels, as
