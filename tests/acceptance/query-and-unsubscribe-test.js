@@ -1,5 +1,5 @@
 import { module, test } from 'qunit';
-import { setupApplicationTest } from 'ember-qunit';
+import { setupApplicationTest } from "dummy/tests/helpers/setup";
 import { addResolveFunctionsToSchema } from 'graphql-tools';
 import { copy } from '@ember/object/internals';
 import { click, currentURL, find, visit } from "@ember/test-helpers";
