@@ -1,107 +1,106 @@
-import { getOwner } from '@ember/application';
 import EmberObject from '@ember/object';
 import RouteQueryManagerMixin from 'ember-apollo-client/mixins/route-query-manager';
-import { moduleFor, test } from 'ember-qunit';
+import { module, test } from 'qunit';
+import { setupTest } from 'ember-qunit';
 
-moduleFor(
-  'mixin:route-query-manager',
-  'Unit | Mixin | route query manager',
-  {
-    needs: ['config:environment', 'service:apollo'],
-    subject() {
+module('Unit | Mixin | route query manager', function(hooks) {
+  setupTest(hooks);
+
+  hooks.beforeEach(function() {
+    this.subject = function() {
       let TestObject = EmberObject.extend(RouteQueryManagerMixin);
-      this.register('test-container:test-object', TestObject);
-      return getOwner(this).lookup('test-container:test-object');
-    },
-  }
-);
-
-test('it unsubscribes from any watchQuery subscriptions with isExiting=true', function(assert) {
-  let done = assert.async();
-  let subject = this.subject();
-  let unsubscribeCalled = 0;
-
-  let apolloService = subject.get('apollo.apollo');
-  apolloService.set('managedWatchQuery', (manager, opts) => {
-    assert.deepEqual(opts, { query: 'fakeQuery' });
-    manager.trackSubscription({
-      unsubscribe() {
-        unsubscribeCalled++;
-      },
-    });
-    return {};
+      this.owner.register('test-container:test-object', TestObject);
+      return this.owner.lookup('test-container:test-object');
+    };
   });
 
-  subject.get('apollo').watchQuery({ query: 'fakeQuery' });
-  subject.get('apollo').watchQuery({ query: 'fakeQuery' });
+  test('it unsubscribes from any watchQuery subscriptions with isExiting=true', function(assert) {
+    let done = assert.async();
+    let subject = this.subject();
+    let unsubscribeCalled = 0;
 
-  subject.beforeModel();
-  subject.resetController({}, true);
-  assert.equal(
-    unsubscribeCalled,
-    2,
-    '_apolloUnsubscribe() was called once per watchQuery'
-  );
-  done();
-});
-
-test('it only unsubscribes from stale watchQuery subscriptions with isExiting=false', function(assert) {
-  let done = assert.async();
-  let subject = this.subject();
-  let unsubscribeCalled = 0;
-
-  let apolloService = subject.get('apollo.apollo');
-  apolloService.set('managedWatchQuery', (manager, opts) => {
-    assert.deepEqual(opts, { query: 'fakeQuery' });
-    manager.trackSubscription({
-      unsubscribe() {
-        unsubscribeCalled++;
-      },
+    let apolloService = subject.get('apollo.apollo');
+    apolloService.set('managedWatchQuery', (manager, opts) => {
+      assert.deepEqual(opts, { query: 'fakeQuery' });
+      manager.trackSubscription({
+        unsubscribe() {
+          unsubscribeCalled++;
+        },
+      });
+      return {};
     });
-    return {};
+
+    subject.get('apollo').watchQuery({ query: 'fakeQuery' });
+    subject.get('apollo').watchQuery({ query: 'fakeQuery' });
+
+    subject.beforeModel();
+    subject.resetController({}, true);
+    assert.equal(
+      unsubscribeCalled,
+      2,
+      '_apolloUnsubscribe() was called once per watchQuery'
+    );
+    done();
   });
 
-  subject.get('apollo').watchQuery({ query: 'fakeQuery' });
+  test('it only unsubscribes from stale watchQuery subscriptions with isExiting=false', function(assert) {
+    let done = assert.async();
+    let subject = this.subject();
+    let unsubscribeCalled = 0;
 
-  // simulate data being re-fetched, as when query params change
-  subject.beforeModel();
-  subject.get('apollo').watchQuery({ query: 'fakeQuery' });
-
-  subject.resetController({}, false);
-  assert.equal(
-    unsubscribeCalled,
-    1,
-    '_apolloUnsubscribe() was called only once, for the first query',
-  );
-  done();
-});
-
-
-test('it unsubscribes from any watchQuery subscriptions on willDestroy', function(assert) {
-  let done = assert.async();
-  let subject = this.subject();
-  let unsubscribeCalled = 0;
-
-  let apolloService = subject.get('apollo.apollo');
-  apolloService.set('managedWatchQuery', (manager, opts) => {
-    assert.deepEqual(opts, { query: 'fakeQuery' });
-    manager.trackSubscription({
-      unsubscribe() {
-        unsubscribeCalled++;
-      },
+    let apolloService = subject.get('apollo.apollo');
+    apolloService.set('managedWatchQuery', (manager, opts) => {
+      assert.deepEqual(opts, { query: 'fakeQuery' });
+      manager.trackSubscription({
+        unsubscribe() {
+          unsubscribeCalled++;
+        },
+      });
+      return {};
     });
-    return {};
+
+    subject.get('apollo').watchQuery({ query: 'fakeQuery' });
+
+    // simulate data being re-fetched, as when query params change
+    subject.beforeModel();
+    subject.get('apollo').watchQuery({ query: 'fakeQuery' });
+
+    subject.resetController({}, false);
+    assert.equal(
+      unsubscribeCalled,
+      1,
+      '_apolloUnsubscribe() was called only once, for the first query',
+    );
+    done();
   });
 
-  subject.get('apollo').watchQuery({ query: 'fakeQuery' });
-  subject.get('apollo').watchQuery({ query: 'fakeQuery' });
 
-  subject.beforeModel();
-  subject.willDestroy();
-  assert.equal(
-    unsubscribeCalled,
-    2,
-    '_apolloUnsubscribe() was called once per watchQuery'
-  );
-  done();
+  test('it unsubscribes from any watchQuery subscriptions on willDestroy', function(assert) {
+    let done = assert.async();
+    let subject = this.subject();
+    let unsubscribeCalled = 0;
+
+    let apolloService = subject.get('apollo.apollo');
+    apolloService.set('managedWatchQuery', (manager, opts) => {
+      assert.deepEqual(opts, { query: 'fakeQuery' });
+      manager.trackSubscription({
+        unsubscribe() {
+          unsubscribeCalled++;
+        },
+      });
+      return {};
+    });
+
+    subject.get('apollo').watchQuery({ query: 'fakeQuery' });
+    subject.get('apollo').watchQuery({ query: 'fakeQuery' });
+
+    subject.beforeModel();
+    subject.willDestroy();
+    assert.equal(
+      unsubscribeCalled,
+      2,
+      '_apolloUnsubscribe() was called once per watchQuery'
+    );
+    done();
+  });
 });
