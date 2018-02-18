@@ -1,0 +1,35 @@
+ {
+   schema: {
+     files: 'tests/fixtures/test-schema.graphql'
+   },
+   query: {
+     files: [
+       // query gql files
+       {
+         match: 'app/gql/**/*.graphql',
+         parser: 'QueryParser',
+         // required until fragment imports work: https://github.com/Mayank1791989/gql/issues/3
+         validate: {
+           extends: "gql-rules-query",
+           rules: {
+             KnownFragmentNames: "off",
+             NoUnusedFragments: "off"
+           }
+         }
+       },
+       // [Embedded queries] gql tag files
+       {
+         match: { include: 'app/**/*.js' },
+         parser: [ 'EmbeddedQueryParser', { startTag: 'gql`', endTag: '`' } ],
+         // required until fragment imports work: https://github.com/Mayank1791989/gql/issues/3
+         validate: {
+           extends: "gql-rules-query",
+           rules: {
+             KnownFragmentNames: "off",
+             NoUnusedFragments: "off"
+           }
+         }
+       },
+     ],
+   },
+ }
