@@ -6,7 +6,7 @@ import {
   addResolveFunctionsToSchema,
   makeExecutableSchema,
 } from 'graphql-tools';
-import schemaString from '../fixtures/test-schema.graphql';
+import schemaString from '../fixtures/test-schema';
 
 const interfaceResolveType = {
   __resolveType(data) {
