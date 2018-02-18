@@ -380,7 +380,6 @@ export default Base.extend(
 )
 ```
 
-
 ### Use with Fastboot
 Ember Apollo Client works with FastBoot out of the box as long that SSR is enabled. In order to enable SSR, define it on apollo service:
 
@@ -437,20 +436,21 @@ The tests also contain a sample Star Wars GraphQL schema with an
 * `cd ember-apollo-client`
 * `yarn install`
 
-### Running
+### Linting
+
+* `yarn run lint:js`
+* `yarn run lint:js -- --fix`
+
+### Running tests
+
+* `ember test` – Runs the test suite on the current Ember version
+* `ember test --server` – Runs the test suite in "watch mode"
+* `yarn test` – Runs `ember try:each` to test your addon against multiple Ember versions
+
+### Running the dummy application
 
 * `ember serve`
-* Visit your app at [http://localhost:4200](http://localhost:4200).
-
-### Running Tests
-
-* `yarn test` (Runs `ember try:each` to test your addon against multiple Ember versions)
-* `ember test`
-* `ember test --server`
-
-### Building
-
-* `ember build`
+* Visit the dummy application at [http://localhost:4200](http://localhost:4200).
 
 For more information on using ember-cli, visit [https://ember-cli.com/](https://ember-cli.com/).
 
@@ -471,3 +471,7 @@ A special thanks to the following contributors:
 [query-manager-api]: #query-manager-api
 [unsubscribing]: #unsubscribing-from-watch-queries
 [watch-query]: http://dev.apollodata.com/core/apollo-client-api.html#ApolloClient\.watchQuery
+
+## License
+
+This project is licensed under the [MIT License](LICENSE.md).
