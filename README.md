@@ -396,6 +396,23 @@ Example:
     }),
   });
   ```
+Since you only want to fetch each query result once, pass the `ssrMode: true` option to the Apollo Client constructor to avoid repeated force-fetching.
+
+#### Skipping queries for SSR
+If you want to intentionally skip a query during SSR, you can pass `ssr: false` in the query options. Typically, this will mean the component will get rendered in its loading state on the server. For example:
+
+```js
+actions: {
+  refetchModel() {
+    this.get('apollo').query({
+      query,
+      variables,
+      // Don't run this query on the server
+      ssr: false
+    });
+  }
+}
+```
 
 ### Testing
 
@@ -447,7 +464,7 @@ A special thanks to the following contributors:
 * Laurin Quast ([@n1ru4l](https://github.com/n1ru4l))
 * Elias Balafoutis ([@balaf](https://github.com/balaf))
 
-[ac-constructor]: http://dev.apollodata.com/core/apollo-client-api.html#ApolloClient\.constructor
+[ac-constructor]: https://www.apollographql.com/docs/react/reference/index.html#ApolloClientOptions
 [apollo-client]: https://github.com/apollostack/apollo-client
 [apollo-service-api]: #apollo-service-api
 [observable-query]: http://dev.apollodata.com/core/apollo-client-api.html#ObservableQuery
