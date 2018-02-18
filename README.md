@@ -41,8 +41,10 @@ This should also automatically install `ember-fetch`.
 Install the [Apollo Client Developer tools for Chrome](https://chrome.google.com/webstore/detail/apollo-client-developer-t/jdkknkkbebbapilgoeccciglkfbmbnfm) for a great GraphQL developer experience!
 
 ## Compatibility
-This addon is tested against the `release`, `beta`, and `canary` channels, as
-well as the latest two LTS releases.
+This addon works and is fully tested with:
+
+* Ember.js 2.12+
+* FastBoot 1.0+
 
 ## Example App
 If you are looking for a full tutorial using `ember-apollo-client` check out the tutorial on [How To GraphQL](https://howtographql.com), written by [DevanB](https://github.com/DevanB).
@@ -253,11 +255,12 @@ The `apollo` service has the following public API:
     }),
   });
   ```
-* `link`: This computed property provides a list of [middlewares and afterwares](https://www.apollographql.com/docs/react/basics/network-layer.html#network-interfaces) to the [Apollo Link](https://www.apollographql.com/docs/link/) the interface for fetching and modifying control flow of GraphQL requests. To create your middlewares:
+* `link`: This computed property provides a list of [middlewares and afterwares](https://www.apollographql.com/docs/react/basics/network-layer.html#network-interfaces) to the [Apollo Link](https://www.apollographql.com/docs/link/) the interface for fetching and modifying control flow of GraphQL requests. To create your middlewares/afterwares:
   ```js
     link: computed(function() {
       let httpLink = this._super(...arguments);
 
+      // Middleware
       let authMiddleware = setContext(async request => {
         if (!token) {
           token = await localStorage.getItem('token') || null;
@@ -269,7 +272,17 @@ The `apollo` service has the following public API:
         };
       });
 
-      return authMiddleware.concat(httpLink);
+      // Afterware
+      const resetToken = onError(({ networkError }) => {
+        if (networkError && networkError.statusCode === 401) {
+          // remove cached token on 401 from the server
+          token = undefined;
+        }
+      });
+
+      const authFlowLink = authMiddleware.concat(resetToken);
+
+      return authFlowLink.concat(httpLink);
     }),
   ```
 
@@ -383,6 +396,23 @@ Example:
     }),
   });
   ```
+Since you only want to fetch each query result once, pass the `ssrMode: true` option to the Apollo Client constructor to avoid repeated force-fetching.
+
+#### Skipping queries for SSR
+If you want to intentionally skip a query during SSR, you can pass `ssr: false` in the query options. Typically, this will mean the component will get rendered in its loading state on the server. For example:
+
+```js
+actions: {
+  refetchModel() {
+    this.get('apollo').query({
+      query,
+      variables,
+      // Don't run this query on the server
+      ssr: false
+    });
+  }
+}
+```
 
 ### Testing
 
@@ -434,7 +464,7 @@ A special thanks to the following contributors:
 * Laurin Quast ([@n1ru4l](https://github.com/n1ru4l))
 * Elias Balafoutis ([@balaf](https://github.com/balaf))
 
-[ac-constructor]: http://dev.apollodata.com/core/apollo-client-api.html#ApolloClient\.constructor
+[ac-constructor]: https://www.apollographql.com/docs/react/reference/index.html#ApolloClientOptions
 [apollo-client]: https://github.com/apollostack/apollo-client
 [apollo-service-api]: #apollo-service-api
 [observable-query]: http://dev.apollodata.com/core/apollo-client-api.html#ObservableQuery
