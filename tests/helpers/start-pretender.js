@@ -63,6 +63,18 @@ export default function startPretender() {
     };
   });
 
+  // overriding fetch is required in order to make apollo-client work w/ pretender:
+  // https://github.com/pretenderjs/pretender/issues/60
+  // https://github.com/apollostack/apollo-client/issues/269
+  pretender._ogFetch = window.fetch;
+  window.fetch = fetch;
+
+  pretender.originalShutdown = pretender.shutdown;
+  pretender.shutdown = function() {
+    window.fetch = pretender._ogFetch;
+    pretender.originalShutdown(...arguments);
+  };
+
   pretender.schema = schema;
 
   pretender.post('https://test.example/graphql', function(request) {
