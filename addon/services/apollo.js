@@ -273,14 +273,7 @@ export default Service.extend({
   _waitFor(promise) {
     this._incrementOngoing();
     return promise
-      .then(result => {
-        this._decrementOngoing();
-        return result;
-      })
-      .catch(err => {
-        this._decrementOngoing();
-        return RSVP.reject(err);
-      });
+      .finally(() => this._decrementOngoing());
   },
 
   // unresolved / ongoing requests, used for tests:
