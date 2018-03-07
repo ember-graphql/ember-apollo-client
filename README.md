@@ -72,6 +72,21 @@ Additional configuration of the ApolloClient can be done by extending the Apollo
 service and overriding the `clientOptions` property. See the
 [Apollo Service API][apollo-service-api] for more info.
 
+Specify any optional Apollo packages you wish to include at build time in `ember-cli-build.js`:
+
+
+```js
+  let app = new EmberApp(defaults, {
+    ...
+    'ember-apollo-client': {
+      include: ['apollo-link-batch-http', 'apollo-link-persisted-queries'],
+    },
+    ...
+  }
+```
+
+Valid package names can be found [here](https://github.com/apollographql/apollo-link/tree/master/packages)
+
 ## Usage
 
 ### Fetching data

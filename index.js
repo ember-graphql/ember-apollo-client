@@ -1,32 +1,37 @@
-'use strict';
+'use strict'
+
+const defaultOptions = [
+  'apollo-cache',
+  'apollo-cache-inmemory',
+  'apollo-client',
+  'apollo-link',
+  'apollo-link-context',
+  'apollo-link-http',
+  'graphql',
+  'graphql-tools',
+  'graphql-tag',
+]
 
 module.exports = {
   name: 'ember-apollo-client',
 
-  included() {
-    this._super.included.apply(this, arguments);
+  included(app) {
+    this._super.included.apply(this, arguments)
 
-    this.import('vendor/-apollo-client-bundle.js');
-    this.import('vendor/-apollo-client-shims.js');
+    this.options['ember-apollo-client'] = app.options['ember-apollo-client']
+
+    this.import('vendor/-apollo-client-bundle.js')
+    this.import('vendor/-apollo-client-shims.js')
   },
 
   treeForVendor() {
-    const WebpackDependencyPlugin = require('./lib/webpack-dependency-plugin');
+    const WebpackDependencyPlugin = require('./lib/webpack-dependency-plugin')
+    const userOptions = this.options['ember-apollo-client'].include
 
     return new WebpackDependencyPlugin({
       outputName: 'apollo-client',
-      expose: [
-        'apollo-cache',
-        'apollo-cache-inmemory',
-        'apollo-client',
-        'apollo-link',
-        'apollo-link-context',
-        'apollo-link-http',
-        'graphql',
-        'graphql-tools',
-        'graphql-tag'
-      ]
-    });
+      expose: [...defaultOptions, ...userOptions],
+    })
   },
 
   setupPreprocessorRegistry(type, registry) {
@@ -35,10 +40,10 @@ module.exports = {
         name: 'ember-apollo-client',
         ext: 'graphql',
         toTree(tree) {
-          const GraphQLFilter = require('./lib/graphql-filter');
-          return new GraphQLFilter(tree);
-        }
-      });
+          const GraphQLFilter = require('./lib/graphql-filter')
+          return new GraphQLFilter(tree)
+        },
+      })
     }
-  }
-};
+  },
+}
