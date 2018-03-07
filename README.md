@@ -1,6 +1,6 @@
 # ember-apollo-client
 
-*Use [apollo-client][apollo-client] and GraphQL from your Ember app.*
+_Use [apollo-client][apollo-client] and GraphQL from your Ember app._
 
 ![Download count all time](https://img.shields.io/npm/dt/ember-apollo-client.svg) [![npm version](https://badge.fury.io/js/ember-apollo-client.svg)](https://badge.fury.io/js/ember-apollo-client) [![Travis CI Build Status](https://travis-ci.org/bgentry/ember-apollo-client.svg?branch=master)](https://travis-ci.org/bgentry/ember-apollo-client) [![Ember Observer Score](https://emberobserver.com/badges/ember-apollo-client.svg)](https://emberobserver.com/addons/ember-apollo-client)
 
@@ -41,31 +41,51 @@ This should also automatically install `ember-fetch`.
 Install the [Apollo Client Developer tools for Chrome](https://chrome.google.com/webstore/detail/apollo-client-developer-t/jdkknkkbebbapilgoeccciglkfbmbnfm) for a great GraphQL developer experience!
 
 ## Compatibility
+
 This addon works and is fully tested with:
 
 * Ember.js 2.12+
 * FastBoot 1.0+
 
 ## Example App
+
 If you are looking for a full tutorial using `ember-apollo-client` check out the tutorial on [How To GraphQL](https://howtographql.com), written by [DevanB](https://github.com/DevanB).
 
 The application built in the tutorial is also available on the [How To GraphQL repository](http://github.com/howtographql/ember-apollo).
 
 ## Configuration
 
-In your app's `config/environment.js`, configure the URL for the GraphQL API:
+In your app's `config/environment.js`, configure the URL for the GraphQL API.
 
 ```js
 let ENV = {
   ...
   apollo: {
     apiURL: 'https://test.example/graphql',
+    include: ['apollo-link-batch-http', 'apollo-link-persisted-queries'],
+    exclude: ['graphql-tag']
     // Optionally, set the credentials property of the Fetch Request interface
     // to control when a cookie is sent:
     // requestCredentials: 'same-origin', // other choices: 'include', 'omit'
   },
   ...
 }
+```
+
+In `ember-cli-build.js`, you can specify additional Apollo packages to include, as well as packages to exclude from the build.
+
+_Note: included packages must also be explicitly installed as development dependencies in `package.json`._
+
+Valid package names can be found [here](https://github.com/apollographql/apollo-link/tree/master/packages).
+
+```js
+  let app = new EmberApp(defaults, {
+  ...
+    apollo: {
+      include: ['apollo-link-batch-http'],
+      exclude: ['graphql-tag'],
+    },
+  })
 ```
 
 Additional configuration of the ApolloClient can be done by extending the Apollo
@@ -80,6 +100,7 @@ GraphQL queries should be placed in external files, which are automatically
 made available for import:
 
 `app/gql/queries/human.graphql`
+
 ```graphql
 query human($id: String!) {
   human(id: $id) {
@@ -107,6 +128,7 @@ Within your routes, you can query for data using the `RouteQueryManager`
 mixin and `watchQuery`:
 
 `app/routes/some-route.js`
+
 ```js
 import Route from "@ember/routing/route";
 import RouteQueryManager from "ember-apollo-client/mixins/route-query-manager";
@@ -171,6 +193,7 @@ same model(s).
 The following example shows both mutations and fragments in action:
 
 `app/gql/fragments/review-fragment.graphql`
+
 ```graphql
 fragment ReviewFragment on Human {
   stars
@@ -179,6 +202,7 @@ fragment ReviewFragment on Human {
 ```
 
 `app/gql/mutations/create-review.graphql`
+
 ```graphql
 #import 'my-app/gql/fragments/review-fragment'
 
@@ -192,6 +216,7 @@ mutation createReview($ep: Episode!, $review: ReviewInput!) {
 ```
 
 `app/routes/my-route.js`
+
 ```js
 import Route from "@ember/routing/route";
 import { inject as service } from "@ember/service";
@@ -223,13 +248,14 @@ export default Route.extend({
   can be used to resolve beneath the root.
 
   The query manager will automatically unsubscribe from this object.
+
 * `query(options, resultKey)`: This calls the
-  [`ApolloClient.query`](http://dev.apollodata.com/core/apollo-client-api.html#ApolloClient\.query)
+  [`ApolloClient.query`](http://dev.apollodata.com/core/apollo-client-api.html#ApolloClient.query)
   method. It returns a promise that resolves with the raw POJO data that the
   query returns. If you provide a `resultKey`, the resolved data is grabbed from
   that key in the result.
 * `mutate(options, resultKey)`: This calls the
-  [`ApolloClient.mutate`](http://dev.apollodata.com/core/apollo-client-api.html#ApolloClient\.mutate)
+  [`ApolloClient.mutate`](http://dev.apollodata.com/core/apollo-client-api.html#ApolloClient.mutate)
   method. It returns a promise that resolves with the raw POJO data that the
   mutation returns. As with the query methods, the `resultKey` can be used to
   resolve beneath the root.
@@ -250,12 +276,13 @@ The `apollo` service has the following public API:
     clientOptions: computed(function() {
       return {
         link: this.get("link"),
-        cache: this.get("cache"),
+        cache: this.get("cache")
       };
-    }),
+    })
   });
   ```
 * `link`: This computed property provides a list of [middlewares and afterwares](https://www.apollographql.com/docs/react/basics/network-layer.html#network-interfaces) to the [Apollo Link](https://www.apollographql.com/docs/link/) the interface for fetching and modifying control flow of GraphQL requests. To create your middlewares/afterwares:
+
   ```js
     link: computed(function() {
       let httpLink = this._super(...arguments);
@@ -287,6 +314,7 @@ The `apollo` service has the following public API:
   ```
 
   Example with ESA:
+
   ```js
   import { computed } from "@ember/object";
   import { inject as service } from "@ember/service";
@@ -311,17 +339,19 @@ The `apollo` service has the following public API:
         return {};
       }
       return new RSVPPromise(success => {
-        this.get(
-          "session"
-        ).authorize("authorizer:oauth2", (headerName, headerContent) => {
-          let headers = {};
-          headers[headerName] = headerContent;
-          success({ headers });
-        });
+        this.get("session").authorize(
+          "authorizer:oauth2",
+          (headerName, headerContent) => {
+            let headers = {};
+            headers[headerName] = headerContent;
+            success({ headers });
+          }
+        );
       });
-    },
+    }
   });
   ```
+
 * `watchQuery(options, resultKey)`: This calls the
   [`ApolloClient.watchQuery`][watch-query] method. It returns a promise that
   resolves with an `Ember.Object`. That object will be updated whenever the
@@ -330,13 +360,14 @@ The `apollo` service has the following public API:
 
   When using this method, **it is important to [unsubscribe][unsubscribing]**
   from the query when you're done with it.
+
 * `query(options, resultKey)`: This calls the
-  [`ApolloClient.query`](http://dev.apollodata.com/core/apollo-client-api.html#ApolloClient\.query)
+  [`ApolloClient.query`](http://dev.apollodata.com/core/apollo-client-api.html#ApolloClient.query)
   method. It returns a promise that resolves with the raw POJO data that the
   query returns. If you provide a `resultKey`, the resolved data is grabbed from
   that key in the result.
 * `mutate(options, resultKey)`: This calls the
-  [`ApolloClient.mutate`](http://dev.apollodata.com/core/apollo-client-api.html#ApolloClient\.mutate)
+  [`ApolloClient.mutate`](http://dev.apollodata.com/core/apollo-client-api.html#ApolloClient.mutate)
   method. It returns a promise that resolves with the raw POJO data that the
   mutation returns. As with the query methods, the `resultKey` can be used to
   resolve beneath the root.
@@ -362,6 +393,7 @@ routes. If you want to inject this mixin into all routes, you should utilize
 a base route class:
 
 `app/routes/base.js`
+
 ```js
 import Route from "@ember/routing/route";
 import RouteQueryManager from "ember-apollo-client/mixins/route-query-manager";
@@ -372,6 +404,7 @@ export default Route.extend(RouteQueryManager);
 Then extend from that in your other routes:
 
 `app/routes/a-real-route.js`
+
 ```js
 import Base from "my-app/routes/base";
 
@@ -381,23 +414,27 @@ export default Base.extend(
 ```
 
 ### Use with Fastboot
+
 Ember Apollo Client works with FastBoot out of the box as long that SSR is enabled. In order to enable SSR, define it on apollo service:
 
 Example:
+
 ```js
-  const OverriddenService = ApolloService.extend({
-    clientOptions: computed(function() {
-      return {
-        ssrMode: true,
-        link: this.get("link"),
-        cache: this.get("cache"),
-      };
-    }),
-  });
-  ```
+const OverriddenService = ApolloService.extend({
+  clientOptions: computed(function() {
+    return {
+      ssrMode: true,
+      link: this.get("link"),
+      cache: this.get("cache")
+    };
+  })
+});
+```
+
 Since you only want to fetch each query result once, pass the `ssrMode: true` option to the Apollo Client constructor to avoid repeated force-fetching.
 
 #### Skipping queries for SSR
+
 If you want to intentionally skip a query during SSR, you can pass `ssr: false` in the query options. Typically, this will mean the component will get rendered in its loading state on the server. For example:
 
 ```js
@@ -470,7 +507,7 @@ A special thanks to the following contributors:
 [observable-query]: http://dev.apollodata.com/core/apollo-client-api.html#ObservableQuery
 [query-manager-api]: #query-manager-api
 [unsubscribing]: #unsubscribing-from-watch-queries
-[watch-query]: http://dev.apollodata.com/core/apollo-client-api.html#ApolloClient\.watchQuery
+[watch-query]: http://dev.apollodata.com/core/apollo-client-api.html#ApolloClient.watchQuery
 
 ## License
 
