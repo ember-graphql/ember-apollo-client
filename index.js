@@ -18,7 +18,8 @@ module.exports = {
   included(app) {
     this._super.included.apply(this, arguments)
 
-    this.options['ember-apollo-client'] = app.options['ember-apollo-client']
+    let config = app.project.config(app.env) || {}
+    this.addonConfig = config[this.name] || {}
 
     this.import('vendor/-apollo-client-bundle.js')
     this.import('vendor/-apollo-client-shims.js')
@@ -26,7 +27,7 @@ module.exports = {
 
   treeForVendor() {
     const WebpackDependencyPlugin = require('./lib/webpack-dependency-plugin')
-    const userOptions = this.options['ember-apollo-client'].include
+    const userOptions = this.addonConfig.include
 
     return new WebpackDependencyPlugin({
       outputName: 'apollo-client',
