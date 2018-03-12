@@ -53,13 +53,15 @@ The application built in the tutorial is also available on the [How To GraphQL r
 
 ## Configuration
 
-In your app's `config/environment.js`, configure the URL for the GraphQL API:
+In your app's `config/environment.js`, configure the URL for the GraphQL API. Here, you can also include additional Apollo packages that haven't been included by default. Valid package names can be found [here](https://github.com/apollographql/apollo-link/tree/master/packages)
+
 
 ```js
 let ENV = {
   ...
   apollo: {
     apiURL: 'https://test.example/graphql',
+    include: ['apollo-link-batch-http', 'apollo-link-persisted-queries'],
     // Optionally, set the credentials property of the Fetch Request interface
     // to control when a cookie is sent:
     // requestCredentials: 'same-origin', // other choices: 'include', 'omit'
@@ -72,20 +74,6 @@ Additional configuration of the ApolloClient can be done by extending the Apollo
 service and overriding the `clientOptions` property. See the
 [Apollo Service API][apollo-service-api] for more info.
 
-Specify any optional Apollo packages you wish to include at build time in `ember-cli-build.js`:
-
-
-```js
-  let app = new EmberApp(defaults, {
-    ...
-    'ember-apollo-client': {
-      include: ['apollo-link-batch-http', 'apollo-link-persisted-queries'],
-    },
-    ...
-  }
-```
-
-Valid package names can be found [here](https://github.com/apollographql/apollo-link/tree/master/packages)
 
 ## Usage
 

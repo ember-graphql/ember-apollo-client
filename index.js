@@ -1,6 +1,6 @@
 'use strict'
 
-const defaultOptions = [
+const defaultPackages = [
   'apollo-cache',
   'apollo-cache-inmemory',
   'apollo-client',
@@ -17,24 +17,24 @@ module.exports = {
 
   included(app) {
     this._super.included.apply(this, arguments)
-
+    
     let config = app.project.config(app.env) || {}
-    this.addonConfig = config[this.name] || {}
-
+    this.addonConfig = config['apollo'] || {}
+    
     this.import('vendor/-apollo-client-bundle.js')
     this.import('vendor/-apollo-client-shims.js')
   },
-
+  
   treeForVendor() {
     const WebpackDependencyPlugin = require('./lib/webpack-dependency-plugin')
-    const userOptions = this.addonConfig.include
-
+    const userSpecifiedPackages = this.addonConfig.include
+    
     return new WebpackDependencyPlugin({
       outputName: 'apollo-client',
-      expose: [...defaultOptions, ...userOptions],
+      expose: [...defaultPackages, ...userSpecifiedPackages],
     })
   },
-
+  
   setupPreprocessorRegistry(type, registry) {
     if (type === 'parent') {
       registry.add('js', {
