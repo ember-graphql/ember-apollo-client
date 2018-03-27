@@ -5,7 +5,7 @@ import { A } from "@ember/array";
 
 export default EmberObject.extend({
   apollo: service(),
-  client: alias('apollo.client'),
+  apolloClient: alias('apollo.client'),
   
   activeSubscriptions: null,
 
