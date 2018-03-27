@@ -1,10 +1,12 @@
 import { inject as service } from "@ember/service";
 import EmberObject from "@ember/object";
+import { alias } from "@ember/object/computed";
 import { A } from "@ember/array";
 
 export default EmberObject.extend({
   apollo: service(),
-
+  client: alias('apollo.client'),
+  
   activeSubscriptions: null,
 
   init() {
