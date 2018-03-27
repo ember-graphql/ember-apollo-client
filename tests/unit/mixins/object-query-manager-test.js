@@ -1,5 +1,6 @@
 import EmberObject from '@ember/object';
 import ObjectQueryManagerMixin from 'ember-apollo-client/mixins/object-query-manager';
+import { ApolloClient } from 'apollo-client';
 import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
 
@@ -40,5 +41,11 @@ module('Unit | Mixin | ember object query manager', function(hooks) {
       '_apolloUnsubscribe() was called once per watchQuery'
     );
     done();
+  });
+
+  test('it exposes an apollo client object', function(assert) {
+    let subject = this.subject();
+    let client = subject.get('apollo.client');
+    assert.ok(client instanceof ApolloClient);
   });
 });
