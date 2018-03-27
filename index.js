@@ -26,7 +26,10 @@ module.exports = {
   treeForVendor() {
     const WebpackDependencyPlugin = require("./lib/webpack-dependency-plugin");
     const {
-      addonConfig: { include: userPackages, exclude: excludedPackages }
+      addonConfig: {
+        include: userPackages = [],
+        exclude: excludedPackages = []
+      }
     } = this;
     const includedPackages = apolloClientDefaultPackages.filter(
       p => !excludedPackages.includes(p)
