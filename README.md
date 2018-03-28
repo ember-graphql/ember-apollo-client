@@ -57,12 +57,6 @@ The application built in the tutorial is also available on the [How To GraphQL r
 
 In your app's `config/environment.js`, configure the URL for the GraphQL API.
 
-Here, you can specify additional Apollo packages to include, as well as packages to exclude from the build.
-
-_Note: included packages must also be explicitly installed as development dependencies in `package.json`._
-
-Valid package names can be found [here](https://github.com/apollographql/apollo-link/tree/master/packages).
-
 ```js
 let ENV = {
   ...
@@ -76,6 +70,22 @@ let ENV = {
   },
   ...
 }
+```
+
+In `ember-cli-build.js`, you can specify additional Apollo packages to include, as well as packages to exclude from the build.
+
+_Note: included packages must also be explicitly installed as development dependencies in `package.json`._
+
+Valid package names can be found [here](https://github.com/apollographql/apollo-link/tree/master/packages).
+
+```js
+  let app = new EmberApp(defaults, {
+  ...
+    apollo: {
+      include: ['apollo-link-batch-http'],
+      exclude: ['graphql-tag'],
+    },
+  })
 ```
 
 Additional configuration of the ApolloClient can be done by extending the Apollo
