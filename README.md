@@ -62,8 +62,6 @@ let ENV = {
   ...
   apollo: {
     apiURL: 'https://test.example/graphql',
-    include: ['apollo-link-batch-http', 'apollo-link-persisted-queries'],
-    exclude: ['graphql-tag']
     // Optionally, set the credentials property of the Fetch Request interface
     // to control when a cookie is sent:
     // requestCredentials: 'same-origin', // other choices: 'include', 'omit'
