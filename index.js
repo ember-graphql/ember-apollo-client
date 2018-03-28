@@ -15,9 +15,9 @@ const apolloClientDefaultPackages = [
 module.exports = {
   name: "ember-apollo-client",
 
-  included({ project, env }) {
+  included() {
     this._super.included.apply(this, arguments);
-    this.addonConfig = project.config(env)["apollo"] || {};
+    this.addonConfig = this.app.options["apollo"] || {};
 
     this.import("vendor/-apollo-client-bundle.js");
     this.import("vendor/-apollo-client-shims.js");
@@ -26,11 +26,10 @@ module.exports = {
   treeForVendor() {
     const WebpackDependencyPlugin = require("./lib/webpack-dependency-plugin");
     const {
-      addonConfig: {
-        include: userPackages = [],
-        exclude: excludedPackages = []
-      }
-    } = this;
+      include: userPackages = [],
+      exclude: excludedPackages = []
+    } = this.addonConfig;
+
     const includedPackages = apolloClientDefaultPackages.filter(
       p => !excludedPackages.includes(p)
     );
