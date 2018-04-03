@@ -2,7 +2,6 @@ import Ember from 'ember';
 import Service from "@ember/service"
 import EmberObject, { get, setProperties, computed } from "@ember/object";
 import { A } from "@ember/array";
-import { copy } from "@ember/object/internals";
 import { deprecate } from "@ember/application/deprecations";
 import { isArray } from "@ember/array";
 import { isNone, isPresent } from "@ember/utils";
@@ -151,7 +150,7 @@ export default Service.extend({
             let dataToSend = isNone(resultKey)
               ? result.data
               : get(result.data, resultKey);
-            dataToSend = copy(dataToSend, true);
+            dataToSend = copyWithExtras(dataToSend, [], []);
             return resolve(dataToSend);
           })
           .catch(error => {
@@ -227,7 +226,7 @@ export default Service.extend({
         if (!isNone(resultKey)) {
           response = get(response, resultKey);
         }
-        return RSVP.resolve(copy(response, true));
+        return RSVP.resolve(copyWithExtras(response, [], []));
       })
     );
   },
