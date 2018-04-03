@@ -2,6 +2,9 @@ import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
 import { computed } from '@ember/object';
 import ApolloService from 'ember-apollo-client/services/apollo';
+import testQuery from '../build/test-query';
+import testMutation from '../build/test-mutation';
+import { Promise } from 'rsvp';
 
 module('Unit | Service | apollo', function(hooks) {
   setupTest(hooks);
@@ -28,5 +31,45 @@ module('Unit | Service | apollo', function(hooks) {
 
     // make sure the override was used.
     assert.equal(service.get('apollo.dataIdFromObject', customDataIdFromObject));
+  });
+
+  test('.mutate resolves with __typename', async function(assert) {
+    let done = assert.async();
+    let service = this.owner.lookup('service:apollo')
+
+    service.set('client', {
+      mutate() {
+        assert.ok(true, 'Called mutate function on apollo client');
+
+        return new Promise(resolve => {
+          resolve({ data: { human: { name: 'Link' },  __typename: 'person' } });
+        });
+      }
+    });
+
+    const result = await service.mutate({ mutation: testMutation });
+
+    assert.equal(result.__typename, 'person');
+    done();
+  });
+
+  test('.query resolves with __typename', async function(assert) {
+    let done = assert.async();
+    let service = this.owner.lookup('service:apollo')
+
+    service.set('client', {
+      query() {
+        assert.ok(true, 'Called query function on apollo client');
+
+        return new Promise(resolve => {
+          resolve({ data: { human: { name: 'Link' },  __typename: 'person' } });
+        });
+      }
+    });
+
+    const result = await service.query({ query: testQuery });
+
+    assert.equal(result.__typename, 'person');
+    done();
   });
 });
