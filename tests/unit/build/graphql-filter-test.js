@@ -5,16 +5,24 @@ import testFragment from './test-fragment';
 import testQuery from './test-query';
 
 module('Unit | graphql-filter', function() {
-  test('simple compilation', function(assert) {
-    assert.deepEqual(testFragment.definitions, gql`
+  function testCompilation(description, { actual, expected }) {
+    test(description, function(assert) {
+      assert.deepEqual(actual.definitions, JSON.parse(JSON.stringify(expected.definitions)));
+    });
+  }
+
+  testCompilation('simple compilation', {
+    actual: testFragment,
+    expected: gql`
       fragment testFragment on Object {
         name
       }
-    `.definitions);
+    `
   });
 
-  test('compilation with #import references', function(assert) {
-    assert.deepEqual(testQuery.definitions, gql`
+  testCompilation('compilation with #import references', {
+    actual: testQuery,
+    expected: gql`
       query TestQuery {
         subject {
           ...testFragment
@@ -24,6 +32,6 @@ module('Unit | graphql-filter', function() {
       fragment testFragment on Object {
         name
       }
-    `.definitions);
+    `
   });
 });
