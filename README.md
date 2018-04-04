@@ -498,6 +498,7 @@ A special thanks to the following contributors:
 * Vinícius Sales ([@viniciussbs](https://github.com/viniciussbs))
 * Laurin Quast ([@n1ru4l](https://github.com/n1ru4l))
 * Elias Balafoutis ([@balaf](https://github.com/balaf))
+* Katherine Smith ([@TerminalStar](https://github.com/TerminalStar))
 
 [ac-constructor]: https://www.apollographql.com/docs/react/reference/index.html#ApolloClientOptions
 [apollo-client]: https://github.com/apollostack/apollo-client
