@@ -19,8 +19,7 @@
   "repository": "https://github.com/bgentry/ember-apollo-client",
   "scripts": {
     "build": "ember build",
-    "lint:js":
-      "eslint ./*.js addon addon-test-support app config lib server test-support tests",
+    "lint:js": "eslint ./*.js addon addon-test-support app config lib server test-support tests",
     "start": "ember serve",
     "test": "ember try:each"
   },
@@ -43,7 +42,7 @@
   "devDependencies": {
     "broccoli-asset-rev": "^2.4.5",
     "ember-ajax": "^3.0.0",
-    "ember-cli": "~3.0.0",
+    "ember-cli": "~3.0.2",
     "ember-cli-dependency-checker": "^2.0.0",
     "ember-cli-eslint": "^4.2.1",
     "ember-cli-htmlbars": "^2.0.1",
@@ -73,6 +72,8 @@
   },
   "ember-addon": {
     "configPath": "tests/dummy/config",
-    "before": ["ember-cli-babel"]
+    "before": [
+      "ember-cli-babel"
+    ]
   }
 }
