@@ -72,6 +72,8 @@
   },
   "ember-addon": {
     "configPath": "tests/dummy/config",
-    "before": ["ember-cli-babel"]
+    "before": [
+      "ember-cli-babel"
+    ]
   }
 }
