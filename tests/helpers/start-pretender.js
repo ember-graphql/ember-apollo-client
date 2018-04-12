@@ -53,7 +53,7 @@ export default function startPretender() {
   };
 
   let schema = makeExecutableSchema({ typeDefs: schemaString, resolvers });
-  addResolveFunctionsToSchema(schema, typeResolvers);
+  addResolveFunctionsToSchema({ schema, resolvers: typeResolvers });
   addMockFunctionsToSchema({ schema, mocks, preserveResolvers: true });
 
   let pretender = new Pretender(function() {

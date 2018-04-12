@@ -19,18 +19,24 @@ module('Acceptance | main', function(hooks) {
     __typename: 'Droid',
   };
 
+  let schema;
+
+  hooks.beforeEach(function() {
+    schema = this.pretender.schema;
+  });
+
   test('visiting /luke', async function(assert) {
     let done = assert.async();
     let human = copy(mockHuman);
-
-    addResolveFunctionsToSchema(this.pretender.schema, {
+    let resolvers = {
       Query: {
         human(obj, args) {
           assert.deepEqual(args, { id: '1000' });
           return copy(human);
         },
       },
-    });
+    };
+    addResolveFunctionsToSchema({ schema, resolvers });
 
     let apollo = this.owner.lookup('service:apollo');
     let getQueries = () => apollo.client.queryManager.queryStore.getStore();
@@ -68,8 +74,7 @@ module('Acceptance | main', function(hooks) {
     let done = assert.async();
 
     let firstQuery = true;
-
-    addResolveFunctionsToSchema(this.pretender.schema, {
+    let resolvers = {
       Query: {
         characters(obj, args) {
           if (firstQuery) {
@@ -82,7 +87,8 @@ module('Acceptance | main', function(hooks) {
           return [mockDroid];
         },
       },
-    });
+    };
+    addResolveFunctionsToSchema({ schema, resolvers });
 
     let apollo = this.owner.lookup('service:apollo');
     let getQueries = () => apollo.client.queryManager.queryStore.getStore();
