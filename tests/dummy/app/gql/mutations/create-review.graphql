@@ -2,8 +2,6 @@
 
 mutation createReview($ep: Episode!, $review: ReviewInput!) {
   createReview(episode: $ep, review: $review) {
-    review {
-      ...ReviewFragment
-    }
+    ...ReviewFragment
   }
 }

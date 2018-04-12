@@ -1,8 +1,7 @@
 import { module, test } from 'qunit';
 import { setupApplicationTest } from "dummy/tests/helpers/setup";
 import { addResolveFunctionsToSchema } from 'graphql-tools';
-import { copy } from '@ember/object/internals';
-import { click, currentURL, find, visit } from "@ember/test-helpers";
+import { click, currentURL, find, settled, visit } from "@ember/test-helpers";
 
 module('Acceptance | main', function(hooks) {
   setupApplicationTest(hooks);
@@ -19,18 +18,24 @@ module('Acceptance | main', function(hooks) {
     __typename: 'Droid',
   };
 
+  let schema;
+
+  hooks.beforeEach(function() {
+    schema = this.pretender.schema;
+  });
+
   test('visiting /luke', async function(assert) {
     let done = assert.async();
-    let human = copy(mockHuman);
-
-    addResolveFunctionsToSchema(this.pretender.schema, {
+    let human = Object.assign({}, mockHuman);
+    let resolvers = {
       Query: {
         human(obj, args) {
           assert.deepEqual(args, { id: '1000' });
-          return copy(human);
+          return Object.assign({}, human);
         },
       },
-    });
+    };
+    addResolveFunctionsToSchema({ schema, resolvers });
 
     let apollo = this.owner.lookup('service:apollo');
     let getQueries = () => apollo.client.queryManager.queryStore.getStore();
@@ -44,6 +49,7 @@ module('Acceptance | main', function(hooks) {
     // that there are no errors:
     human.name = 'Lucas Skywalker';
     await click('.refetch-button');
+    await settled()
 
     assert.equal(find('.model-name').innerText, 'Lucas Skywalker');
     // Because we used watchQuery() there should be an ongoing query in the
@@ -68,8 +74,7 @@ module('Acceptance | main', function(hooks) {
     let done = assert.async();
 
     let firstQuery = true;
-
-    addResolveFunctionsToSchema(this.pretender.schema, {
+    let resolvers = {
       Query: {
         characters(obj, args) {
           if (firstQuery) {
@@ -82,7 +87,8 @@ module('Acceptance | main', function(hooks) {
           return [mockDroid];
         },
       },
-    });
+    };
+    addResolveFunctionsToSchema({ schema, resolvers });
 
     let apollo = this.owner.lookup('service:apollo');
     let getQueries = () => apollo.client.queryManager.queryStore.getStore();

@@ -18,6 +18,8 @@ const interfaceResolveType = {
   },
 };
 
+const __resolveType = ({ type }) => type;
+
 export default function startPretender() {
   let resolvers = {
     // This is where you would declare custom resolvers. For example, assume we
@@ -34,6 +36,11 @@ export default function startPretender() {
     //     return ast.value;
     //   }
     // },
+
+    // We set up __resolveType for this interface type here, then it is inherited
+    // when we build the schema:
+    Character: { __resolveType },
+    SearchResult: { __resolveType },
   };
   let typeResolvers = {
     // This is where you can declare custom type resolvers, such as those
@@ -53,7 +60,11 @@ export default function startPretender() {
   };
 
   let schema = makeExecutableSchema({ typeDefs: schemaString, resolvers });
-  addResolveFunctionsToSchema(schema, typeResolvers);
+  addResolveFunctionsToSchema({
+    schema,
+    resolvers: typeResolvers,
+    inheritResolversFromInterfaces: true,
+  });
   addMockFunctionsToSchema({ schema, mocks, preserveResolvers: true });
 
   let pretender = new Pretender(function() {

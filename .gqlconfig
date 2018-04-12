@@ -6,7 +6,7 @@
      files: [
        // query gql files
        {
-         match: 'app/gql/**/*.graphql',
+         match: 'tests/dummy/app/gql/**/*.graphql',
          parser: 'QueryParser',
          // required until fragment imports work: https://github.com/Mayank1791989/gql/issues/3
          validate: {
@@ -19,7 +19,7 @@
        },
        // [Embedded queries] gql tag files
        {
-         match: { include: 'app/**/*.js' },
+         match: { include: 'tests/dummy/app/**/*.js' },
          parser: [ 'EmbeddedQueryParser', { startTag: 'gql`', endTag: '`' } ],
          // required until fragment imports work: https://github.com/Mayank1791989/gql/issues/3
          validate: {
