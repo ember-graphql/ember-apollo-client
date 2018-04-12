@@ -23,13 +23,11 @@ module('Unit | Route | new-review', function(hooks) {
     let expectedMutation = stripIndent`
       mutation createReview($ep: Episode!, $review: ReviewInput!) {
         createReview(episode: $ep, review: $review) {
-          review {
-            ...ReviewFragment
-          }
+          ...ReviewFragment
         }
       }
 
-      fragment ReviewFragment on Human {
+      fragment ReviewFragment on Review {
         stars
         commentary
       }

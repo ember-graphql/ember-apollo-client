@@ -1,4 +1,4 @@
-fragment ReviewFragment on Human {
+fragment ReviewFragment on Review {
   stars
   commentary
 }
