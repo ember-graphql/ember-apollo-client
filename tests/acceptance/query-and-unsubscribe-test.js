@@ -1,8 +1,7 @@
 import { module, test } from 'qunit';
 import { setupApplicationTest } from "dummy/tests/helpers/setup";
 import { addResolveFunctionsToSchema } from 'graphql-tools';
-import { copy } from '@ember/object/internals';
-import { click, currentURL, find, visit } from "@ember/test-helpers";
+import { click, currentURL, find, settled, visit } from "@ember/test-helpers";
 
 module('Acceptance | main', function(hooks) {
   setupApplicationTest(hooks);
@@ -27,12 +26,12 @@ module('Acceptance | main', function(hooks) {
 
   test('visiting /luke', async function(assert) {
     let done = assert.async();
-    let human = copy(mockHuman);
+    let human = Object.assign({}, mockHuman);
     let resolvers = {
       Query: {
         human(obj, args) {
           assert.deepEqual(args, { id: '1000' });
-          return copy(human);
+          return Object.assign({}, human);
         },
       },
     };
@@ -50,6 +49,7 @@ module('Acceptance | main', function(hooks) {
     // that there are no errors:
     human.name = 'Lucas Skywalker';
     await click('.refetch-button');
+    await settled()
 
     assert.equal(find('.model-name').innerText, 'Lucas Skywalker');
     // Because we used watchQuery() there should be an ongoing query in the
