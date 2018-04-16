@@ -1310,9 +1310,9 @@ broccoli-funnel@^2.0.0, broccoli-funnel@^2.0.1:
     symlink-or-copy "^1.0.0"
     walk-sync "^0.3.1"
 
-broccoli-graphql-filter@^0.2.3:
-  version "0.2.3"
-  resolved "https://registry.yarnpkg.com/broccoli-graphql-filter/-/broccoli-graphql-filter-0.2.3.tgz#f45e81c2dcddaea1f7f32534edfff90eefe1b471"
+broccoli-graphql-filter@^0.2.4:
+  version "0.2.4"
+  resolved "https://registry.yarnpkg.com/broccoli-graphql-filter/-/broccoli-graphql-filter-0.2.4.tgz#5e76fb1553db53d01e59306c81fe257601967e68"
   dependencies:
     broccoli-persistent-filter "^1.4.3"
     graphql "^0.13.2"
