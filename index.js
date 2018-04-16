@@ -46,7 +46,7 @@ module.exports = {
         name: "ember-apollo-client",
         ext: "graphql",
         toTree(tree) {
-          const GraphQLFilter = require("./lib/graphql-filter");
+          const GraphQLFilter = require("broccoli-graphql-filter");
           return new GraphQLFilter(tree);
         }
       });
