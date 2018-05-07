@@ -22,8 +22,8 @@ a few real-world problems such as reliable testing and preventing resource leaks
 by unsubscribing from watch queries.
 
 [graphql-repo]: https://github.com/graphql/graphql-js "GraphQL"
-[graphql-tag-repo]: https://github.com/apollostack/graphql-tag "graphql-tag"
-[graphql-tools-repo]: https://github.com/apollostack/graphql-tools "graphql-tools"
+[graphql-tag-repo]: https://github.com/apollographql/graphql-tag "graphql-tag"
+[graphql-tools-repo]: https://github.com/apollographql/graphql-tools "graphql-tools"
 [apollo-cache]: https://www.npmjs.com/package/apollo-cache
 [apollo-cache-inmemory]: https://www.npmjs.com/package/apollo-cache-inmemory
 [apollo-link]: https://github.com/apollographql/apollo-link
@@ -248,12 +248,12 @@ export default Route.extend({
   The query manager will automatically unsubscribe from this object.
 
 * `query(options, resultKey)`: This calls the
-  [`ApolloClient.query`](http://dev.apollodata.com/core/apollo-client-api.html#ApolloClient.query)
+  [`ApolloClient.query`](https://www.apollographql.com/docs/react/api/apollo-client.html#ApolloClient.query)
   method. It returns a promise that resolves with the raw POJO data that the
   query returns. If you provide a `resultKey`, the resolved data is grabbed from
   that key in the result.
 * `mutate(options, resultKey)`: This calls the
-  [`ApolloClient.mutate`](http://dev.apollodata.com/core/apollo-client-api.html#ApolloClient.mutate)
+  [`ApolloClient.mutate`](https://www.apollographql.com/docs/react/api/apollo-client.html#ApolloClient.mutate)
   method. It returns a promise that resolves with the raw POJO data that the
   mutation returns. As with the query methods, the `resultKey` can be used to
   resolve beneath the root.
@@ -279,7 +279,7 @@ The `apollo` service has the following public API:
     })
   });
   ```
-* `link`: This computed property provides a list of [middlewares and afterwares](https://www.apollographql.com/docs/react/basics/network-layer.html#network-interfaces) to the [Apollo Link](https://www.apollographql.com/docs/link/) the interface for fetching and modifying control flow of GraphQL requests. To create your middlewares/afterwares:
+* `link`: This computed property provides a list of [middlewares and afterwares](https://www.apollographql.com/docs/react/advanced/network-layer.html#network-interfaces) to the [Apollo Link](https://www.apollographql.com/docs/link/) the interface for fetching and modifying control flow of GraphQL requests. To create your middlewares/afterwares:
 
   ```js
     link: computed(function() {
@@ -360,12 +360,12 @@ The `apollo` service has the following public API:
   from the query when you're done with it.
 
 * `query(options, resultKey)`: This calls the
-  [`ApolloClient.query`](http://dev.apollodata.com/core/apollo-client-api.html#ApolloClient.query)
+  [`ApolloClient.query`](https://www.apollographql.com/docs/react/api/apollo-client.html#ApolloClient.query)
   method. It returns a promise that resolves with the raw POJO data that the
   query returns. If you provide a `resultKey`, the resolved data is grabbed from
   that key in the result.
 * `mutate(options, resultKey)`: This calls the
-  [`ApolloClient.mutate`](http://dev.apollodata.com/core/apollo-client-api.html#ApolloClient.mutate)
+  [`ApolloClient.mutate`](https://www.apollographql.com/docs/react/api/apollo-client.html#ApolloClient.mutate)
   method. It returns a promise that resolves with the raw POJO data that the
   mutation returns. As with the query methods, the `resultKey` can be used to
   resolve beneath the root.
@@ -500,13 +500,13 @@ A special thanks to the following contributors:
 * Elias Balafoutis ([@balaf](https://github.com/balaf))
 * Katherine Smith ([@TerminalStar](https://github.com/TerminalStar))
 
-[ac-constructor]: https://www.apollographql.com/docs/react/reference/index.html#ApolloClientOptions
-[apollo-client]: https://github.com/apollostack/apollo-client
+[ac-constructor]: https://www.apollographql.com/docs/react/api/apollo-client.html#ApolloClientOptions
+[apollo-client]: https://github.com/apollographql/apollo-client
 [apollo-service-api]: #apollo-service-api
-[observable-query]: http://dev.apollodata.com/core/apollo-client-api.html#ObservableQuery
+[observable-query]: https://www.apollographql.com/docs/react/api/apollo-client.html#ObservableQuery
 [query-manager-api]: #query-manager-api
 [unsubscribing]: #unsubscribing-from-watch-queries
-[watch-query]: http://dev.apollodata.com/core/apollo-client-api.html#ApolloClient.watchQuery
+[watch-query]: https://www.apollographql.com/docs/react/api/apollo-client.html#ApolloClient.watchQuery
 
 ## License
 
