@@ -279,7 +279,7 @@ The `apollo` service has the following public API:
     })
   });
   ```
-* `link`: This computed property provides a list of [middlewares and afterwares](https://www.apollographql.com/docs/react/advanced/network-layer.html) to the [Apollo Link](https://www.apollographql.com/docs/link/) the interface for fetching and modifying control flow of GraphQL requests. To create your middlewares/afterwares:
+* `link`: This computed property provides a list of [middlewares and afterwares](https://www.apollographql.com/docs/react/advanced/network-layer.html#network-interfaces) to the [Apollo Link](https://www.apollographql.com/docs/link/) the interface for fetching and modifying control flow of GraphQL requests. To create your middlewares/afterwares:
 
   ```js
     link: computed(function() {
