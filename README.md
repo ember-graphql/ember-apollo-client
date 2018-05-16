@@ -135,7 +135,7 @@ import query from "my-app/gql/queries/human";
 export default Route.extend(RouteQueryManager, {
   model(params) {
     let variables = { id: params.id };
-    return this.apollo.watchQuery({ query, variables }, "human");
+    return this.get('apollo').watchQuery({ query, variables }, "human");
   }
 });
 ```
@@ -169,7 +169,7 @@ import { getObservable } from "ember-apollo-client";
 
 export default Route.extend(RouteQueryManager, {
   model() {
-    let result = this.apollo.watchQuery(...);
+    let result = this.get('apollo').watchQuery(...);
     let observable = getObservable(result);
     observable.fetchMore(...) // utilize the ObservableQuery
     ...
