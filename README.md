@@ -311,7 +311,7 @@ The `apollo` service has the following public API:
     }),
   ```
 
-  Example with ESA:
+  Example with [ember-simple-auth](https://github.com/simplabs/ember-simple-auth):
 
   ```js
   import { computed } from "@ember/object";
