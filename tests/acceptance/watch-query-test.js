@@ -30,8 +30,8 @@ module('Acceptance | watch query', function(hooks) {
       },
       Mutation: {
         changeCharacterName(_, { id, name }) {
-          assert.equal(id, mockHuman.id, 'correct mutuation id is passed in');
-          assert.equal(name, 'Darth Vader', 'correct mutuation name is passed in');
+          assert.equal(id, mockHuman.id, 'correct mutation id is passed in');
+          assert.equal(name, 'Darth Vader', 'correct mutation name is passed in');
           return Object.assign({}, character, { name });
         }
       },
