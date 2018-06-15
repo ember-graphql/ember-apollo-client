@@ -23,6 +23,7 @@ type Query {
 # The mutation type, represents all updates we can make to our data
 type Mutation {
   createReview(episode: Episode, review: ReviewInput!): Review
+  changeCharacterName(id: ID!, name: String!): Character
 }
 
 # The episodes in the Star Wars trilogy

@@ -1,0 +1,6 @@
+mutation ChangeCharacterName($id: ID!, $name: String!) {
+  changeCharacterName(id: $id, name: $name) {
+    id
+    name
+  }
+}
