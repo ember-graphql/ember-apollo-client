@@ -221,12 +221,19 @@ export default Service.extend({
    */
   query(opts, resultKey) {
     return this._waitFor(
-      this.client.query(opts).then(result => {
-        let response = result.data;
-        if (!isNone(resultKey)) {
-          response = get(response, resultKey);
-        }
-        return RSVP.resolve(copyWithExtras(response, [], []));
+      new RSVP.Promise((resolve, reject) => {
+        this.client
+          .query(opts)
+          .then(result => {
+            let response = result.data;
+            if (!isNone(resultKey)) {
+              response = get(response, resultKey);
+            }
+            return resolve(copyWithExtras(response, [], []));
+          })
+          .catch(error => {
+            return reject(error);
+          });
       })
     );
   },
