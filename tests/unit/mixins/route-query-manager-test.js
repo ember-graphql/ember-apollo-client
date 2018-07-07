@@ -69,11 +69,10 @@ module('Unit | Mixin | route query manager', function(hooks) {
     assert.equal(
       unsubscribeCalled,
       1,
-      '_apolloUnsubscribe() was called only once, for the first query',
+      '_apolloUnsubscribe() was called only once, for the first query'
     );
     done();
   });
-
 
   test('it unsubscribes from any watchQuery subscriptions on willDestroy', function(assert) {
     let done = assert.async();

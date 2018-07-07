@@ -19,32 +19,37 @@ module('Unit | Service | apollo', function(hooks) {
 
   test('it uses clientOptions', function(assert) {
     let customDataIdFromObject = o => o.name;
-    this.owner.register('service:overridden-apollo', ApolloService.extend({
-      // Override the clientOptions.
-      clientOptions: computed(function() {
-        let opts = this._super(...arguments);
-        opts.dataIdFromObject = customDataIdFromObject;
-        return opts;
-      }),
-    }));
-    let service = this.owner.lookup('service:overridden-apollo')
+    this.owner.register(
+      'service:overridden-apollo',
+      ApolloService.extend({
+        // Override the clientOptions.
+        clientOptions: computed(function() {
+          let opts = this._super(...arguments);
+          opts.dataIdFromObject = customDataIdFromObject;
+          return opts;
+        }),
+      })
+    );
+    let service = this.owner.lookup('service:overridden-apollo');
 
     // make sure the override was used.
-    assert.equal(service.get('apollo.dataIdFromObject', customDataIdFromObject));
+    assert.equal(
+      service.get('apollo.dataIdFromObject', customDataIdFromObject)
+    );
   });
 
   test('.mutate resolves with __typename', async function(assert) {
     let done = assert.async();
-    let service = this.owner.lookup('service:apollo')
+    let service = this.owner.lookup('service:apollo');
 
     service.set('client', {
       mutate() {
         assert.ok(true, 'Called mutate function on apollo client');
 
         return new Promise(resolve => {
-          resolve({ data: { human: { name: 'Link' },  __typename: 'person' } });
+          resolve({ data: { human: { name: 'Link' }, __typename: 'person' } });
         });
-      }
+      },
     });
 
     const result = await service.mutate({ mutation: testMutation });
@@ -55,16 +60,16 @@ module('Unit | Service | apollo', function(hooks) {
 
   test('.query resolves with __typename', async function(assert) {
     let done = assert.async();
-    let service = this.owner.lookup('service:apollo')
+    let service = this.owner.lookup('service:apollo');
 
     service.set('client', {
       query() {
         assert.ok(true, 'Called query function on apollo client');
 
         return new Promise(resolve => {
-          resolve({ data: { human: { name: 'Link' },  __typename: 'person' } });
+          resolve({ data: { human: { name: 'Link' }, __typename: 'person' } });
         });
-      }
+      },
     });
 
     const result = await service.query({ query: testQuery });

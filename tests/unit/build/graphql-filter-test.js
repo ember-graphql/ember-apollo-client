@@ -7,7 +7,10 @@ import testQuery from './test-query';
 module('Unit | graphql-filter', function() {
   function testCompilation(description, { actual, expected }) {
     test(description, function(assert) {
-      assert.deepEqual(actual.definitions, JSON.parse(JSON.stringify(expected.definitions)));
+      assert.deepEqual(
+        actual.definitions,
+        JSON.parse(JSON.stringify(expected.definitions))
+      );
     });
   }
 
@@ -17,7 +20,7 @@ module('Unit | graphql-filter', function() {
       fragment testFragment on Object {
         name
       }
-    `
+    `,
   });
 
   testCompilation('compilation with #import references', {
@@ -32,6 +35,6 @@ module('Unit | graphql-filter', function() {
       fragment testFragment on Object {
         name
       }
-    `
+    `,
   });
 });

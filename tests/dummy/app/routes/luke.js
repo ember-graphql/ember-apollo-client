@@ -6,11 +6,14 @@ const variables = { id: '1000' };
 
 export default Route.extend(RouteQueryManager, {
   model() {
-    return this.get('apollo').watchQuery({
-      query,
-      variables,
-      fetchPolicy: 'cache-and-network',
-    }, 'human');
+    return this.get('apollo').watchQuery(
+      {
+        query,
+        variables,
+        fetchPolicy: 'cache-and-network',
+      },
+      'human'
+    );
   },
 
   actions: {

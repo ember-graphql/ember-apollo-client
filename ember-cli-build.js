@@ -6,8 +6,8 @@ module.exports = function(defaults) {
   let app = new EmberAddon(defaults, {
     'ember-cli-babel': {
       // Necessary for Object.assign when testing in the dummy app with PhantomJS
-      includePolyfill: true
-    }
+      includePolyfill: true,
+    },
   });
 
   /*

@@ -1,7 +1,7 @@
 import { module, test } from 'qunit';
-import { setupApplicationTest } from "dummy/tests/helpers/setup";
+import { setupApplicationTest } from 'dummy/tests/helpers/setup';
 import { addResolveFunctionsToSchema } from 'graphql-tools';
-import { click, currentURL, find, settled, visit } from "@ember/test-helpers";
+import { click, currentURL, find, settled, visit } from '@ember/test-helpers';
 
 module('Acceptance | main', function(hooks) {
   setupApplicationTest(hooks);
@@ -49,7 +49,7 @@ module('Acceptance | main', function(hooks) {
     // that there are no errors:
     human.name = 'Lucas Skywalker';
     await click('.refetch-button');
-    await settled()
+    await settled();
 
     assert.equal(find('.model-name').innerText, 'Lucas Skywalker');
     // Because we used watchQuery() there should be an ongoing query in the
@@ -102,7 +102,11 @@ module('Acceptance | main', function(hooks) {
     // Because we used watchQuery() there should be an ongoing query in the
     // apollo query manager:
     let queries = getQueries();
-    assert.equal(Object.keys(queries).length, 1, 'there is an active watchQuery');
+    assert.equal(
+      Object.keys(queries).length,
+      1,
+      'there is an active watchQuery'
+    );
 
     // Change the query param to re-fetch model, which will trigger
     // resetController() when it's done:
@@ -114,7 +118,11 @@ module('Acceptance | main', function(hooks) {
     // watchQuery should have been fetched referencing 'droid'. It should
     // still be active, while the 'human' query should not.
     queries = getQueries();
-    assert.equal(Object.keys(queries).length, 1, 'there is an active watchQuery');
+    assert.equal(
+      Object.keys(queries).length,
+      1,
+      'there is an active watchQuery'
+    );
     done();
   });
 });

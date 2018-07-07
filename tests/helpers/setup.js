@@ -1,5 +1,5 @@
-import { setupApplicationTest as defaultSetup } from "ember-qunit";
-import startPretender from "../helpers/start-pretender";
+import { setupApplicationTest as defaultSetup } from 'ember-qunit';
+import startPretender from '../helpers/start-pretender';
 
 function setupPretender(hooks) {
   hooks.beforeEach(function() {

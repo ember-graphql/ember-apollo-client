@@ -8,11 +8,11 @@ module('Unit | Utility | copyWithExtras', function() {
       hamsters: ['Tomster', 'Zoey'],
       people: [
         { name: 'Link', __typename: 'hero' },
-        { name: 'Zelda', __typename: 'princess' }
+        { name: 'Zelda', __typename: 'princess' },
       ],
       bestDay: new Date(2018, 3, 3),
       todoCount: 4,
-      __typename: 'testData'
+      __typename: 'testData',
     };
 
     let result = copyWithExtras(toCopy, [], []);
@@ -23,7 +23,7 @@ module('Unit | Utility | copyWithExtras', function() {
   test('does not copy attributes prefixed with __ unless in extraCopyProperties', function(assert) {
     const toCopy = {
       __typename: 'test',
-      __otherAttribute: 'notATest'
+      __otherAttribute: 'notATest',
     };
 
     let result = copyWithExtras(toCopy, [], []);

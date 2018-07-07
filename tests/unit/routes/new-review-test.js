@@ -44,11 +44,11 @@ module('Unit | Route | new-review', function(hooks) {
           createReview: {
             review: {
               ep: 'JEDI',
-              commentary: "It's a trap"
-            }
-          }
+              commentary: "It's a trap",
+            },
+          },
         };
-      }
+      },
     };
     route.set('apollo', apollo);
 
