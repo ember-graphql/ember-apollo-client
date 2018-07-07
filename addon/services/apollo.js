@@ -1,22 +1,22 @@
 import Ember from 'ember';
-import Service from "@ember/service"
-import EmberObject, { get, setProperties, computed } from "@ember/object";
-import { A } from "@ember/array";
-import { deprecate } from "@ember/application/deprecations";
-import { isArray } from "@ember/array";
-import { isNone, isPresent } from "@ember/utils";
-import { getOwner } from "@ember/application";
-import { merge } from "@ember/polyfills";
-import RSVP from "rsvp";
-import { run } from "@ember/runloop";
-import { alias } from "@ember/object/computed";
-import { ApolloClient } from "apollo-client";
-import { createHttpLink } from "apollo-link-http";
-import { InMemoryCache } from "apollo-cache-inmemory";
-import { apolloObservableKey } from "ember-apollo-client";
-import QueryManager from "ember-apollo-client/apollo/query-manager";
-import copyWithExtras from "ember-apollo-client/utils/copy-with-extras";
-import { registerWaiter } from "@ember/test";
+import Service from '@ember/service';
+import EmberObject, { get, setProperties, computed } from '@ember/object';
+import { A } from '@ember/array';
+import { deprecate } from '@ember/application/deprecations';
+import { isArray } from '@ember/array';
+import { isNone, isPresent } from '@ember/utils';
+import { getOwner } from '@ember/application';
+import { merge } from '@ember/polyfills';
+import RSVP from 'rsvp';
+import { run } from '@ember/runloop';
+import { alias } from '@ember/object/computed';
+import { ApolloClient } from 'apollo-client';
+import { createHttpLink } from 'apollo-link-http';
+import { InMemoryCache } from 'apollo-cache-inmemory';
+import { apolloObservableKey } from 'ember-apollo-client';
+import QueryManager from 'ember-apollo-client/apollo/query-manager';
+import copyWithExtras from 'ember-apollo-client/utils/copy-with-extras';
+import { registerWaiter } from '@ember/test';
 import fetch from 'fetch';
 
 function newDataFunc(observable, resultKey, resolve, mergedProps = {}) {
@@ -54,7 +54,7 @@ function newDataFunc(observable, resultKey, resolve, mergedProps = {}) {
 
 // used in environments without injected `config:environment` (i.e. unit tests):
 const defaultOptions = {
-  apiURL: "http://testserver.example/v1/graph",
+  apiURL: 'http://testserver.example/v1/graph',
 };
 
 export default Service.extend({
@@ -65,13 +65,13 @@ export default Service.extend({
   // options are configured in your environment.js.
   options: computed(function() {
     // config:environment not injected into tests, so try to handle that gracefully.
-    let config = getOwner(this).resolveRegistration("config:environment");
+    let config = getOwner(this).resolveRegistration('config:environment');
     if (config && config.apollo) {
       return config.apollo;
     } else if (Ember.testing) {
       return defaultOptions;
     }
-    throw new Error("no Apollo service options defined");
+    throw new Error('no Apollo service options defined');
   }),
 
   init() {
@@ -100,8 +100,8 @@ export default Service.extend({
    */
   clientOptions: computed(function() {
     return {
-      link: this.get("link"),
-      cache: this.get("cache"),
+      link: this.get('link'),
+      cache: this.get('cache'),
     };
   }),
 
@@ -121,11 +121,16 @@ export default Service.extend({
 
     let middlewares = this.get('middlewares');
     if (isPresent(middlewares)) {
-      deprecate(`The \`middlewares\` option is deprecated, override \`link\` instead.`, false, {
-        id: 'ember-apollo-client.deprecate-middlewares-for-link',
-        until: '1.0.0',
-        url: 'https://github.com/apollographql/apollo-client/blob/master/docs/source/2.0-migration.md#network-middleware-and-afterware'
-      });
+      deprecate(
+        `The \`middlewares\` option is deprecated, override \`link\` instead.`,
+        false,
+        {
+          id: 'ember-apollo-client.deprecate-middlewares-for-link',
+          until: '1.0.0',
+          url:
+            'https://github.com/apollographql/apollo-client/blob/master/docs/source/2.0-migration.md#network-middleware-and-afterware',
+        }
+      );
     }
 
     return link;
@@ -278,8 +283,7 @@ export default Service.extend({
    */
   _waitFor(promise) {
     this._incrementOngoing();
-    return promise
-      .finally(() => this._decrementOngoing());
+    return promise.finally(() => this._decrementOngoing());
   },
 
   // unresolved / ongoing requests, used for tests:

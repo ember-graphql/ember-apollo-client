@@ -1,7 +1,7 @@
 import { module, test } from 'qunit';
-import { setupApplicationTest } from "dummy/tests/helpers/setup";
+import { setupApplicationTest } from 'dummy/tests/helpers/setup';
 import { addResolveFunctionsToSchema } from 'graphql-tools';
-import { click, currentURL, find, visit } from "@ember/test-helpers";
+import { click, currentURL, find, visit } from '@ember/test-helpers';
 
 const mockHuman = {
   id: '1000',
@@ -31,17 +31,21 @@ module('Acceptance | watch query', function(hooks) {
       Mutation: {
         changeCharacterName(_, { id, name }) {
           assert.equal(id, mockHuman.id, 'correct mutation id is passed in');
-          assert.equal(name, 'Darth Vader', 'correct mutation name is passed in');
+          assert.equal(
+            name,
+            'Darth Vader',
+            'correct mutation name is passed in'
+          );
           return Object.assign({}, character, { name });
-        }
+        },
       },
       Character: {
         __resolveType(obj) {
           // Character interface needs to resolve to a specific type
           // so it's just pulled from the object's type that was queried
           return obj.__typename;
-        }
-      }
+        },
+      },
     };
 
     addResolveFunctionsToSchema({ schema, resolvers });
@@ -49,9 +53,17 @@ module('Acceptance | watch query', function(hooks) {
     await visit('/anakin');
     assert.equal(currentURL(), '/anakin');
 
-    assert.equal(find('.model-name').innerText, 'Anakin Skywalker', 'has correct name from initial query');
+    assert.equal(
+      find('.model-name').innerText,
+      'Anakin Skywalker',
+      'has correct name from initial query'
+    );
     await click('.change-name');
-    assert.equal(find('.model-name').innerText, 'Darth Vader', 'has updated name from mutation and watch query');
+    assert.equal(
+      find('.model-name').innerText,
+      'Darth Vader',
+      'has updated name from mutation and watch query'
+    );
     done();
   });
 });

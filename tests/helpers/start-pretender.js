@@ -1,4 +1,4 @@
-import RSVP from 'rsvp'
+import RSVP from 'rsvp';
 import Pretender from 'pretender';
 import { graphql } from 'graphql';
 import {
@@ -90,8 +90,8 @@ export default function startPretender() {
 
   pretender.post('https://test.example/graphql', function(request) {
     let body = JSON.parse(request.requestBody);
-    return new RSVP.Promise((resolve) => {
-      graphql(schema, body.query, {}, {}, body.variables).then((result) => {
+    return new RSVP.Promise(resolve => {
+      graphql(schema, body.query, {}, {}, body.variables).then(result => {
         if (result.errors && result.errors.length > 0) {
           console.log('ERROR:', result.errors[0]); // eslint-disable-line no-console
           debugger; // eslint-disable-line no-debugger

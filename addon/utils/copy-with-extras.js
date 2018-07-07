@@ -1,10 +1,10 @@
-const extraCopyProperties = ["__typename"];
+const extraCopyProperties = ['__typename'];
 
 export default function copyWithExtras(obj, seen, copies) {
   let ret, loc, key;
 
   // primitive data types are immutable, just return them.
-  if (typeof obj !== "object" || obj === null) {
+  if (typeof obj !== 'object' || obj === null) {
     return obj;
   }
 
@@ -34,7 +34,7 @@ export default function copyWithExtras(obj, seen, copies) {
 
       // Prevents browsers that don't respect non-enumerability from
       // copying internal Ember properties
-      if (key.substring(0, 2) === "__") {
+      if (key.substring(0, 2) === '__') {
         continue;
       }
 

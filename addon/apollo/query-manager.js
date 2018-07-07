@@ -1,12 +1,12 @@
-import { inject as service } from "@ember/service";
-import EmberObject from "@ember/object";
-import { alias } from "@ember/object/computed";
-import { A } from "@ember/array";
+import { inject as service } from '@ember/service';
+import EmberObject from '@ember/object';
+import { alias } from '@ember/object/computed';
+import { A } from '@ember/array';
 
 export default EmberObject.extend({
   apollo: service(),
   apolloClient: alias('apollo.client'),
-  
+
   activeSubscriptions: null,
 
   init() {
@@ -60,7 +60,7 @@ export default EmberObject.extend({
     return this.get('apollo').managedWatchQuery(this, opts, resultKey);
   },
 
-   /**
+  /**
    * Tracks a subscription in the list of active subscriptions, which will all be
    * cancelled when `unsubcribeAll` is called.
    *
@@ -97,7 +97,7 @@ export default EmberObject.extend({
    * @return {!Promise}
    * @public
    */
-  unsubscribeAll(onlyStale=false) {
+  unsubscribeAll(onlyStale = false) {
     let subscriptions = this.get('activeSubscriptions');
     subscriptions.forEach(subscription => {
       if (!onlyStale || subscription.stale) {
