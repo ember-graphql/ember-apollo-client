@@ -6,6 +6,6 @@ export default Mixin.create({
   apolloService: service('apollo'),
   init() {
     this._super(...arguments);
-    this.apollo = this.get('apolloService').createQueryManager();
-  }
+    this.set('apollo', this.get('apolloService').createQueryManager());
+  },
 });
