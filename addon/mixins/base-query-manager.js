@@ -4,8 +4,8 @@ import { computed } from '@ember/object';
 
 export default Mixin.create({
   apolloService: service('apollo'),
-
-  apollo: computed(function() {
-    return this.get('apolloService').createQueryManager();
-  }),
+  init() {
+    this._super(...arguments);
+    this.apollo = this.get('apolloService').createQueryManager();
+  }
 });
