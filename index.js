@@ -17,7 +17,9 @@ module.exports = {
 
   included() {
     this._super.included.apply(this, arguments);
-    this.addonConfig = this.app.options['apollo'] || {};
+
+    const host = this._findHost();
+    this.addonConfig = host.options['apollo'] || {};
 
     this.import('vendor/-apollo-client-bundle.js');
     this.import('vendor/-apollo-client-shims.js');
