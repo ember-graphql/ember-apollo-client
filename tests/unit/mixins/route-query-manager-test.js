@@ -1,5 +1,5 @@
 import EmberObject from '@ember/object';
-import RouteQueryManagerMixin from 'ember-apollo-client/mixins/route-query-manager';
+import { RouteQueryManager } from 'ember-apollo-client';
 import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
 
@@ -8,7 +8,7 @@ module('Unit | Mixin | route query manager', function(hooks) {
 
   hooks.beforeEach(function() {
     this.subject = function() {
-      let TestObject = EmberObject.extend(RouteQueryManagerMixin);
+      let TestObject = EmberObject.extend(RouteQueryManager);
       this.owner.register('test-container:test-object', TestObject);
       return this.owner.lookup('test-container:test-object');
     };

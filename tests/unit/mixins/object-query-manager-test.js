@@ -1,5 +1,5 @@
 import EmberObject from '@ember/object';
-import ObjectQueryManagerMixin from 'ember-apollo-client/mixins/object-query-manager';
+import { ObjectQueryManager } from 'ember-apollo-client';
 import { ApolloClient } from 'apollo-client';
 import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
@@ -9,7 +9,7 @@ module('Unit | Mixin | ember object query manager', function(hooks) {
 
   hooks.beforeEach(function() {
     this.subject = function() {
-      let TestObject = EmberObject.extend(ObjectQueryManagerMixin);
+      let TestObject = EmberObject.extend(ObjectQueryManager);
       this.owner.register('test-container:test-object', TestObject);
       return this.owner.lookup('test-container:test-object');
     };

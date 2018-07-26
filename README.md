@@ -129,7 +129,7 @@ mixin and `watchQuery`:
 
 ```js
 import Route from "@ember/routing/route";
-import RouteQueryManager from "ember-apollo-client/mixins/route-query-manager";
+import { RouteQueryManager } from "ember-apollo-client";
 import query from "my-app/gql/queries/human";
 
 export default Route.extend(RouteQueryManager, {
@@ -377,7 +377,8 @@ whenever the store is updated with new data about the resolved objects. This
 happens until you explicitly unsubscribe from it.
 
 In ember-apollo-client, most unsubscriptions are handled automatically by the
-`RouteQueryManager`, `ObjectQueryManager` and `ComponentQueryManager` mixins, so long as you use them.
+`RouteQueryManager`, `ObjectQueryManager` and `ComponentQueryManager` mixins,
+so long as you use them.
 
 If you're fetching data elsewhere, such as in an Ember Service, or if you use
 the Apollo service directly, you are responsible for unsubscribing from
@@ -394,7 +395,7 @@ a base route class:
 
 ```js
 import Route from "@ember/routing/route";
-import RouteQueryManager from "ember-apollo-client/mixins/route-query-manager";
+import { RouteQueryManager } from "ember-apollo-client";
 
 export default Route.extend(RouteQueryManager);
 ```
