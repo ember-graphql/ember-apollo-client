@@ -18,11 +18,12 @@ module.exports = {
   included() {
     this._super.included.apply(this, arguments);
 
-    const host = this._findHost();
-    this.addonConfig = host.options['apollo'] || {};
-
     this.import('vendor/-apollo-client-bundle.js');
     this.import('vendor/-apollo-client-shims.js');
+  },
+
+  addonConfig() {
+    return this._findHost().options['apollo'] || {};
   },
 
   treeForVendor() {
@@ -30,7 +31,7 @@ module.exports = {
     const {
       include: userPackages = [],
       exclude: excludedPackages = [],
-    } = this.addonConfig;
+    } = this.addonConfig();
 
     const includedPackages = apolloClientDefaultPackages.filter(
       p => !excludedPackages.includes(p)
