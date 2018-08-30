@@ -1,22 +1,13 @@
-import Mixin from '@ember/object/mixin';
-import BaseQueryManager from 'ember-apollo-client/mixins/base-query-manager';
+import RouteQueryManager from 'ember-apollo-client/-private/mixins/route-query-manager';
+import { deprecate } from '@ember/application/deprecations';
 
-export default Mixin.create(BaseQueryManager, {
-  beforeModel() {
-    this.get('apollo').markSubscriptionsStale();
-    return this._super(...arguments);
-  },
+deprecate(
+  'ember-apollo-client/mixins/route-query-manager is deprecated, use `import { RouteQueryManager } from "ember-apollo-client";`',
+  false,
+  {
+    id: 'ember-apollo-client.deprecate-long-form-mixins',
+    until: '2.0.0',
+  }
+);
 
-  resetController(_controller, isExiting) {
-    this._super(...arguments);
-    this.get('apollo').unsubscribeAll(!isExiting);
-  },
-
-  willDestroy() {
-    let apollo = this.get('apollo');
-    if (apollo.unsubscribeAll) {
-      this.get('apollo').unsubscribeAll(false);
-    }
-    this._super(...arguments);
-  },
-});
+export default RouteQueryManager;

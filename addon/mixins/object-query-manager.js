@@ -1,9 +1,13 @@
-import Mixin from '@ember/object/mixin';
-import BaseQueryManager from 'ember-apollo-client/mixins/base-query-manager';
+import ObjectQueryManager from 'ember-apollo-client/-private/mixins/object-query-manager';
+import { deprecate } from '@ember/application/deprecations';
 
-export default Mixin.create(BaseQueryManager, {
-  willDestroy() {
-    this._super(...arguments);
-    this.get('apollo').unsubscribeAll(false);
-  },
-});
+deprecate(
+  'ember-apollo-client/mixins/object-query-manager is deprecated, use `import { ObjectQueryManager } from "ember-apollo-client";`',
+  false,
+  {
+    id: 'ember-apollo-client.deprecate-long-form-mixins',
+    until: '2.0.0',
+  }
+);
+
+export default ObjectQueryManager;
