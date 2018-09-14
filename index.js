@@ -1,46 +1,24 @@
 'use strict';
 
-const apolloClientDefaultPackages = [
-  'apollo-cache',
-  'apollo-cache-inmemory',
-  'apollo-client',
-  'apollo-link',
-  'apollo-link-context',
-  'apollo-link-http',
-  'graphql',
-  'graphql-tools',
-  'graphql-tag',
-];
-
 module.exports = {
   name: 'ember-apollo-client',
 
-  included() {
-    this._super.included.apply(this, arguments);
-
-    this.import('vendor/-apollo-client-bundle.js');
-    this.import('vendor/-apollo-client-shims.js');
-  },
-
-  addonConfig() {
-    return this._findHost().options['apollo'] || {};
-  },
-
-  treeForVendor() {
-    const WebpackDependencyPlugin = require('./lib/webpack-dependency-plugin');
-    const {
-      include: userPackages = [],
-      exclude: excludedPackages = [],
-    } = this.addonConfig();
-
-    const includedPackages = apolloClientDefaultPackages.filter(
-      p => !excludedPackages.includes(p)
-    );
-
-    return new WebpackDependencyPlugin({
-      outputName: 'apollo-client',
-      expose: [...includedPackages, ...userPackages],
-    });
+  options: {
+    autoImport: {
+      webpack: {
+        module: {
+          rules: [
+            /* fixes issue with graphql-js's mjs entry */
+            /* see: https://github.com/graphql/graphql-js/issues/1272#issuecomment-393903706 */
+            {
+              test: /\.mjs$/,
+              include: /node_modules\/graphql/,
+              type: 'javascript/auto',
+            },
+          ],
+        },
+      },
+    },
   },
 
   setupPreprocessorRegistry(type, registry) {
@@ -50,6 +28,7 @@ module.exports = {
         ext: 'graphql',
         toTree(tree) {
           const GraphQLFilter = require('broccoli-graphql-filter');
+
           return new GraphQLFilter(tree);
         },
       });
