@@ -32,8 +32,8 @@ function newDataFunc(observable, resultKey, resolve, mergedProps = {}) {
       // See https://github.com/bgentry/ember-apollo-client/issues/45
       return;
     }
-    let keyedData = isNone(resultKey) ? data : get(data, resultKey);
-    let dataToSend = copyWithExtras(keyedData, [], []);
+    let keyedData = isNone(resultKey) ? data : data && get(data, resultKey);
+    let dataToSend = copyWithExtras(keyedData || {}, [], []);
     if (isNone(obj)) {
       if (isArray(dataToSend)) {
         obj = A(dataToSend);
