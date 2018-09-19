@@ -2,7 +2,6 @@ import Ember from 'ember';
 import Service from '@ember/service';
 import EmberObject, { get, setProperties, computed } from '@ember/object';
 import { A } from '@ember/array';
-import { deprecate } from '@ember/application/deprecations';
 import { isArray } from '@ember/array';
 import { isNone, isPresent } from '@ember/utils';
 import { getOwner } from '@ember/application';
@@ -117,23 +116,7 @@ export default Service.extend({
     if (isPresent(requestCredentials)) {
       linkOptions.credentials = requestCredentials;
     }
-    let link = createHttpLink(linkOptions);
-
-    let middlewares = this.get('middlewares');
-    if (isPresent(middlewares)) {
-      deprecate(
-        `The \`middlewares\` option is deprecated, override \`link\` instead.`,
-        false,
-        {
-          id: 'ember-apollo-client.deprecate-middlewares-for-link',
-          until: '1.0.0',
-          url:
-            'https://github.com/apollographql/apollo-client/blob/master/docs/source/2.0-migration.md#network-middleware-and-afterware',
-        }
-      );
-    }
-
-    return link;
+    return createHttpLink(linkOptions);
   }),
 
   /**

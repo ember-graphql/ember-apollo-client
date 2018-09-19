@@ -74,6 +74,12 @@ Additional configuration of the ApolloClient can be done by extending the Apollo
 service and overriding the `clientOptions` property. See the
 [Apollo Service API][apollo-service-api] for more info.
 
+### Dependencies
+
+This addon uses [ember-auto-import](https://github.com/ef4/ember-auto-import) to import dependencies.
+
+If you desire any additional graphql dependencies, install them with npm/yarn and import as desired.
+
 ## Usage
 
 ### Fetching data
