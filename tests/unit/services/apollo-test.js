@@ -77,4 +77,40 @@ module('Unit | Service | apollo', function(hooks) {
     assert.equal(result.__typename, 'person');
     done();
   });
+
+  test('.watchQuery with key', async function(assert) {
+    let service = this.owner.lookup('service:apollo');
+
+    service.set('client', {
+      watchQuery() {
+        assert.ok(true, 'Called watchQuery function on apollo client');
+
+        return {
+          subscribe({ next }) {
+            next({ data: { human: { name: 'Link' }, __typename: 'person' } });
+          },
+        };
+      },
+    });
+
+    const result = await service.watchQuery({ query: testQuery }, 'human');
+    assert.equal(result.get('name'), 'Link');
+  });
+
+  test('.watchQuery with key gracefully handles null', async function(assert) {
+    let service = this.owner.lookup('service:apollo');
+
+    service.set('client', {
+      watchQuery() {
+        return {
+          subscribe({ next }) {
+            next({ data: null });
+          },
+        };
+      },
+    });
+
+    const result = await service.watchQuery({ query: testQuery }, 'human');
+    assert.equal(result.get('name'), undefined);
+  });
 });
