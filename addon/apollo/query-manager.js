@@ -60,6 +60,10 @@ export default EmberObject.extend({
     return this.get('apollo').managedWatchQuery(this, opts, resultKey);
   },
 
+  subscribe(opts, resultKey) {
+    return this.get('apollo').managedSubscribe(this, opts, resultKey);
+  },
+
   /**
    * Tracks a subscription in the list of active subscriptions, which will all be
    * cancelled when `unsubcribeAll` is called.
