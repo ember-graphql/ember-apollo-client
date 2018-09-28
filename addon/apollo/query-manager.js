@@ -60,6 +60,21 @@ export default EmberObject.extend({
     return this.get('apollo').managedWatchQuery(this, opts, resultKey);
   },
 
+  /**
+   * Executes a `subscribe` on the Apollo service.
+   *
+   * This subscription is tracked by the QueryManager and will be unsubscribed
+   * (and no longer updated with new data) when unsubscribeAll() is called.
+   *
+   * The Promise will contain a Subscription object which will contain events
+   * as they come in. It will also trigger `event` messages which can be listened for.
+   *
+   * @method subscribe
+   * @param {!Object} opts The query options used in the Apollo Client watchQuery.
+   * @param {String} resultKey The key that will be returned from the resulting response data. If null or undefined, the entire response data will be returned.
+   * @return {!Promise}
+   * @public
+   */
   subscribe(opts, resultKey) {
     return this.get('apollo').managedSubscribe(this, opts, resultKey);
   },
