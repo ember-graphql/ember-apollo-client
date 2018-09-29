@@ -43,6 +43,34 @@ module('Unit | Mixin | ember object query manager', function(hooks) {
     done();
   });
 
+  test('it unsubscribes from any subscribe subscriptions', function(assert) {
+    let done = assert.async();
+    let subject = this.subject();
+    let unsubscribeCalled = 0;
+
+    let apolloService = subject.get('apollo.apollo');
+    apolloService.set('managedSubscribe', (manager, opts) => {
+      assert.deepEqual(opts, { subscription: 'fakeSubscription' });
+      manager.trackSubscription({
+        unsubscribe() {
+          unsubscribeCalled++;
+        },
+      });
+      return {};
+    });
+
+    subject.get('apollo').subscribe({ subscription: 'fakeSubscription' });
+    subject.get('apollo').subscribe({ subscription: 'fakeSubscription' });
+
+    subject.willDestroy();
+    assert.equal(
+      unsubscribeCalled,
+      2,
+      '_apolloUnsubscribe() was called once per subscribe'
+    );
+    done();
+  });
+
   test('it exposes an apollo client object', function(assert) {
     let subject = this.subject();
     let client = subject.get('apollo.apolloClient');

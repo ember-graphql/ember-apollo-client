@@ -43,6 +43,35 @@ module('Unit | Mixin | route query manager', function(hooks) {
     done();
   });
 
+  test('it unsubscribes from any subscribe subscriptions', function(assert) {
+    let done = assert.async();
+    let subject = this.subject();
+    let unsubscribeCalled = 0;
+
+    let apolloService = subject.get('apollo.apollo');
+    apolloService.set('managedSubscribe', (manager, opts) => {
+      assert.deepEqual(opts, { subscription: 'fakeSubscription' });
+      manager.trackSubscription({
+        unsubscribe() {
+          unsubscribeCalled++;
+        },
+      });
+      return {};
+    });
+
+    subject.get('apollo').subscribe({ subscription: 'fakeSubscription' });
+    subject.get('apollo').subscribe({ subscription: 'fakeSubscription' });
+
+    subject.beforeModel();
+    subject.resetController({}, true);
+    assert.equal(
+      unsubscribeCalled,
+      2,
+      '_apolloUnsubscribe() was called once per subscribe'
+    );
+    done();
+  });
+
   test('it only unsubscribes from stale watchQuery subscriptions with isExiting=false', function(assert) {
     let done = assert.async();
     let subject = this.subject();

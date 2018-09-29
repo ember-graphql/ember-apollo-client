@@ -19,11 +19,10 @@ import { registerWaiter } from '@ember/test';
 import fetch from 'fetch';
 import Evented from '@ember/object/evented';
 
-const Subscription = EmberObject.extend(Evented, {
-  init(...args) {
-    this._super(...args);
-
-    this.set('events', []);
+const EmberApolloSubscription = EmberObject.extend(Evented, {
+  init() {
+    this._super(...arguments);
+    this.set('events', A([]));
   },
 
   lastEvent: alias('events.firstObject'),
@@ -41,7 +40,7 @@ const Subscription = EmberObject.extend(Evented, {
 });
 
 function extractNewData(resultKey, { data, loading }) {
-  if (loading && data === undefined) {
+  if (loading && isNone(data)) {
     // This happens when the cache has no data and the data is still loading
     // from the server. We don't want to resolve the promise with empty data
     // so we instead just bail out.
@@ -247,14 +246,13 @@ export default Service.extend({
   subscribe(opts, resultKey = null) {
     const observable = this.get('client').subscribe(opts);
 
-    const obj = Subscription.create();
+    const obj = EmberApolloSubscription.create();
 
     return this._waitFor(
       new RSVP.Promise((resolve, reject) => {
         let subscription = observable.subscribe({
           next: newData => {
             let dataToSend = extractNewData(resultKey, newData);
-
             if (dataToSend === null) {
               // see comment in extractNewData
               return;

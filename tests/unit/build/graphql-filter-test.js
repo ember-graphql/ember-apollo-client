@@ -3,6 +3,7 @@ import gql from 'graphql-tag';
 
 import testFragment from './test-fragment';
 import testQuery from './test-query';
+import testSubscription from './test-subscription';
 
 module('Unit | graphql-filter', function() {
   function testCompilation(description, { actual, expected }) {
@@ -19,6 +20,17 @@ module('Unit | graphql-filter', function() {
     expected: gql`
       fragment testFragment on Object {
         name
+      }
+    `,
+  });
+
+  testCompilation('simple subscription compilation', {
+    actual: testSubscription,
+    expected: gql`
+      subscription TestSubscription {
+        subject {
+          name
+        }
       }
     `,
   });
