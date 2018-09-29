@@ -171,6 +171,80 @@ See the [detailed query manager docs][query-manager-api] for more details on
 usage, or the [Apollo service API][apollo-service-api] if you need to use
 the service directly.
 
+### GraphQL Subscriptions
+
+GQL Subscriptions allow a client to subscribe to specific queries they are interested in tracking. The syntax for doing this is almost identical to a `query` / `watchQuery`, the main difference, other than the format of the GQL Document you provide, is that with a Subscription, you have a few ways to act on changes as they come in (typically via websockets).
+
+```js
+import gql from "graphql-tag";
+
+const subscription = gql`
+  subscription {
+    newHuman() {
+      name
+    }
+  }
+`;
+```
+
+Within your routes, you can subscribe using the `RouteQueryManager`
+mixin and `subscribe`:
+
+`app/routes/some-route.js`
+
+```js
+import Route from "@ember/routing/route";
+import { RouteQueryManager } from "ember-apollo-client";
+import subscription from "my-app/gql/subscription/new-human";
+
+export default Route.extend(RouteQueryManager, {
+  setupSubscription() {
+    const subscription = this.get("apollo").subscribe({ subscription }, "human");
+
+    subscription.on("event", event => alert(`${event.name} was just born!`));
+
+    // Then imagine this subscription is notified that "Greg" was just born:
+
+    // The browser would alert that "Greg was just born!"
+    // at which point these properties would be updated:
+    subscription.get("events").mapBy("name"); // ["Greg"]
+    subscription.get("lastEvent.name"); // "Greg"
+  },
+});
+```
+
+The big advantage of using the Manager is that when you navigate away from this route, all subscriptions created will be terminated. That said, if you want to manually unsubscribe (or are not using the QueryManager) `subscription.unsubscribe()` will do the trick.
+
+#### Enabling Websockets
+
+GraphQL Subscriptions are typically managed via websockets. This can be handled by updating your `link` in `my-app/services/apollo.js`
+
+Example with Authenticated Phoenix Channels + Absinthe:
+
+```js
+import ApolloService from 'ember-apollo-client/services/apollo';
+import { Socket } from 'phoenix';
+import { inject as service } from "@ember/service";
+import { createAbsintheSocketLink } from '@absinthe/socket-apollo-link';
+import AbsintheSocket from '@absinthe/socket';
+import { computed } from '@ember/object';
+
+
+export default ApolloService.extend({
+  session: service(),
+
+  link: computed(function () {
+    const socket = new Socket("ws://socket-url", {
+      params: { token: this.get('session.token') },
+    });
+    const absintheSocket = AbsintheSocket.create(socket);
+
+    return createAbsintheSocketLink(absintheSocket);
+  }),
+});
+
+```
+
 ### Mutations and Fragments
 
 You can perform a mutation using the `mutate` method. You can also use GraphQL
@@ -236,7 +310,18 @@ export default Route.extend({
   can be used to resolve beneath the root.
 
   The query manager will automatically unsubscribe from this object.
+* `subscribe(options, resultKey)`: This calls the
+  [`ApolloClient.subscribe`][subscribe] method. It returns a promise that
+  resolves with an `EmberApolloSubscription`. You can use this object in a few ways to keep
+  track of your subscription:
+  - emberApolloSubscription.get('events'); // returns an array of all events received (newest first)
+  - emberApolloSubscription.get('lastEvent'); // return the most recent event
+  - emberApolloSubscription.on('event', event => do_something_with(event)); // manually act on event
 
+  As before, the `resultKey` can be used to resolve beneath the root.
+
+  The query manager will automatically unsubscribe from this object. If you want to manually
+  unsubscribe, you can do so with `emberApolloSubscription.apolloUnsubscribe();`
 * `query(options, resultKey)`: This calls the
   [`ApolloClient.query`](https://www.apollographql.com/docs/react/api/apollo-client.html#ApolloClient.query)
   method. It returns a promise that resolves with the raw POJO data that the
