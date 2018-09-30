@@ -20,12 +20,7 @@ import fetch from 'fetch';
 import Evented from '@ember/object/evented';
 
 const EmberApolloSubscription = EmberObject.extend(Evented, {
-  init() {
-    this._super(...arguments);
-    this.set('events', A([]));
-  },
-
-  lastEvent: alias('events.firstObject'),
+  lastEvent: null,
 
   apolloUnsubscribe() {
     this.get('_apolloClientSubscription').unsubscribe();
@@ -34,7 +29,7 @@ const EmberApolloSubscription = EmberObject.extend(Evented, {
   _apolloClientSubscription: null,
 
   _onNewData(newData) {
-    this.get('events').unshiftObject(newData);
+    this.set('lastEvent', newData);
     this.trigger('event', newData);
   },
 });

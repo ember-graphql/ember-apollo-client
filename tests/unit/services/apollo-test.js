@@ -143,7 +143,6 @@ module('Unit | Service | apollo', function(hooks) {
 
     // Things initialize as empty
     assert.equal(result.get('lastEvent'), null);
-    assert.equal(result.get('events.length'), 0);
 
     // Two updates come in
     nextFunction({ data: { human: { name: '1 Link' }, __typename: 'person' } });
@@ -151,13 +150,6 @@ module('Unit | Service | apollo', function(hooks) {
 
     // Events are in the correct order
     assert.equal(result.get('lastEvent.name'), '2 Luke');
-    assert.equal(
-      result
-        .get('events')
-        .mapBy('name')
-        .join(' '),
-      '2 Luke 1 Link'
-    );
     // Event streams are in the correct order
     assert.equal(names.join(' '), '1 Link 2 Luke');
 
@@ -167,5 +159,6 @@ module('Unit | Service | apollo', function(hooks) {
     nextFunction({ loading: true, data: null });
     // Still have last event
     assert.equal(result.get('lastEvent.name'), '3 Greg');
+    assert.equal(names.join(' '), '1 Link 2 Luke 3 Greg');
   });
 });

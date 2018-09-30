@@ -173,22 +173,25 @@ the service directly.
 
 ### GraphQL Subscriptions
 
-GQL Subscriptions allow a client to subscribe to specific queries they are interested in tracking. The syntax for doing this is almost identical to a `query` / `watchQuery`, the main difference, other than the format of the GQL Document you provide, is that with a Subscription, you have a few ways to act on changes as they come in (typically via websockets).
+GQL Subscriptions allow a client to subscribe to specific queries they are interested in tracking. The syntax for doing this is similar to `query` / `watchQuery`, but there are a few main differences:
 
-```js
-import gql from "graphql-tag";
+- ) you must define a `subscription` (versus a `query` or `mutation`)
+- ) because subscriptions are async by nature, you have to listen for these events and act accordingly.
+- ) subscriptions require websockets, so must configure your `link` accordingly
 
-const subscription = gql`
-  subscription {
-    newHuman() {
-      name
-    }
+**Creating your subscription:**
+
+`my-app/gql/subscription/new-human`
+
+```
+subscription {
+  newHuman() {
+    name
   }
-`;
+}
 ```
 
-Within your routes, you can subscribe using the `RouteQueryManager`
-mixin and `subscribe`:
+**Subscribing from inside a route:**
 
 `app/routes/some-route.js`
 
@@ -199,28 +202,20 @@ import subscription from "my-app/gql/subscription/new-human";
 
 export default Route.extend(RouteQueryManager, {
   setupSubscription() {
-    const subscription = this.get("apollo").subscribe({ subscription }, "human");
-
-    subscription.on("event", event => alert(`${event.name} was just born!`));
-
-    // Then imagine this subscription is notified that "Greg" was just born:
-
-    // The browser would alert that "Greg was just born!"
-    // at which point these properties would be updated:
-    subscription.get("events").mapBy("name"); // ["Greg"]
-    subscription.get("lastEvent.name"); // "Greg"
+    this.get("apollo")
+        .subscribe({ subscription }, "human");
+        .on("event", event => alert(`${event.name} was just born!`));
   },
 });
 ```
 
-The big advantage of using the Manager is that when you navigate away from this route, all subscriptions created will be terminated. That said, if you want to manually unsubscribe (or are not using the QueryManager) `subscription.unsubscribe()` will do the trick.
+The big advantage of using the RouteQueryManager is that when you navigate away from this route, all subscriptions created will be terminated. That said, if you want to manually unsubscribe (or are not using the RouteQueryManager) `subscription.unsubscribe()` will do the trick.
 
-#### Enabling Websockets
+**Enabling Websockets**
 
-GraphQL Subscriptions are typically managed via websockets. This can be handled by updating your `link` in `my-app/services/apollo.js`
+While this library should work w/ any back-end implementation, here's an example with Authenticated [Phoenix](https://github.com/phoenixframework/phoenix) + [Absinthe](https://github.com/absinthe-graphql/absinthe):
 
-Example with Authenticated Phoenix Channels + Absinthe:
-
+`my-app/services/apollo.js`
 ```js
 import ApolloService from 'ember-apollo-client/services/apollo';
 import { Socket } from 'phoenix';
@@ -242,6 +237,39 @@ export default ApolloService.extend({
     return createAbsintheSocketLink(absintheSocket);
   }),
 });
+
+```
+Note: This will switch **all** gql communication to use websockets versus `http`. If you want to conditionally use websockets for only subscriptions (a common pattern) this is where [Apollo Link Composition](https://www.apollographql.com/docs/link/composition.html) comes in. Specifically, the `split` function is what we're after (note we are using [apollo-utilities](https://www.npmjs.com/package/apollo-utilities), a helpful `npm` package):
+
+`my-app/services/apollo.js`
+```js
+import { computed } from '@ember/object';
+import ApolloService from 'ember-apollo-client/services/apollo';
+import { split } from 'apollo-link';
+import { getMainDefinition } from 'apollo-utilities';
+import { createAbsintheSocketLink } from '@absinthe/socket-apollo-link';
+import AbsintheSocket from '@absinthe/socket';
+
+export default ApolloService.extend({
+  session      : service(),
+
+link: computed(function () {
+    const httpLink = this._super(...arguments);
+    const socket = new Socket("ws://socket-url", {
+      params: { token: this.get('session.token') },
+    });
+    const absintheSocket = AbsintheSocket.create(socket);
+
+    return split(
+      ({ query }) => {
+        const { kind, operation } = getMainDefinition(query);
+
+        return kind === 'OperationDefinition' && operation === 'subscription';
+      },
+      socketLink,
+      httpLink
+    );
+  }),
 
 ```
 
@@ -314,9 +342,8 @@ export default Route.extend({
   [`ApolloClient.subscribe`][subscribe] method. It returns a promise that
   resolves with an `EmberApolloSubscription`. You can use this object in a few ways to keep
   track of your subscription:
-  - emberApolloSubscription.get('events'); // returns an array of all events received (newest first)
-  - emberApolloSubscription.get('lastEvent'); // return the most recent event
   - emberApolloSubscription.on('event', event => do_something_with(event)); // manually act on event
+  - emberApolloSubscription.get('lastEvent'); // return the most recently received event data
 
   As before, the `resultKey` can be used to resolve beneath the root.
 
