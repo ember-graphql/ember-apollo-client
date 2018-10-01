@@ -5,7 +5,7 @@ import { A } from '@ember/array';
 import { isArray } from '@ember/array';
 import { isNone, isPresent } from '@ember/utils';
 import { getOwner } from '@ember/application';
-import { merge } from '@ember/polyfills';
+import { assign } from '@ember/polyfills';
 import RSVP from 'rsvp';
 import { run } from '@ember/runloop';
 import { alias } from '@ember/object/computed';
@@ -38,7 +38,7 @@ function newDataFunc(observable, resultKey, resolve, mergedProps = {}) {
         obj = A(dataToSend);
         obj.setProperties(mergedProps);
       } else {
-        obj = EmberObject.create(merge(dataToSend, mergedProps));
+        obj = EmberObject.create(assign(dataToSend, mergedProps));
       }
       return resolve(obj);
     }
