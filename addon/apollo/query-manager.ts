@@ -1,18 +1,26 @@
-import { inject as service } from '@ember/service';
-import EmberObject from '@ember/object';
-import { alias } from '@ember/object/computed';
-import { A } from '@ember/array';
+import { service } from '@ember-decorators/service';
+import EmberObject, { get } from '@ember/object';
+import { alias } from '@ember-decorators/object/computed';
+import {
+  ApolloClient,
+  MutationOptions,
+  QueryOptions,
+  WatchQueryOptions,
+} from 'apollo-client';
+import ApolloService, { ResultKey } from 'ember-apollo-client/services/apollo';
 
-export default EmberObject.extend({
-  apollo: service(),
-  apolloClient: alias('apollo.client'),
+type Subscription = ZenObservable.Subscription;
 
-  activeSubscriptions: null,
+interface ActiveSubscription {
+  subscription: Subscription;
+  stale: boolean;
+}
 
-  init() {
-    this._super(...arguments);
-    this.set('activeSubscriptions', A([]));
-  },
+export default class QueryManager extends EmberObject {
+  @service apollo!: ApolloService;
+  @alias('apollo.client') apolloClient!: ApolloClient<any>;
+
+  private activeSubscriptions: ActiveSubscription[] = [];
 
   /**
    * Executes a mutation on the Apollo service. The resolved object will
@@ -24,9 +32,9 @@ export default EmberObject.extend({
    * @return {!Promise}
    * @public
    */
-  mutate(opts, resultKey) {
-    return this.get('apollo').mutate(opts, resultKey);
-  },
+  mutate(opts: MutationOptions, resultKey: ResultKey) {
+    return get(this, 'apollo').mutate(opts, resultKey);
+  }
 
   /**
    * Executes a single `query` on the Apollo service. The resolved object will
@@ -38,9 +46,9 @@ export default EmberObject.extend({
    * @return {!Promise}
    * @public
    */
-  query(opts, resultKey) {
-    return this.get('apollo').query(opts, resultKey);
-  },
+  query(opts: QueryOptions, resultKey: ResultKey) {
+    return get(this, 'apollo').query(opts, resultKey);
+  }
 
   /**
    * Executes a `watchQuery` on the Apollo service. If updated data for this
@@ -56,21 +64,21 @@ export default EmberObject.extend({
    * @return {!Promise}
    * @public
    */
-  watchQuery(opts, resultKey) {
-    return this.get('apollo').managedWatchQuery(this, opts, resultKey);
-  },
+  watchQuery(opts: WatchQueryOptions, resultKey: ResultKey) {
+    return get(this, 'apollo').managedWatchQuery(this, opts, resultKey);
+  }
 
   /**
    * Tracks a subscription in the list of active subscriptions, which will all be
-   * cancelled when `unsubcribeAll` is called.
+   * cancelled when `unsubscribeAll` is called.
    *
    * @method trackSubscription
-   * @param {!Object} subscription The Apollo Client Subscription to be tracked for future unsubscription.
+   * @param {!Object} subscription The Apollo Client Subscription to be tracked for future unsubscribing.
    * @private
    */
-  trackSubscription(subscription) {
-    this.get('activeSubscriptions').pushObject({ subscription, stale: false });
-  },
+  trackSubscription(subscription: Subscription) {
+    this.activeSubscriptions.push({ subscription, stale: false });
+  }
 
   /**
    * Marks all tracked subscriptions as being stale, such that they will be
@@ -80,11 +88,10 @@ export default EmberObject.extend({
    * @private
    */
   markSubscriptionsStale() {
-    let subscriptions = this.get('activeSubscriptions');
-    subscriptions.forEach(subscription => {
+    for (const subscription of this.activeSubscriptions) {
       subscription.stale = true;
-    });
-  },
+    }
+  }
 
   /**
    * Unsubscribes from all actively tracked subscriptions initiated by calls to
@@ -98,12 +105,11 @@ export default EmberObject.extend({
    * @public
    */
   unsubscribeAll(onlyStale = false) {
-    let subscriptions = this.get('activeSubscriptions');
-    subscriptions.forEach(subscription => {
-      if (!onlyStale || subscription.stale) {
-        subscription.subscription.unsubscribe();
+    for (const { stale, subscription } of this.activeSubscriptions) {
+      if (!onlyStale || stale) {
+        subscription.unsubscribe();
       }
-    });
-    this.set('activeSubscriptions', A([]));
-  },
-});
+    }
+    this.activeSubscriptions = [];
+  }
+}
