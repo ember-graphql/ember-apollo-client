@@ -1,6 +1,8 @@
 import Ember from 'ember';
 import Service from '@ember/service';
-import EmberObject, { get, setProperties, computed } from '@ember/object';
+import EmberObject, { get, setProperties } from '@ember/object';
+import { computed } from '@ember-decorators/object';
+import { alias } from '@ember-decorators/object/computed';
 import { A } from '@ember/array';
 import { isArray } from '@ember/array';
 import { isNone, isPresent } from '@ember/utils';
@@ -8,17 +10,31 @@ import { getOwner } from '@ember/application';
 import { assign } from '@ember/polyfills';
 import RSVP from 'rsvp';
 import { run } from '@ember/runloop';
-import { alias } from '@ember/object/computed';
-import { ApolloClient } from 'apollo-client';
-import { createHttpLink } from 'apollo-link-http';
+import {
+  ApolloClient,
+  MutationOptions,
+  QueryOptions,
+  WatchQueryOptions,
+  ObservableQuery,
+} from 'apollo-client';
+import { createHttpLink, FetchOptions } from 'apollo-link-http';
 import { InMemoryCache } from 'apollo-cache-inmemory';
 import { apolloObservableKey } from 'ember-apollo-client';
 import QueryManager from 'ember-apollo-client/apollo/query-manager';
 import copyWithExtras from 'ember-apollo-client/utils/copy-with-extras';
 import { registerWaiter } from '@ember/test';
 import fetch from 'fetch';
+import { ApolloCache } from 'apollo-cache';
 
-function newDataFunc(observable, resultKey, resolve, mergedProps = {}) {
+type Subscription = ZenObservable.Subscription;
+export type ResultKey = string | null | undefined;
+
+function newDataFunc(
+  observable: ObservableQuery,
+  resultKey: ResultKey,
+  resolve: (value: any) => void,
+  mergedProps = {}
+) {
   let obj;
   mergedProps[apolloObservableKey] = observable;
 
@@ -56,13 +72,14 @@ const defaultOptions = {
   apiURL: 'http://testserver.example/v1/graph',
 };
 
-export default Service.extend({
-  client: null,
-  apiURL: alias('options.apiURL'),
-  requestCredentials: alias('options.requestCredentials'),
+export default class ApolloService extends Service {
+  client!: ApolloClient<any>;
+  @alias('options.apiURL') apiURL!: string;
+  @alias('options.requestCredentials') requestCredentials!: string;
 
   // options are configured in your environment.js.
-  options: computed(function() {
+  @computed
+  get options() {
     // config:environment not injected into tests, so try to handle that gracefully.
     let config = getOwner(this).resolveRegistration('config:environment');
     if (config && config.apollo) {
@@ -71,10 +88,10 @@ export default Service.extend({
       return defaultOptions;
     }
     throw new Error('no Apollo service options defined');
-  }),
+  }
 
   init() {
-    this._super(...arguments);
+    super.init();
 
     const owner = getOwner(this);
     if (owner) {
@@ -87,7 +104,7 @@ export default Service.extend({
     if (Ember.testing) {
       this._registerWaiter();
     }
-  },
+  }
 
   /**
    * This is the options hash that will be passed to the ApolloClient constructor.
@@ -97,27 +114,30 @@ export default Service.extend({
    * @return {!Object}
    * @public
    */
-  clientOptions: computed(function() {
+  @computed
+  get clientOptions() {
     return {
-      link: this.get('link'),
-      cache: this.get('cache'),
+      link: get(this, 'link'),
+      cache: get(this, 'cache'),
     };
-  }),
+  }
 
-  cache: computed(function() {
+  @computed
+  get cache(): ApolloCache<any> {
     return new InMemoryCache();
-  }),
+  }
 
-  link: computed(function() {
-    let uri = this.get('apiURL');
-    let requestCredentials = this.get('requestCredentials');
-    const linkOptions = { uri, fetch };
+  @computed
+  get link() {
+    const uri = get(this, 'apiURL');
+    const requestCredentials = get(this, 'requestCredentials');
+    const linkOptions: FetchOptions = { uri, fetch };
 
     if (isPresent(requestCredentials)) {
       linkOptions.credentials = requestCredentials;
     }
     return createHttpLink(linkOptions);
-  }),
+  }
 
   /**
    * Executes a mutation on the Apollo client. The resolved object will
@@ -129,7 +149,7 @@ export default Service.extend({
    * @return {!Promise}
    * @public
    */
-  mutate(opts, resultKey) {
+  mutate(opts: MutationOptions, resultKey: ResultKey) {
     return this._waitFor(
       new RSVP.Promise((resolve, reject) => {
         this.client
@@ -156,7 +176,7 @@ export default Service.extend({
           });
       })
     );
-  },
+  }
 
   /**
    * Executes a `watchQuery` on the Apollo client. If updated data for this
@@ -173,9 +193,9 @@ export default Service.extend({
    * @return {!Promise}
    * @public
    */
-  watchQuery(opts, resultKey) {
+  watchQuery(opts: WatchQueryOptions, resultKey: ResultKey) {
     let observable = this.client.watchQuery(opts);
-    let subscription;
+    let subscription: Subscription;
 
     let mergedProps = {
       _apolloUnsubscribe() {
@@ -195,7 +215,7 @@ export default Service.extend({
         });
       })
     );
-  },
+  }
 
   /**
    * Executes a single `query` on the Apollo client. The resolved object will
@@ -207,7 +227,7 @@ export default Service.extend({
    * @return {!Promise}
    * @public
    */
-  query(opts, resultKey) {
+  query(opts: QueryOptions, resultKey: ResultKey) {
     return this._waitFor(
       new RSVP.Promise((resolve, reject) => {
         this.client
@@ -224,7 +244,7 @@ export default Service.extend({
           });
       })
     );
-  },
+  }
 
   /**
    * Executes a `watchQuery` on the Apollo client and tracks the resulting
@@ -237,7 +257,11 @@ export default Service.extend({
    * @return {!Promise}
    * @private
    */
-  managedWatchQuery(manager, opts, resultKey) {
+  managedWatchQuery(
+    manager: QueryManager,
+    opts: WatchQueryOptions,
+    resultKey: ResultKey
+  ) {
     let observable = this.client.watchQuery(opts);
 
     return this._waitFor(
@@ -251,11 +275,11 @@ export default Service.extend({
         manager.trackSubscription(subscription);
       })
     );
-  },
+  }
 
   createQueryManager() {
     return QueryManager.create({ apollo: this });
-  },
+  }
 
   /**
    * Wraps a promise in test waiters.
@@ -264,30 +288,30 @@ export default Service.extend({
    * @return {!Promise}
    * @private
    */
-  _waitFor(promise) {
+  private _waitFor(promise: RSVP.Promise<any>) {
     this._incrementOngoing();
     return promise.finally(() => this._decrementOngoing());
-  },
+  }
 
   // unresolved / ongoing requests, used for tests:
-  _ongoing: 0,
+  _ongoing = 0;
 
-  _incrementOngoing() {
+  private _incrementOngoing() {
     this._ongoing++;
-  },
+  }
 
-  _decrementOngoing() {
+  private _decrementOngoing() {
     this._ongoing--;
-  },
+  }
 
-  _shouldWait() {
+  private _isDone() {
     return this._ongoing === 0;
-  },
+  }
 
-  _registerWaiter() {
-    this._waiter = () => {
-      return this._shouldWait();
-    };
+  private _waiter?: () => boolean;
+
+  private _registerWaiter() {
+    this._waiter = () => this._isDone();
     registerWaiter(this._waiter);
-  },
-});
+  }
+}

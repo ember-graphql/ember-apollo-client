@@ -1,6 +1,6 @@
 import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
-import { computed } from '@ember/object';
+import { computed } from '@ember-decorators/object';
 import ApolloService from 'ember-apollo-client/services/apollo';
 import testQuery from '../build/test-query';
 import testMutation from '../build/test-mutation';
@@ -21,14 +21,15 @@ module('Unit | Service | apollo', function(hooks) {
     let customDataIdFromObject = o => o.name;
     this.owner.register(
       'service:overridden-apollo',
-      ApolloService.extend({
+      class extends ApolloService {
         // Override the clientOptions.
-        clientOptions: computed(function() {
+        @computed
+        get clientOptions() {
           let opts = this._super(...arguments);
           opts.dataIdFromObject = customDataIdFromObject;
           return opts;
-        }),
-      })
+        }
+      }
     );
     let service = this.owner.lookup('service:overridden-apollo');
 
