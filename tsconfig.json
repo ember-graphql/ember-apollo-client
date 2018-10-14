@@ -42,6 +42,9 @@
       ],
       "*": [
         "types/*"
+      ],
+      "fetch": [
+        "node_modules/ember-fetch/index.d.ts"
       ]
     }
   },
