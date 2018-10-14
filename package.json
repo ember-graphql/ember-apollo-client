@@ -28,6 +28,7 @@
     "postpublish": "ember ts:clean"
   },
   "dependencies": {
+    "@ember-decorators/object": "^2.5.2",
     "@ember-decorators/service": "^2.5.2",
     "apollo-cache": "^1.1.21",
     "apollo-cache-inmemory": "^1.3.11",

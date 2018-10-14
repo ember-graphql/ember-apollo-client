@@ -591,6 +591,15 @@
     lodash "^4.17.10"
     to-fast-properties "^2.0.0"
 
+"@ember-decorators/object@^2.5.2":
+  version "2.5.2"
+  resolved "https://registry.yarnpkg.com/@ember-decorators/object/-/object-2.5.2.tgz#3f0d238212da13bda94a129964b47387ed90054c"
+  integrity sha512-9jV1a5D6gJ2eMQY9RP94YGWE+/zOA4+Sw8q49hlE5UIpyguSVHLhsdVvbWK+4WhRImKTr/tFwGU1cIJdVVJ5CQ==
+  dependencies:
+    "@ember-decorators/utils" "^2.5.2"
+    ember-cli-babel "^6.6.0"
+    ember-compatibility-helpers "^1.0.0"
+
 "@ember-decorators/service@^2.5.2":
   version "2.5.2"
   resolved "https://registry.yarnpkg.com/@ember-decorators/service/-/service-2.5.2.tgz#0ec93ca10f5e8baa8d93364c794de23a526e8493"
