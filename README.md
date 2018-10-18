@@ -13,22 +13,22 @@ This addon exposes the following dependencies to an ember application:
 * [apollo-link-context][apollo-link-context]
 * [apollo-link-http][apollo-link-http]
 * [graphql][graphql-repo]
+
+You may want to install these optional dependencies as well:
+
 * [graphql-tag][graphql-tag-repo]
 * [graphql-tools][graphql-tools-repo]
 
-I have been using the non-addon version of this in my own app for several months.
-Because I've actually used it to build a real app, I've encountered and solved
-a few real-world problems such as reliable testing and preventing resource leaks
-by unsubscribing from watch queries.
+This addon is battle tested: it has been used to build several large apps. As such, we've solved real-world problems such as reliable testing and preventing resource leaks by unsubscribing from watch queries.
 
 [graphql-repo]: https://github.com/graphql/graphql-js "GraphQL"
-[graphql-tag-repo]: https://github.com/apollographql/graphql-tag "graphql-tag"
-[graphql-tools-repo]: https://github.com/apollographql/graphql-tools "graphql-tools"
 [apollo-cache]: https://www.npmjs.com/package/apollo-cache
 [apollo-cache-inmemory]: https://www.npmjs.com/package/apollo-cache-inmemory
 [apollo-link]: https://github.com/apollographql/apollo-link
 [apollo-link-context]: https://www.npmjs.com/package/apollo-link-context
 [apollo-link-http]: https://www.npmjs.com/package/apollo-link-http
+[graphql-tag-repo]: https://github.com/apollographql/graphql-tag "graphql-tag"
+[graphql-tools-repo]: https://github.com/apollographql/graphql-tools "graphql-tools"
 
 ## Installation
 
