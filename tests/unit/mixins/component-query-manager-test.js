@@ -49,7 +49,7 @@ module('Unit | Mixin | component query manager', function(hooks) {
 
     let apolloService = subject.get('apollo.apollo');
     apolloService.set('managedSubscribe', (manager, opts) => {
-      assert.deepEqual(opts, { subscription: 'fakeSubscription' });
+      assert.deepEqual(opts, { query: 'fakeSubscription' });
       manager.trackSubscription({
         unsubscribe() {
           unsubscribeCalled++;
@@ -58,8 +58,8 @@ module('Unit | Mixin | component query manager', function(hooks) {
       return {};
     });
 
-    subject.get('apollo').subscribe({ subscription: 'fakeSubscription' });
-    subject.get('apollo').subscribe({ subscription: 'fakeSubscription' });
+    subject.get('apollo').subscribe({ query: 'fakeSubscription' });
+    subject.get('apollo').subscribe({ query: 'fakeSubscription' });
 
     subject.willDestroyElement();
     assert.equal(

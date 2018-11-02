@@ -198,12 +198,12 @@ subscription {
 ```js
 import Route from "@ember/routing/route";
 import { RouteQueryManager } from "ember-apollo-client";
-import subscription from "my-app/gql/subscription/new-human";
+import query from "my-app/gql/subscription/new-human";
 
 export default Route.extend(RouteQueryManager, {
   setupSubscription() {
     this.get("apollo")
-        .subscribe({ subscription }, "human");
+        .subscribe({ query }, "human");
         .on("event", event => alert(`${event.name} was just born!`));
   },
 });
