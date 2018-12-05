@@ -25,7 +25,11 @@ module('Unit | Service | apollo', function(hooks) {
         // Override the clientOptions.
         @computed
         get clientOptions() {
-          let opts = this._super(...arguments);
+          const desc = Object.getOwnPropertyDescriptor(
+            Object.getPrototypeOf(Object.getPrototypeOf(this)),
+            'clientOptions'
+          )!;
+          const opts = desc.get!.call(this);
           opts.dataIdFromObject = customDataIdFromObject;
           return opts;
         }
