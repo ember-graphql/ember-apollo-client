@@ -73,7 +73,7 @@ const defaultOptions = {
 };
 
 export default class ApolloService extends Service {
-  client!: ApolloClient<any>;
+  client: ApolloClient<any> = new ApolloClient(this.get('clientOptions'));
   @alias('options.apiURL') apiURL!: string;
   @alias('options.requestCredentials') requestCredentials!: string;
 
@@ -97,9 +97,6 @@ export default class ApolloService extends Service {
     if (owner) {
       owner.registerOptionsForType('apollo', { instantiate: false });
     }
-
-    let client = new ApolloClient(this.get('clientOptions'));
-    this.set('client', client);
 
     if (Ember.testing) {
       this._registerWaiter();
