@@ -5,6 +5,8 @@ import ApolloService from 'ember-apollo-client/services/apollo';
 import testQuery from '../build/test-query';
 import testMutation from '../build/test-mutation';
 import { Promise } from 'rsvp';
+import getSuperComputed from 'dummy/tests/helpers/call-super-computed';
+import { InMemoryCache } from 'apollo-cache-inmemory';
 
 module('Unit | Service | apollo', function(hooks) {
   setupTest(hooks);
@@ -18,28 +20,28 @@ module('Unit | Service | apollo', function(hooks) {
   });
 
   test('it uses clientOptions', function(assert) {
-    let customDataIdFromObject = o => o.name;
+    const dataIdFromObject = o => o.name;
+
     this.owner.register(
       'service:overridden-apollo',
       class extends ApolloService {
         // Override the clientOptions.
         @computed
         get clientOptions() {
-          const desc = Object.getOwnPropertyDescriptor(
-            Object.getPrototypeOf(Object.getPrototypeOf(this)),
-            'clientOptions'
-          )!;
-          const opts = desc.get!.call(this);
-          opts.dataIdFromObject = customDataIdFromObject;
-          return opts;
+          const { get } = getSuperComputed(this, 'clientOptions');
+          const opts = get!.call(this);
+
+          return { ...opts, cache: new InMemoryCache({ dataIdFromObject }) };
         }
       }
     );
-    let service = this.owner.lookup('service:overridden-apollo');
+
+    const service = this.owner.lookup('service:overridden-apollo');
 
     // make sure the override was used.
     assert.equal(
-      service.get('apollo.dataIdFromObject', customDataIdFromObject)
+      service.get('client.cache.config.dataIdFromObject'),
+      dataIdFromObject
     );
   });
 
