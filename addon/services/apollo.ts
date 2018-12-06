@@ -25,6 +25,7 @@ import copyWithExtras from 'ember-apollo-client/utils/copy-with-extras';
 import { registerWaiter } from '@ember/test';
 import fetch from 'fetch';
 import { ApolloCache } from 'apollo-cache';
+import NativeArray from '@ember/array/-private/native-array';
 
 type Subscription = ZenObservable.Subscription;
 export type ResultKey = string | null | undefined;
@@ -33,12 +34,12 @@ function newDataFunc(
   observable: ObservableQuery,
   resultKey: ResultKey,
   resolve: (value: any) => void,
-  mergedProps = {}
+  mergedProps: { [key: string]: any } = {}
 ) {
-  let obj;
+  let obj: any;
   mergedProps[apolloObservableKey] = observable;
 
-  return ({ data, loading }) => {
+  return ({ data, loading }: { data: any; loading: any }) => {
     if (loading && data === undefined) {
       // This happens when the cache has no data and the data is still loading
       // from the server. We don't want to resolve the promise with empty data
@@ -51,7 +52,7 @@ function newDataFunc(
     let dataToSend = copyWithExtras(keyedData || {}, [], []);
     if (isNone(obj)) {
       if (isArray(dataToSend)) {
-        obj = A(dataToSend);
+        obj = A(dataToSend as any[]);
         obj.setProperties(mergedProps);
       } else {
         obj = EmberObject.create(assign(dataToSend, mergedProps));
@@ -61,7 +62,7 @@ function newDataFunc(
 
     run(() => {
       isArray(obj)
-        ? obj.setObjects(dataToSend)
+        ? (obj as NativeArray<any>).setObjects(dataToSend)
         : setProperties(obj, dataToSend);
     });
   };
@@ -154,7 +155,7 @@ export default class ApolloService extends Service {
           .then(result => {
             let dataToSend = isNone(resultKey)
               ? result.data
-              : get(result.data, resultKey);
+              : get(result.data!, resultKey);
             dataToSend = copyWithExtras(dataToSend, [], []);
             return resolve(dataToSend);
           })
@@ -198,8 +199,8 @@ export default class ApolloService extends Service {
       _apolloUnsubscribe() {
         subscription.unsubscribe();
       },
+      [apolloObservableKey]: observable,
     };
-    mergedProps[apolloObservableKey] = observable;
 
     return this._waitFor(
       new RSVP.Promise((resolve, reject) => {
@@ -232,7 +233,7 @@ export default class ApolloService extends Service {
           .then(result => {
             let response = result.data;
             if (!isNone(resultKey)) {
-              response = get(response, resultKey);
+              response = get(response as { [key: string]: any }, resultKey);
             }
             return resolve(copyWithExtras(response, [], []));
           })

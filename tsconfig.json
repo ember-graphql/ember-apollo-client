@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "lib": ["esnext", "dom"],
     "target": "es2017",
     "allowJs": true,
     "moduleResolution": "node",
@@ -21,31 +22,14 @@
     "baseUrl": ".",
     "module": "es6",
     "paths": {
-      "dummy/tests/*": [
-        "tests/*"
-      ],
-      "dummy/*": [
-        "tests/dummy/app/*",
-        "app/*"
-      ],
-      "ember-apollo-client": [
-        "addon"
-      ],
-      "ember-apollo-client/*": [
-        "addon/*"
-      ],
-      "ember-apollo-client/test-support": [
-        "addon-test-support"
-      ],
-      "ember-apollo-client/test-support/*": [
-        "addon-test-support/*"
-      ],
-      "*": [
-        "types/*"
-      ],
-      "fetch": [
-        "node_modules/ember-fetch/index.d.ts"
-      ]
+      "dummy/tests/*": ["tests/*"],
+      "dummy/*": ["tests/dummy/app/*", "app/*"],
+      "ember-apollo-client": ["addon"],
+      "ember-apollo-client/*": ["addon/*"],
+      "ember-apollo-client/test-support": ["addon-test-support"],
+      "ember-apollo-client/test-support/*": ["addon-test-support/*"],
+      "*": ["types/*"],
+      "fetch": ["node_modules/ember-fetch/index.d.ts"]
     }
   },
   "include": [
