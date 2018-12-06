@@ -7,6 +7,7 @@ import testMutation from '../build/test-mutation';
 import { Promise } from 'rsvp';
 import getSuperComputed from 'dummy/tests/helpers/call-super-computed';
 import { InMemoryCache } from 'apollo-cache-inmemory';
+import { ObservableQuery } from 'apollo-client';
 
 module('Unit | Service | apollo', function(hooks) {
   setupTest(hooks);
@@ -20,21 +21,19 @@ module('Unit | Service | apollo', function(hooks) {
   });
 
   test('it uses clientOptions', function(assert) {
-    const dataIdFromObject = o => o.name;
+    const dataIdFromObject = (o: { name: string }) => o.name;
 
-    this.owner.register(
-      'service:overridden-apollo',
-      class extends ApolloService {
-        // Override the clientOptions.
-        @computed
-        get clientOptions() {
-          const { get } = getSuperComputed(this, 'clientOptions');
-          const opts = get!.call(this);
+    class OverriddenApolloService extends ApolloService {
+      // Override the clientOptions.
+      @computed
+      get clientOptions() {
+        const { get } = getSuperComputed(this, 'clientOptions');
+        const opts = get!.call(this);
 
-          return { ...opts, cache: new InMemoryCache({ dataIdFromObject }) };
-        }
+        return { ...opts, cache: new InMemoryCache({ dataIdFromObject }) };
       }
-    );
+    }
+    this.owner.register('service:overridden-apollo', OverriddenApolloService);
 
     const service = this.owner.lookup('service:overridden-apollo');
 
@@ -89,12 +88,13 @@ module('Unit | Service | apollo', function(hooks) {
     let service = this.owner.lookup('service:apollo');
 
     service.set('client', {
-      watchQuery() {
+      watchQuery(): Pick<ObservableQuery, 'subscribe'> {
         assert.ok(true, 'Called watchQuery function on apollo client');
 
         return {
-          subscribe({ next }) {
+          subscribe({ next }: ZenObservable.SubscriptionObserver<any>) {
             next({ data: { human: { name: 'Link' }, __typename: 'person' } });
+            return { closed: false, unsubscribe() {} };
           },
         };
       },
@@ -108,10 +108,11 @@ module('Unit | Service | apollo', function(hooks) {
     let service = this.owner.lookup('service:apollo');
 
     service.set('client', {
-      watchQuery() {
+      watchQuery(): Pick<ObservableQuery, 'subscribe'> {
         return {
-          subscribe({ next }) {
+          subscribe({ next }: ZenObservable.SubscriptionObserver<any>) {
             next({ data: null });
+            return { closed: false, unsubscribe() {} };
           },
         };
       },
