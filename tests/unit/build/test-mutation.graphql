@@ -1,4 +1,4 @@
-#import './test-fragment'
+#import './test-fragment.graphql'
 
 mutation TestMutation($id: ID!) {
   subject_update(id: $id) {

@@ -1,7 +1,7 @@
 import Route from '@ember/routing/route';
 import { RouteQueryManager } from 'ember-apollo-client';
-import query from 'dummy/gql/queries/human';
-import mutation from 'dummy/gql/mutations/change-character-name';
+import query from 'dummy/gql/queries/human.graphql';
+import mutation from 'dummy/gql/mutations/change-character-name.graphql';
 
 const variables = { id: '1000' };
 

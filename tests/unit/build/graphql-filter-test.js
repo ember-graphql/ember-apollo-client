@@ -1,8 +1,8 @@
 import { module, test } from 'qunit';
 import gql from 'graphql-tag';
 
-import testFragment from './test-fragment';
-import testQuery from './test-query';
+import testFragment from './test-fragment.graphql';
+import testQuery from './test-query.graphql';
 
 module('Unit | graphql-filter', function() {
   function testCompilation(description, { actual, expected }) {

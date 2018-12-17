@@ -1,6 +1,6 @@
 import Route from '@ember/routing/route';
 import { RouteQueryManager } from 'ember-apollo-client';
-import query from 'dummy/gql/queries/human';
+import query from 'dummy/gql/queries/human.graphql';
 
 const variables = { id: '1000' };
 

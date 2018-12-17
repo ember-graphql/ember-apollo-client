@@ -45,7 +45,6 @@
   },
   "devDependencies": {
     "@ember/optional-features": "^0.7.0",
-    "@playlyfe/gql": "^2.6.1",
     "@types/ember": "^3.0.26",
     "@types/ember-qunit": "^3.4.3",
     "@types/ember-test-helpers": "^1.0.4",
