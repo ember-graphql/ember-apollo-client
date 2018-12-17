@@ -923,10 +923,11 @@
   integrity sha512-U1IsKAfoqgNTAQ7rojbAmF8ynQaovfHP9Kff1lCB1A1FLq+vtQ81CzaiEHgWWAlPfbqrFtBIYD0rwehEQ1ofRg==
 
 "@types/ember__object@*":
-  version "3.0.5"
-  resolved "https://registry.yarnpkg.com/@types/ember__object/-/ember__object-3.0.5.tgz#c4957cad68fffdd0959c6ca0d3469df8878b750c"
-  integrity sha512-0sgaktxsu86OqRNOe9lxLhqWnGGk+gNM+iuAbi7BKc5OZQHlOtAGPgHv7hUozWCW5cVK/3hMbr3ciD/vu25xsg==
+  version "3.0.6"
+  resolved "https://registry.yarnpkg.com/@types/ember__object/-/ember__object-3.0.6.tgz#980822abe397ae16cce5dba51688aa0e0e12b39a"
+  integrity sha512-Kx2aKbbjF66k3+owaXQ5HDzn9+yIkg37neuN88sKcZdmHZA1g7xJq6fZliJMp3fX3pA5nbRYVM6Jt0OeBWjGFw==
   dependencies:
+    "@types/ember__object" "*"
     "@types/rsvp" "*"
 
 "@types/ember__polyfills@*":
