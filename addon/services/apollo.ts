@@ -91,8 +91,8 @@ export default class ApolloService extends Service {
     throw new Error('no Apollo service options defined');
   }
 
-  init() {
-    super.init();
+  init(...args: any[]) {
+    super.init(...args);
 
     const owner = getOwner(this);
     if (owner) {
