@@ -1,4 +1,4 @@
-#import './test-fragment'
+#import './test-fragment.graphql'
 
 query TestQuery {
   subject {

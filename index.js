@@ -29,7 +29,7 @@ module.exports = {
         toTree(tree) {
           const GraphQLFilter = require('broccoli-graphql-filter');
 
-          return new GraphQLFilter(tree);
+          return new GraphQLFilter(tree, { keepExtension: true });
         },
       });
     }

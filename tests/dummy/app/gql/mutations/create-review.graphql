@@ -1,4 +1,4 @@
-#import 'dummy/gql/fragments/review-fragment'
+#import 'dummy/gql/fragments/review-fragment.graphql'
 
 mutation createReview($ep: Episode!, $review: ReviewInput!) {
   createReview(episode: $ep, review: $review) {
