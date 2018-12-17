@@ -1,7 +1,7 @@
 'use strict';
 
 module.exports = {
-  name: 'ember-apollo-client',
+  name: require('./package').name,
 
   options: {
     autoImport: {
@@ -24,7 +24,7 @@ module.exports = {
   setupPreprocessorRegistry(type, registry) {
     if (type === 'parent') {
       registry.add('js', {
-        name: 'ember-apollo-client',
+        name: require('./package').name,
         ext: 'graphql',
         toTree(tree) {
           const GraphQLFilter = require('broccoli-graphql-filter');

@@ -5,9 +5,9 @@ module.exports = {
   normalizeEntityName() {},
 
   /*
-  * This is necessary until this is fixed
-  * https://github.com/ember-cli/ember-fetch/issues/98
-  */
+   * This is necessary until this is fixed
+   * https://github.com/ember-cli/ember-fetch/issues/98
+   */
   afterInstall() {
     return this.addPackagesToProject([
       { name: 'ember-fetch', target: '^5.1.1' },
