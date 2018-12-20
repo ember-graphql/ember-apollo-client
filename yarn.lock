@@ -1030,19 +1030,12 @@ apollo-cache-inmemory@^1.3.11:
     apollo-utilities "^1.0.26"
     optimism "^0.6.6"
 
-apollo-cache@1.1.22:
+apollo-cache@1.1.22, apollo-cache@^1.1.21:
   version "1.1.22"
   resolved "https://registry.yarnpkg.com/apollo-cache/-/apollo-cache-1.1.22.tgz#d4682ea6e8b2508a934f61c2fd9e36b4a65041d9"
   integrity sha512-8PoxhQLISj2oHwT7i/r4l+ly4y3RKZls+dtXzAewu3U77P9dNZKhYkRNAhx9iEfsrNoHgXBV8vMp64hb1uYh+g==
   dependencies:
     apollo-utilities "^1.0.27"
-
-apollo-cache@^1.1.21:
-  version "1.1.21"
-  resolved "https://registry.yarnpkg.com/apollo-cache/-/apollo-cache-1.1.21.tgz#950025e2272741ba8e5064419906e3ac4072925d"
-  integrity sha512-5ErNb78KHtrJNimkDBTEigcvHkIqUmS7QJIk4lpZZ+XLVVgvk2fD+GhD1PLP+s8vHfAKVbO6vdbRxCCjGGrh5w==
-  dependencies:
-    apollo-utilities "^1.0.26"
 
 apollo-client@^2.4.7:
   version "2.4.8"
