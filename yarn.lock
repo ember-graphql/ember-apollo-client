@@ -2222,9 +2222,9 @@ broccoli-funnel@^2.0.0, broccoli-funnel@^2.0.1:
     walk-sync "^0.3.1"
 
 broccoli-graphql-filter@^0.3.0:
-  version "0.3.0"
-  resolved "https://registry.yarnpkg.com/broccoli-graphql-filter/-/broccoli-graphql-filter-0.3.0.tgz#9d47c176acaa6bce4e03510acb7591ea443c6e1d"
-  integrity sha512-H5X3diaQeSLuFup3NDniWPFn87P3jFgp7GkYYev3VU6UxrqLCmmPfD1Xz68Bt3mD3vnnj/7yRDOd6Ush58bbrQ==
+  version "0.3.1"
+  resolved "https://registry.yarnpkg.com/broccoli-graphql-filter/-/broccoli-graphql-filter-0.3.1.tgz#4b03372c6e052fd37fb9d444213ba1eed9e08984"
+  integrity sha512-NzisJoc33xtCtahbRxYkIuBWhs9vlsA23vt/IgbMx43x6BBX3+Lur11wvUB66ZiukPYtiYYr1v0tcwPHkZqOew==
   dependencies:
     broccoli-persistent-filter "^2.1.1"
     graphql "^14.0.2"
