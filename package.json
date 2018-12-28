@@ -65,7 +65,7 @@
     "eslint-config-prettier": "^3.3.0",
     "eslint-plugin-ember": "^6.1.0",
     "eslint-plugin-node": "^8.0.0",
-    "eslint-plugin-prettier": "3.0.0",
+    "eslint-plugin-prettier": "3.0.1",
     "graphql-tag": "^2.10.0",
     "graphql-tools": "^4.0.3",
     "loader.js": "^4.7.0",
