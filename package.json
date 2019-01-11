@@ -3,10 +3,10 @@
   "version": "2.0.0-beta.3",
   "description": "An ember-cli addon for the Apollo GraphQL Client.",
   "keywords": [
-    "ember-addon",
-    "ember",
-    "apollo-client",
     "apollo",
+    "apollo-client",
+    "ember",
+    "ember-addon",
     "graphql",
     "graphql-client"
   ],
@@ -34,8 +34,7 @@
     "apollo-link-http": "^1.5.9",
     "broccoli-graphql-filter": "^0.3.2",
     "ember-auto-import": "^1.2.19",
-    "ember-cli-babel": "^7.1.2",
-    "graphql": "^14.0.2"
+    "ember-cli-babel": "^7.1.2"
   },
   "devDependencies": {
     "@ember/optional-features": "^0.7.0",
@@ -66,11 +65,15 @@
     "eslint-plugin-ember": "^6.1.0",
     "eslint-plugin-node": "^8.0.1",
     "eslint-plugin-prettier": "3.0.1",
+    "graphql": "^14.0.2",
     "graphql-tag": "^2.10.0",
     "graphql-tools": "^4.0.3",
     "loader.js": "^4.7.0",
     "prettier": "^1.15.3",
     "qunit-dom": "^0.8.4"
+  },
+  "peerDependencies": {
+    "graphql": "^14.0.2"
   },
   "engines": {
     "node": "6.* || 8.* || >= 10.*"
