@@ -21,7 +21,23 @@ module.exports = {
     },
   },
 
+  included(app) {
+    this._super.included.apply(this, arguments);
+
+    this.app = app;
+  },
+
+  getOptions() {
+    return (
+      (this.app && this.app.options.emberApolloClient) || {
+        keepGraphqlFileExtension: false,
+      }
+    );
+  },
+
   setupPreprocessorRegistry(type, registry) {
+    let getOptions = this.getOptions.bind(this);
+
     if (type === 'parent') {
       registry.add('js', {
         name: require('./package').name,
@@ -29,7 +45,11 @@ module.exports = {
         toTree(tree) {
           const GraphQLFilter = require('broccoli-graphql-filter');
 
-          return new GraphQLFilter(tree);
+          let options = getOptions();
+
+          return new GraphQLFilter(tree, {
+            keepExtension: options.keepGraphqlFileExtension,
+          });
         },
       });
     }

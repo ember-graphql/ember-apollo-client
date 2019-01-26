@@ -55,6 +55,8 @@ The application built in the tutorial is also available on the [How To GraphQL r
 
 ## Configuration
 
+### Runtime configuration
+
 In your app's `config/environment.js`, configure the URL for the GraphQL API.
 
 ```js
@@ -73,6 +75,25 @@ let ENV = {
 Additional configuration of the ApolloClient can be done by extending the Apollo
 service and overriding the `clientOptions` property. See the
 [Apollo Service API][apollo-service-api] for more info.
+
+### Build time configuration
+
+In your app's `ember-cli-build.js`, you can set build time options for [broccoli-graphql-filter](https://github.com/csantero/broccoli-graphql-filter) to keep file extensions in `.graphql` files.
+
+```js
+module.exports = function(defaults) {
+  let app = new EmberApp(defaults, {
+    emberApolloClient: {
+      keepGraphqlFileExtension: true
+    }
+  });
+
+  return app.toTree();
+};
+
+```
+
+`keepGraphqlFileExtension = false`, optional – If `true`, creates files called `my-query.graphql.js` instead of `my-query.js`, so that you can import them as `./my-query.graphql` instead of `./my-query`.
 
 ### Dependencies
 
