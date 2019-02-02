@@ -201,10 +201,13 @@ import { RouteQueryManager } from "ember-apollo-client";
 import query from "my-app/gql/subscription/new-human";
 
 export default Route.extend(RouteQueryManager, {
-  setupSubscription() {
-    this.get("apollo")
-        .subscribe({ query }, "human");
-        .on("event", event => alert(`${event.name} was just born!`));
+  model() {
+    return this.get("apollo")
+               .subscribe({ query }, "human");
+  },
+
+  setupController(controller, model) {
+    model.on("event", event => alert(`${event.name} was just born!`));
   },
 });
 ```
