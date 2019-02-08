@@ -43,7 +43,7 @@ module('Unit | Mixin | ember object query manager', function(hooks) {
     done();
   });
 
-  test('it unsubscribes from any subscribe subscriptions', function(assert) {
+  test('it unsubscribes from any subscriptions', function(assert) {
     let done = assert.async();
     let subject = this.subject();
     let unsubscribeCalled = 0;

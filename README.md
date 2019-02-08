@@ -175,15 +175,15 @@ the service directly.
 
 GQL Subscriptions allow a client to subscribe to specific queries they are interested in tracking. The syntax for doing this is similar to `query` / `watchQuery`, but there are a few main differences:
 
-- ) you must define a `subscription` (versus a `query` or `mutation`)
-- ) because subscriptions are async by nature, you have to listen for these events and act accordingly.
-- ) subscriptions require websockets, so must configure your `link` accordingly
+- you must define a `subscription` (versus a `query` or `mutation`)
+- because subscriptions are async by nature, you have to listen for these events and act accordingly.
+- subscriptions require websockets, so must configure your `link` accordingly
 
-**Creating your subscription:**
+#### Creating your subscription
 
 `my-app/gql/subscription/new-human`
 
-```
+```graphql
 subscription {
   newHuman() {
     name
@@ -191,7 +191,7 @@ subscription {
 }
 ```
 
-**Subscribing from inside a route:**
+#### Subscribing from inside a route
 
 `app/routes/some-route.js`
 
@@ -212,7 +212,7 @@ export default Route.extend(RouteQueryManager, {
 });
 ```
 
-The big advantage of using the RouteQueryManager is that when you navigate away from this route, all subscriptions created will be terminated. That said, if you want to manually unsubscribe (or are not using the RouteQueryManager) `subscription.unsubscribe()` will do the trick.
+The big advantage of using the `RouteQueryManager` is that when you navigate away from this route, all subscriptions created will be terminated. That said, if you want to manually unsubscribe (or are not using the `RouteQueryManager`) `subscription.unsubscribe()` will do the trick.
 
 **Enabling Websockets**
 
@@ -254,9 +254,9 @@ import { createAbsintheSocketLink } from '@absinthe/socket-apollo-link';
 import AbsintheSocket from '@absinthe/socket';
 
 export default ApolloService.extend({
-  session      : service(),
+  session: service(),
 
-link: computed(function () {
+  link: computed(function () {
     const httpLink = this._super(...arguments);
     const socket = new Socket("ws://socket-url", {
       params: { token: this.get('session.token') },
@@ -273,8 +273,8 @@ link: computed(function () {
       httpLink
     );
   }),
-
 ```
+
 
 ### Mutations and Fragments
 
