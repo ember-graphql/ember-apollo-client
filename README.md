@@ -181,7 +181,7 @@ GQL Subscriptions allow a client to subscribe to specific queries they are inter
 
 #### Creating your subscription
 
-`my-app/gql/subscription/new-human`
+`app/gql/subscriptions/new-human.graphql`
 
 ```graphql
 subscription {
@@ -196,18 +196,18 @@ subscription {
 `app/routes/some-route.js`
 
 ```js
-import Route from "@ember/routing/route";
-import { RouteQueryManager } from "ember-apollo-client";
-import query from "my-app/gql/subscription/new-human";
+import Route from '@ember/routing/route';
+import { RouteQueryManager } from 'ember-apollo-client';
+import query from 'app/gql/subscriptions/new-human';
 
 export default Route.extend(RouteQueryManager, {
   model() {
-    return this.get("apollo")
-               .subscribe({ query }, "human");
+    return this.get('apollo')
+               .subscribe({ query }, 'human');
   },
 
   setupController(controller, model) {
-    model.on("event", event => alert(`${event.name} was just born!`));
+    model.on('event', event => alert(`${event.name} was just born!`));
   },
 });
 ```
