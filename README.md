@@ -44,7 +44,7 @@ Install the [Apollo Client Developer tools for Chrome](https://chrome.google.com
 
 This addon works and is fully tested with:
 
-* Ember.js 2.12+
+* Ember.js 3.4+
 * FastBoot 1.0+
 
 ## Example App
