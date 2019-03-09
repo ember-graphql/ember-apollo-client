@@ -627,6 +627,7 @@ A special thanks to the following contributors:
 * Elias Balafoutis ([@balaf](https://github.com/balaf))
 * Katherine Smith ([@TerminalStar](https://github.com/TerminalStar))
 * Greg Coladarci ([@coladarci](https://github.com/coladarci))
+* Josemar Luedke ([@josemarluedke](https://github.com/josemarluedke))
 
 [ac-constructor]: https://www.apollographql.com/docs/react/api/apollo-client.html#ApolloClientOptions
 [apollo-client]: https://github.com/apollographql/apollo-client
