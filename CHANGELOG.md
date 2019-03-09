@@ -6,11 +6,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [v2.0.0-beta.3] - 2019-03-09
+
+### Added
+
+- Add built-in support for GraphQL subscriptions. Thanks [@coladarci](https://github.com/coladarci)! ([#173](https://github.com/bgentry/ember-apollo-client/pull/173))
+
 ## [v2.0.0-beta.2] - 2019-02-19
 
 ### Changed
 
-- Add configuration options to keep graphql file extension. Thanks [@josemarluedke](/josemarluedke)! ([#230](https://github.com/bgentry/ember-apollo-client/pull/230))
+- Add configuration options to keep graphql file extension. Thanks [@josemarluedke](https://github.com/josemarluedke)! ([#230](https://github.com/bgentry/ember-apollo-client/pull/230))
 
 ## [v2.0.0-beta.1] - 2018-09-18
 
