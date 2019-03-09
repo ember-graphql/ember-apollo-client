@@ -626,6 +626,7 @@ A special thanks to the following contributors:
 * Laurin Quast ([@n1ru4l](https://github.com/n1ru4l))
 * Elias Balafoutis ([@balaf](https://github.com/balaf))
 * Katherine Smith ([@TerminalStar](https://github.com/TerminalStar))
+* Greg Coladarci ([@coladarci](https://github.com/coladarci))
 
 [ac-constructor]: https://www.apollographql.com/docs/react/api/apollo-client.html#ApolloClientOptions
 [apollo-client]: https://github.com/apollographql/apollo-client
@@ -634,6 +635,10 @@ A special thanks to the following contributors:
 [query-manager-api]: #query-manager-api
 [unsubscribing]: #unsubscribing-from-watch-queries
 [watch-query]: https://www.apollographql.com/docs/react/api/apollo-client.html#ApolloClient.watchQuery
+
+## Contributing
+
+See the [Contributing](CONTRIBUTING.md) guide for details.
 
 ## License
 
