@@ -352,7 +352,7 @@ export default class Apollo extends Service {
   }
 
   createQueryManager() {
-    return QueryManager.create({ apollo: this });
+    return new QueryManager(this);
   }
 
   /**

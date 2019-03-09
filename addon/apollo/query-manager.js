@@ -1,20 +1,13 @@
-import EmberObject from '@ember/object';
-import { A } from '@ember/array';
-import { inject as service } from '@ember-decorators/service';
-import { alias } from '@ember-decorators/object/computed';
+export default class QueryManager {
+  apollo = undefined;
+  activeSubscriptions = [];
 
-export default class QueryManager extends EmberObject {
-  @service()
-  apollo;
+  constructor(apoloService) {
+    this.apollo = apoloService;
+  }
 
-  @alias('apollo.client')
-  apolloClient;
-
-  activeSubscriptions = null;
-
-  init() {
-    super.init(...arguments);
-    this.set('activeSubscriptions', A([]));
+  get apolloClient() {
+    return this.apollo.client;
   }
 
   /**
@@ -28,7 +21,7 @@ export default class QueryManager extends EmberObject {
    * @public
    */
   mutate(opts, resultKey) {
-    return this.get('apollo').mutate(opts, resultKey);
+    return this.apollo.mutate(opts, resultKey);
   }
 
   /**
@@ -42,7 +35,7 @@ export default class QueryManager extends EmberObject {
    * @public
    */
   query(opts, resultKey) {
-    return this.get('apollo').query(opts, resultKey);
+    return this.apollo.query(opts, resultKey);
   }
 
   /**
@@ -60,7 +53,7 @@ export default class QueryManager extends EmberObject {
    * @public
    */
   watchQuery(opts, resultKey) {
-    return this.get('apollo').managedWatchQuery(this, opts, resultKey);
+    return this.apollo.managedWatchQuery(this, opts, resultKey);
   }
 
   /**
@@ -79,7 +72,7 @@ export default class QueryManager extends EmberObject {
    * @public
    */
   subscribe(opts, resultKey) {
-    return this.get('apollo').managedSubscribe(this, opts, resultKey);
+    return this.apollo.managedSubscribe(this, opts, resultKey);
   }
 
   /**
@@ -91,7 +84,7 @@ export default class QueryManager extends EmberObject {
    * @private
    */
   trackSubscription(subscription) {
-    this.get('activeSubscriptions').pushObject({ subscription, stale: false });
+    this.activeSubscriptions.push({ subscription, stale: false });
   }
 
   /**
@@ -102,8 +95,7 @@ export default class QueryManager extends EmberObject {
    * @private
    */
   markSubscriptionsStale() {
-    let subscriptions = this.get('activeSubscriptions');
-    subscriptions.forEach(subscription => {
+    this.activeSubscriptions.forEach(subscription => {
       subscription.stale = true;
     });
   }
@@ -120,12 +112,11 @@ export default class QueryManager extends EmberObject {
    * @public
    */
   unsubscribeAll(onlyStale = false) {
-    let subscriptions = this.get('activeSubscriptions');
-    subscriptions.forEach(subscription => {
+    this.activeSubscriptions.forEach(subscription => {
       if (!onlyStale || subscription.stale) {
         subscription.subscription.unsubscribe();
       }
     });
-    this.set('activeSubscriptions', A([]));
+    this.activeSubscriptions = [];
   }
 }
