@@ -17,22 +17,49 @@ import QueryManager from 'ember-apollo-client/apollo/query-manager';
 import copyWithExtras from 'ember-apollo-client/utils/copy-with-extras';
 import { registerWaiter } from '@ember/test';
 import fetch from 'fetch';
+import Evented from '@ember/object/evented';
+
+const EmberApolloSubscription = EmberObject.extend(Evented, {
+  lastEvent: null,
+
+  apolloUnsubscribe() {
+    this.get('_apolloClientSubscription').unsubscribe();
+  },
+
+  _apolloClientSubscription: null,
+
+  _onNewData(newData) {
+    this.set('lastEvent', newData);
+    this.trigger('event', newData);
+  },
+});
+
+function extractNewData(resultKey, { data, loading }) {
+  if (loading && isNone(data)) {
+    // This happens when the cache has no data and the data is still loading
+    // from the server. We don't want to resolve the promise with empty data
+    // so we instead just bail out.
+    //
+    // See https://github.com/bgentry/ember-apollo-client/issues/45
+    return null;
+  }
+  let keyedData = isNone(resultKey) ? data : data && get(data, resultKey);
+
+  return copyWithExtras(keyedData || {}, [], []);
+}
 
 function newDataFunc(observable, resultKey, resolve, mergedProps = {}) {
   let obj;
   mergedProps[apolloObservableKey] = observable;
 
-  return ({ data, loading }) => {
-    if (loading && data === undefined) {
-      // This happens when the cache has no data and the data is still loading
-      // from the server. We don't want to resolve the promise with empty data
-      // so we instead just bail out.
-      //
-      // See https://github.com/bgentry/ember-apollo-client/issues/45
+  return newData => {
+    let dataToSend = extractNewData(resultKey, newData);
+
+    if (dataToSend === null) {
+      // see comment in extractNewData
       return;
     }
-    let keyedData = isNone(resultKey) ? data : data && get(data, resultKey);
-    let dataToSend = copyWithExtras(keyedData || {}, [], []);
+
     if (isNone(obj)) {
       if (isArray(dataToSend)) {
         obj = A(dataToSend);
@@ -198,6 +225,49 @@ export default Service.extend({
   },
 
   /**
+   * Executes a `subscribe` on the Apollo client. If this subscription receives
+   * data, the resolved object will be updated with the new data.
+   *
+   * When using this method, it is important to call `apolloUnsubscribe()` on
+   * the resolved data when the route or component is torn down. That tells
+   * Apollo to stop trying to send updated data to a non-existent listener.
+   *
+   * @method subscribe
+   * @param {!Object} opts The query options used in the Apollo Client subscribe.
+   * @param {String} resultKey The key that will be returned from the resulting response data. If null or undefined, the entire response data will be returned.
+   * @return {!Promise}
+   * @public
+   */
+  subscribe(opts, resultKey = null) {
+    const observable = this.get('client').subscribe(opts);
+
+    const obj = EmberApolloSubscription.create();
+
+    return this._waitFor(
+      new RSVP.Promise((resolve, reject) => {
+        let subscription = observable.subscribe({
+          next: newData => {
+            let dataToSend = extractNewData(resultKey, newData);
+            if (dataToSend === null) {
+              // see comment in extractNewData
+              return;
+            }
+
+            run(() => obj._onNewData(dataToSend));
+          },
+          error(e) {
+            reject(e);
+          },
+        });
+
+        obj.set('_apolloClientSubscription', subscription);
+
+        resolve(obj);
+      })
+    );
+  },
+
+  /**
    * Executes a single `query` on the Apollo client. The resolved object will
    * never be updated and does not have to be unsubscribed.
    *
@@ -251,6 +321,25 @@ export default Service.extend({
         manager.trackSubscription(subscription);
       })
     );
+  },
+
+  /**
+   * Executes a `subscribe` on the Apollo client and tracks the resulting
+   * subscription on the provided query manager.
+   *
+   * @method managedSubscribe
+   * @param {!Object} manager A QueryManager that should track this active subscribe.
+   * @param {!Object} opts The query options used in the Apollo Client subscribe.
+   * @param {String} resultKey The key that will be returned from the resulting response data. If null or undefined, the entire response data will be returned.
+   * @return {!Promise}
+   * @private
+   */
+  managedSubscribe(manager, opts, resultKey = null) {
+    return this.subscribe(opts, resultKey).then(obj => {
+      manager.trackSubscription(obj._apolloClientSubscription);
+
+      return obj;
+    });
   },
 
   createQueryManager() {

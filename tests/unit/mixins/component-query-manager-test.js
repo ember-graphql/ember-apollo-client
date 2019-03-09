@@ -41,4 +41,32 @@ module('Unit | Mixin | component query manager', function(hooks) {
     );
     done();
   });
+
+  test('it unsubscribes from any subscriptions', function(assert) {
+    let done = assert.async();
+    let subject = this.subject();
+    let unsubscribeCalled = 0;
+
+    let apolloService = subject.get('apollo.apollo');
+    apolloService.set('managedSubscribe', (manager, opts) => {
+      assert.deepEqual(opts, { query: 'fakeSubscription' });
+      manager.trackSubscription({
+        unsubscribe() {
+          unsubscribeCalled++;
+        },
+      });
+      return {};
+    });
+
+    subject.get('apollo').subscribe({ query: 'fakeSubscription' });
+    subject.get('apollo').subscribe({ query: 'fakeSubscription' });
+
+    subject.willDestroyElement();
+    assert.equal(
+      unsubscribeCalled,
+      2,
+      '_apolloUnsubscribe() was called once per subscribe'
+    );
+    done();
+  });
 });

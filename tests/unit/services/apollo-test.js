@@ -4,6 +4,7 @@ import { computed } from '@ember/object';
 import ApolloService from 'ember-apollo-client/services/apollo';
 import testQuery from '../build/test-query';
 import testMutation from '../build/test-mutation';
+import testSubscription from '../build/test-subscription';
 import { Promise } from 'rsvp';
 
 module('Unit | Service | apollo', function(hooks) {
@@ -112,5 +113,52 @@ module('Unit | Service | apollo', function(hooks) {
 
     const result = await service.watchQuery({ query: testQuery }, 'human');
     assert.equal(result.get('name'), undefined);
+  });
+
+  test('.subscribe with key', async function(assert) {
+    let service = this.owner.lookup('service:apollo');
+    let nextFunction = null;
+
+    service.set('client', {
+      subscribe() {
+        assert.ok(true, 'Called subscribe function on apollo client');
+
+        return {
+          subscribe({ next }) {
+            nextFunction = next;
+          },
+        };
+      },
+    });
+
+    const result = await service.subscribe(
+      {
+        subscription: testSubscription,
+      },
+      'human'
+    );
+
+    const names = [];
+    result.on('event', e => names.push(e.name));
+
+    // Things initialize as empty
+    assert.equal(result.get('lastEvent'), null);
+
+    // Two updates come in
+    nextFunction({ data: { human: { name: '1 Link' }, __typename: 'person' } });
+    nextFunction({ data: { human: { name: '2 Luke' }, __typename: 'person' } });
+
+    // Events are in the correct order
+    assert.equal(result.get('lastEvent.name'), '2 Luke');
+    // Event streams are in the correct order
+    assert.equal(names.join(' '), '1 Link 2 Luke');
+
+    nextFunction({ data: { human: { name: '3 Greg' }, __typename: 'person' } });
+    // Stream null
+    nextFunction({ loading: true });
+    nextFunction({ loading: true, data: null });
+    // Still have last event
+    assert.equal(result.get('lastEvent.name'), '3 Greg');
+    assert.equal(names.join(' '), '1 Link 2 Luke 3 Greg');
   });
 });
