@@ -1,18 +1,21 @@
-import { inject as service } from '@ember/service';
 import EmberObject from '@ember/object';
-import { alias } from '@ember/object/computed';
 import { A } from '@ember/array';
+import { inject as service } from '@ember-decorators/service';
+import { alias } from '@ember-decorators/object/computed';
 
-export default EmberObject.extend({
-  apollo: service(),
-  apolloClient: alias('apollo.client'),
+export default class QueryManager extends EmberObject {
+  @service()
+  apollo;
 
-  activeSubscriptions: null,
+  @alias('apollo.client')
+  apolloClient;
+
+  activeSubscriptions = null;
 
   init() {
-    this._super(...arguments);
+    super.init(...arguments);
     this.set('activeSubscriptions', A([]));
-  },
+  }
 
   /**
    * Executes a mutation on the Apollo service. The resolved object will
@@ -26,7 +29,7 @@ export default EmberObject.extend({
    */
   mutate(opts, resultKey) {
     return this.get('apollo').mutate(opts, resultKey);
-  },
+  }
 
   /**
    * Executes a single `query` on the Apollo service. The resolved object will
@@ -40,7 +43,7 @@ export default EmberObject.extend({
    */
   query(opts, resultKey) {
     return this.get('apollo').query(opts, resultKey);
-  },
+  }
 
   /**
    * Executes a `watchQuery` on the Apollo service. If updated data for this
@@ -58,7 +61,7 @@ export default EmberObject.extend({
    */
   watchQuery(opts, resultKey) {
     return this.get('apollo').managedWatchQuery(this, opts, resultKey);
-  },
+  }
 
   /**
    * Executes a `subscribe` on the Apollo service.
@@ -77,7 +80,7 @@ export default EmberObject.extend({
    */
   subscribe(opts, resultKey) {
     return this.get('apollo').managedSubscribe(this, opts, resultKey);
-  },
+  }
 
   /**
    * Tracks a subscription in the list of active subscriptions, which will all be
@@ -89,7 +92,7 @@ export default EmberObject.extend({
    */
   trackSubscription(subscription) {
     this.get('activeSubscriptions').pushObject({ subscription, stale: false });
-  },
+  }
 
   /**
    * Marks all tracked subscriptions as being stale, such that they will be
@@ -103,7 +106,7 @@ export default EmberObject.extend({
     subscriptions.forEach(subscription => {
       subscription.stale = true;
     });
-  },
+  }
 
   /**
    * Unsubscribes from all actively tracked subscriptions initiated by calls to
@@ -124,5 +127,5 @@ export default EmberObject.extend({
       }
     });
     this.set('activeSubscriptions', A([]));
-  },
-});
+  }
+}
