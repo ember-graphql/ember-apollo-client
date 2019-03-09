@@ -84,7 +84,7 @@ const defaultOptions = {
   apiURL: 'http://testserver.example/v1/graph',
 };
 
-export default class Apollo extends Service {
+export default class ApolloService extends Service {
   client = null;
 
   @alias('options.apiURL')
