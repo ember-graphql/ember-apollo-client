@@ -1,6 +1,9 @@
 import Ember from 'ember';
+import EmberObject, { get, setProperties } from '@ember/object';
+import { computed } from '@ember-decorators/object';
+import Evented from '@ember/object/evented';
 import Service from '@ember/service';
-import EmberObject, { get, setProperties, computed } from '@ember/object';
+import { alias } from '@ember-decorators/object/computed';
 import { A } from '@ember/array';
 import { isArray } from '@ember/array';
 import { isNone, isPresent } from '@ember/utils';
@@ -8,7 +11,6 @@ import { getOwner } from '@ember/application';
 import { assign } from '@ember/polyfills';
 import RSVP from 'rsvp';
 import { run } from '@ember/runloop';
-import { alias } from '@ember/object/computed';
 import { ApolloClient } from 'apollo-client';
 import { createHttpLink } from 'apollo-link-http';
 import { InMemoryCache } from 'apollo-cache-inmemory';
@@ -17,22 +19,21 @@ import QueryManager from 'ember-apollo-client/apollo/query-manager';
 import copyWithExtras from 'ember-apollo-client/utils/copy-with-extras';
 import { registerWaiter } from '@ember/test';
 import fetch from 'fetch';
-import Evented from '@ember/object/evented';
 
-const EmberApolloSubscription = EmberObject.extend(Evented, {
-  lastEvent: null,
+class EmberApolloSubscription extends EmberObject.extend(Evented) {
+  lastEvent = null;
 
   apolloUnsubscribe() {
     this.get('_apolloClientSubscription').unsubscribe();
-  },
+  }
 
-  _apolloClientSubscription: null,
+  _apolloClientSubscription = null;
 
   _onNewData(newData) {
     this.set('lastEvent', newData);
     this.trigger('event', newData);
-  },
-});
+  }
+}
 
 function extractNewData(resultKey, { data, loading }) {
   if (loading && isNone(data)) {
@@ -83,13 +84,18 @@ const defaultOptions = {
   apiURL: 'http://testserver.example/v1/graph',
 };
 
-export default Service.extend({
-  client: null,
-  apiURL: alias('options.apiURL'),
-  requestCredentials: alias('options.requestCredentials'),
+export default class Apollo extends Service {
+  client = null;
+
+  @alias('options.apiURL')
+  apiURL;
+
+  @alias('options.requestCredentials')
+  requestCredentials;
 
   // options are configured in your environment.js.
-  options: computed(function() {
+  @computed()
+  get options() {
     // config:environment not injected into tests, so try to handle that gracefully.
     let config = getOwner(this).resolveRegistration('config:environment');
     if (config && config.apollo) {
@@ -98,10 +104,10 @@ export default Service.extend({
       return defaultOptions;
     }
     throw new Error('no Apollo service options defined');
-  }),
+  }
 
   init() {
-    this._super(...arguments);
+    super.init(...arguments);
 
     const owner = getOwner(this);
     if (owner) {
@@ -114,7 +120,7 @@ export default Service.extend({
     if (Ember.testing) {
       this._registerWaiter();
     }
-  },
+  }
 
   /**
    * This is the options hash that will be passed to the ApolloClient constructor.
@@ -124,18 +130,21 @@ export default Service.extend({
    * @return {!Object}
    * @public
    */
-  clientOptions: computed(function() {
+  @computed()
+  get clientOptions() {
     return {
       link: this.get('link'),
       cache: this.get('cache'),
     };
-  }),
+  }
 
-  cache: computed(function() {
+  @computed()
+  get cache() {
     return new InMemoryCache();
-  }),
+  }
 
-  link: computed(function() {
+  @computed()
+  get link() {
     let uri = this.get('apiURL');
     let requestCredentials = this.get('requestCredentials');
     const linkOptions = { uri, fetch };
@@ -144,7 +153,7 @@ export default Service.extend({
       linkOptions.credentials = requestCredentials;
     }
     return createHttpLink(linkOptions);
-  }),
+  }
 
   /**
    * Executes a mutation on the Apollo client. The resolved object will
@@ -183,7 +192,7 @@ export default Service.extend({
           });
       })
     );
-  },
+  }
 
   /**
    * Executes a `watchQuery` on the Apollo client. If updated data for this
@@ -222,7 +231,7 @@ export default Service.extend({
         });
       })
     );
-  },
+  }
 
   /**
    * Executes a `subscribe` on the Apollo client. If this subscription receives
@@ -265,7 +274,7 @@ export default Service.extend({
         resolve(obj);
       })
     );
-  },
+  }
 
   /**
    * Executes a single `query` on the Apollo client. The resolved object will
@@ -294,7 +303,7 @@ export default Service.extend({
           });
       })
     );
-  },
+  }
 
   /**
    * Executes a `watchQuery` on the Apollo client and tracks the resulting
@@ -321,7 +330,7 @@ export default Service.extend({
         manager.trackSubscription(subscription);
       })
     );
-  },
+  }
 
   /**
    * Executes a `subscribe` on the Apollo client and tracks the resulting
@@ -340,11 +349,11 @@ export default Service.extend({
 
       return obj;
     });
-  },
+  }
 
   createQueryManager() {
     return QueryManager.create({ apollo: this });
-  },
+  }
 
   /**
    * Wraps a promise in test waiters.
@@ -356,27 +365,27 @@ export default Service.extend({
   _waitFor(promise) {
     this._incrementOngoing();
     return promise.finally(() => this._decrementOngoing());
-  },
+  }
 
   // unresolved / ongoing requests, used for tests:
-  _ongoing: 0,
+  _ongoing = 0;
 
   _incrementOngoing() {
     this._ongoing++;
-  },
+  }
 
   _decrementOngoing() {
     this._ongoing--;
-  },
+  }
 
   _shouldWait() {
     return this._ongoing === 0;
-  },
+  }
 
   _registerWaiter() {
     this._waiter = () => {
       return this._shouldWait();
     };
     registerWaiter(this._waiter);
-  },
-});
+  }
+}
