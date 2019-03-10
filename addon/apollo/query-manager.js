@@ -2,8 +2,8 @@ export default class QueryManager {
   apollo = undefined;
   activeSubscriptions = [];
 
-  constructor(apoloService) {
-    this.apollo = apoloService;
+  constructor(apolloService) {
+    this.apollo = apolloService;
   }
 
   get apolloClient() {
