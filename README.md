@@ -242,47 +242,49 @@ While this library should work w/ any back-end implementation, here's an example
 `my-app/services/apollo.js`
 ```js
 import ApolloService from 'ember-apollo-client/services/apollo';
+import { inject as service } from '@ember-decorators/service';
 import { Socket } from 'phoenix';
-import { inject as service } from "@ember/service";
 import { createAbsintheSocketLink } from '@absinthe/socket-apollo-link';
 import AbsintheSocket from '@absinthe/socket';
-import { computed } from '@ember/object';
 
+class OverriddenApollo extends ApolloService {
+  @service
+  session;
 
-export default ApolloService.extend({
-  session: service(),
-
-  link: computed(function () {
+  link() {
     const socket = new Socket("ws://socket-url", {
       params: { token: this.get('session.token') },
     });
     const absintheSocket = AbsintheSocket.create(socket);
 
     return createAbsintheSocketLink(absintheSocket);
-  }),
-});
+  }
+}
 
 ```
 Note: This will switch **all** gql communication to use websockets versus `http`. If you want to conditionally use websockets for only subscriptions (a common pattern) this is where [Apollo Link Composition](https://www.apollographql.com/docs/link/composition.html) comes in. Specifically, the `split` function is what we're after (note we are using [apollo-utilities](https://www.npmjs.com/package/apollo-utilities), a helpful `npm` package):
 
 `my-app/services/apollo.js`
 ```js
-import { computed } from '@ember/object';
 import ApolloService from 'ember-apollo-client/services/apollo';
+import { inject as service } from '@ember-decorators/service';
+import { Socket } from 'phoenix';
 import { split } from 'apollo-link';
 import { getMainDefinition } from 'apollo-utilities';
 import { createAbsintheSocketLink } from '@absinthe/socket-apollo-link';
 import AbsintheSocket from '@absinthe/socket';
 
-export default ApolloService.extend({
-  session: service(),
+class OverriddenApollo extends ApolloService {
+  @service
+  session;
 
-  link: computed(function () {
-    const httpLink = this._super(...arguments);
+  link() {
+    let httpLink = super.link();
+
     const socket = new Socket("ws://socket-url", {
       params: { token: this.get('session.token') },
     });
-    const absintheSocket = AbsintheSocket.create(socket);
+    const socketLink = createAbsintheSocketLink(AbsintheSocket.create(socket));
 
     return split(
       ({ query }) => {
@@ -293,7 +295,8 @@ export default ApolloService.extend({
       socketLink,
       httpLink
     );
-  }),
+  }
+}
 ```
 
 
@@ -392,24 +395,24 @@ loading data from a service rather than a route or component).
 
 The `apollo` service has the following public API:
 
-* `clientOptions`: This computed property should return the options hash that
+* `clientOptions`: This function should return the options hash that
   will be passed to the `ApolloClient` [constructor][ac-constructor]. You can
-  override this property to configure the client this service uses:
+  override this function to configure the client this service uses:
   ```js
-  const OverriddenService = ApolloService.extend({
-    clientOptions: computed(function() {
+  class OverriddenApolloService extends ApolloService {
+    clientOptions() {
       return {
-        link: this.get("link"),
-        cache: this.get("cache")
+        link: this.link(),
+        cache: this.cache(),
       };
-    })
-  });
+    }
+  }
   ```
-* `link`: This computed property provides a list of [middlewares and afterwares](https://www.apollographql.com/docs/react/advanced/network-layer.html#network-interfaces) to the [Apollo Link](https://www.apollographql.com/docs/link/) the interface for fetching and modifying control flow of GraphQL requests. To create your middlewares/afterwares:
+* `link`: This function provides a list of [middlewares and afterwares](https://www.apollographql.com/docs/react/advanced/network-layer.html#network-interfaces) to the [Apollo Link](https://www.apollographql.com/docs/link/) the interface for fetching and modifying control flow of GraphQL requests. To create your middlewares/afterwares:
 
   ```js
-    link: computed(function() {
-      let httpLink = this._super(...arguments);
+    link() {
+      let httpLink = super.link()
 
       // Middleware
       let authMiddleware = setContext(async request => {
@@ -434,37 +437,37 @@ The `apollo` service has the following public API:
       const authFlowLink = authMiddleware.concat(resetToken);
 
       return authFlowLink.concat(httpLink);
-    }),
+    }
   ```
 
   Example with [ember-simple-auth](https://github.com/simplabs/ember-simple-auth):
 
   ```js
-  import { computed } from "@ember/object";
-  import { inject as service } from "@ember/service";
-  import ApolloService from "ember-apollo-client/services/apollo";
-  import { setContext } from "apollo-link-context";
-  import { Promise as RSVPPromise } from "rsvp";
+  import ApolloService from 'ember-apollo-client/services/apollo';
+  import { inject as service } from '@ember-decorators/service';
+  import { setContext } from 'apollo-link-context';
+  import { Promise } from 'rsvp';
 
-  const OverriddenService = ApolloService.extend({
-    session: service(),
+  class OverriddenApollo extends ApolloService {
+    @service
+    session;
 
-    link: computed(function() {
-      let httpLink = this._super(...arguments);
+    link() {
+      let httpLink = super.link();
 
       let authLink = setContext((request, context) => {
         return this._runAuthorize(request, context);
       });
       return authLink.concat(httpLink);
-    }),
+    }
 
     _runAuthorize() {
-      if (!this.get("session.isAuthenticated")) {
+      if (!this.get('session.isAuthenticated')) {
         return {};
       }
-      return new RSVPPromise(success => {
-        this.get("session").authorize(
-          "authorizer:oauth2",
+      return new Promise(success => {
+        this.get('session').authorize(
+          'authorizer:oauth2',
           (headerName, headerContent) => {
             let headers = {};
             headers[headerName] = headerContent;
@@ -473,7 +476,7 @@ The `apollo` service has the following public API:
         );
       });
     }
-  });
+  }
   ```
 
 * `watchQuery(options, resultKey)`: This calls the
@@ -545,15 +548,12 @@ Ember Apollo Client works with FastBoot out of the box as long that SSR is enabl
 Example:
 
 ```js
-const OverriddenService = ApolloService.extend({
-  clientOptions: computed(function() {
-    return {
-      ssrMode: true,
-      link: this.get("link"),
-      cache: this.get("cache")
-    };
-  })
-});
+class OverriddenApolloService extends ApolloService {
+  clientOptions() {
+    const opts = super.clientOptions();
+    return {...opts, ssrMode: true };
+  }
+}
 ```
 
 Since you only want to fetch each query result once, pass the `ssrMode: true` option to the Apollo Client constructor to avoid repeated force-fetching.

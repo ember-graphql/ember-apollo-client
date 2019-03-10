@@ -1,9 +1,7 @@
 import Ember from 'ember';
 import EmberObject, { get, setProperties } from '@ember/object';
-import { computed } from '@ember-decorators/object';
 import Evented from '@ember/object/evented';
 import Service from '@ember/service';
-import { alias } from '@ember-decorators/object/computed';
 import { A } from '@ember/array';
 import { isArray } from '@ember/array';
 import { isNone, isPresent } from '@ember/utils';
@@ -79,47 +77,46 @@ function newDataFunc(observable, resultKey, resolve, mergedProps = {}) {
   };
 }
 
-// used in environments without injected `config:environment` (i.e. unit tests):
-const defaultOptions = {
-  apiURL: 'http://testserver.example/v1/graph',
-};
-
 export default class ApolloService extends Service {
   client = null;
 
-  @alias('options.apiURL')
-  apiURL;
+  init() {
+    super.init(...arguments);
 
-  @alias('options.requestCredentials')
-  requestCredentials;
+    const client = new ApolloClient(this.clientOptions());
+    this.set('client', client);
+
+    if (Ember.testing) {
+      this._registerWaiter();
+    }
+  }
 
   // options are configured in your environment.js.
-  @computed()
   get options() {
     // config:environment not injected into tests, so try to handle that gracefully.
     let config = getOwner(this).resolveRegistration('config:environment');
     if (config && config.apollo) {
       return config.apollo;
     } else if (Ember.testing) {
-      return defaultOptions;
+      return {
+        apiURL: 'http://testserver.example/v1/graph',
+      };
     }
     throw new Error('no Apollo service options defined');
   }
 
-  init() {
-    super.init(...arguments);
+  cache() {
+    return new InMemoryCache();
+  }
 
-    const owner = getOwner(this);
-    if (owner) {
-      owner.registerOptionsForType('apollo', { instantiate: false });
+  link() {
+    const { apiURL, requestCredentials } = this.options;
+    const linkOptions = { uri: apiURL, fetch };
+
+    if (isPresent(requestCredentials)) {
+      linkOptions.credentials = requestCredentials;
     }
-
-    let client = new ApolloClient(this.get('clientOptions'));
-    this.set('client', client);
-
-    if (Ember.testing) {
-      this._registerWaiter();
-    }
+    return createHttpLink(linkOptions);
   }
 
   /**
@@ -130,29 +127,11 @@ export default class ApolloService extends Service {
    * @return {!Object}
    * @public
    */
-  @computed()
-  get clientOptions() {
+  clientOptions() {
     return {
-      link: this.get('link'),
-      cache: this.get('cache'),
+      link: this.link(),
+      cache: this.cache(),
     };
-  }
-
-  @computed()
-  get cache() {
-    return new InMemoryCache();
-  }
-
-  @computed()
-  get link() {
-    let uri = this.get('apiURL');
-    let requestCredentials = this.get('requestCredentials');
-    const linkOptions = { uri, fetch };
-
-    if (isPresent(requestCredentials)) {
-      linkOptions.credentials = requestCredentials;
-    }
-    return createHttpLink(linkOptions);
   }
 
   /**
