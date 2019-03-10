@@ -1,3 +1,29 @@
+import { getOwner } from '@ember/application';
+import { computed } from '@ember-decorators/object';
+import setupHooks from './setup-hooks';
+
+export function queryManager(options = {}) {
+  let serviceName = 'apollo';
+  if (typeof options === 'object' && options.service) {
+    serviceName = options.service;
+  }
+
+  const macro = computed({
+    get() {
+      const service = getOwner(this).lookup(`service:${serviceName}`);
+      const queryManager = new QueryManager(service);
+      setupHooks(queryManager, this);
+      return queryManager;
+    },
+  });
+
+  if (arguments.length > 1) {
+    return macro(...arguments);
+  }
+
+  return macro;
+}
+
 export default class QueryManager {
   apollo = undefined;
   activeSubscriptions = [];
