@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Add queryManager computed macro/decorator with support for classic Ember Object and Classes through decorators.
+
+### Deprecated
+
+- Mixins are deprecated in favor of queryManager computed macro.
+
 ## [v2.0.0-beta.4] - 2019-04-22
 
 ### Breaking
