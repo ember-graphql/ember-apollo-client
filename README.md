@@ -525,7 +525,7 @@ result of `query` via a method `_apolloUnsubscribe`.
 
 ### queryManager as decorator
 
-The `queryManager` computed macro can be used as a decorator. `ember-apollo-client` uses `@ember-decorators/object` to implement the computed macro, and as per [Decorators RFC](https://github.com/emberjs/rfcs/pull/408) computed properties will work in both classic objects as well as classes by using decorators.
+The `queryManager` computed macro can be used as a decorator. `ember-apollo-client` uses `ember-decorators` to implement the computed macro, and as per [Decorators RFC](https://github.com/emberjs/rfcs/pull/408) computed properties will work in both classic objects as well as classes by using decorators.
 
 
 ```js
