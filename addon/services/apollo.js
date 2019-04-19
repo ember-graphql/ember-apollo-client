@@ -17,6 +17,7 @@ import QueryManager from 'ember-apollo-client/apollo/query-manager';
 import copyWithExtras from 'ember-apollo-client/utils/copy-with-extras';
 import { registerWaiter } from '@ember/test';
 import fetch from 'fetch';
+import deprecateComputed from 'ember-apollo-client/-private/deprecate-computed';
 
 class EmberApolloSubscription extends EmberObject.extend(Evented) {
   lastEvent = null;
@@ -83,7 +84,14 @@ export default class ApolloService extends Service {
   init() {
     super.init(...arguments);
 
-    const client = new ApolloClient(this.clientOptions());
+    let options = this.clientOptions;
+    if (typeof options === 'function') {
+      options = this.clientOptions();
+    } else {
+      deprecateComputed('clientOptions');
+    }
+
+    const client = new ApolloClient(options);
     this.set('client', client);
 
     if (Ember.testing) {
@@ -128,10 +136,21 @@ export default class ApolloService extends Service {
    * @public
    */
   clientOptions() {
-    return {
-      link: this.link(),
-      cache: this.cache(),
-    };
+    let { link, cache } = this;
+
+    if (typeof link === 'function') {
+      link = this.link();
+    } else {
+      deprecateComputed('link');
+    }
+
+    if (typeof cache === 'function') {
+      cache = this.cache();
+    } else {
+      deprecateComputed('cache');
+    }
+
+    return { link, cache };
   }
 
   /**

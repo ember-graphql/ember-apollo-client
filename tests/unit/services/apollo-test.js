@@ -5,6 +5,10 @@ import testQuery from '../build/test-query';
 import testMutation from '../build/test-mutation';
 import testSubscription from '../build/test-subscription';
 import { Promise } from 'rsvp';
+import { computed } from '@ember/object';
+import { createHttpLink } from 'apollo-link-http';
+import { InMemoryCache } from 'apollo-cache-inmemory';
+import fetch from 'fetch';
 
 let customDataIdFromObject = o => o.name;
 class OverriddenApollo extends ApolloService {
@@ -153,5 +157,48 @@ module('Unit | Service | apollo', function(hooks) {
     // Still have last event
     assert.equal(result.get('lastEvent.name'), '3 Greg');
     assert.equal(names.join(' '), '1 Link 2 Luke 3 Greg');
+  });
+
+  test('it works when cache and link are computed properties, deprecated computed', function(assert) {
+    assert.expect(3);
+    this.owner.register(
+      'service:deprecated-overridden-apollo',
+      ApolloService.extend({
+        cache: computed(function() {
+          assert.ok('should have called cache in computed');
+
+          return new InMemoryCache();
+        }),
+        link: computed(function() {
+          assert.ok('should have called link in computed');
+
+          return createHttpLink({ uri: '/some-api', fetch });
+        }),
+      })
+    );
+    let service = this.owner.lookup('service:deprecated-overridden-apollo');
+
+    assert.ok(service);
+  });
+
+  test('it works when clientOptions is a computed property, deprecated computed', function(assert) {
+    this.owner.register(
+      'service:client-options-overridden-apollo',
+      ApolloService.extend({
+        clientOptions: computed(function() {
+          return {
+            cache: this.cache(),
+            link: this.link(),
+            dataIdFromObject: customDataIdFromObject,
+          };
+        }),
+      })
+    );
+    let service = this.owner.lookup('service:client-options-overridden-apollo');
+    assert.ok(service);
+    // make sure the override was used.
+    assert.equal(
+      service.get('apollo.dataIdFromObject', customDataIdFromObject)
+    );
   });
 });
