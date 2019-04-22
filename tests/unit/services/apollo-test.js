@@ -1,36 +1,33 @@
 import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
-import { computed } from '@ember/object';
 import ApolloService from 'ember-apollo-client/services/apollo';
 import testQuery from '../build/test-query';
 import testMutation from '../build/test-mutation';
 import testSubscription from '../build/test-subscription';
 import { Promise } from 'rsvp';
+import { computed } from '@ember/object';
+import { createHttpLink } from 'apollo-link-http';
+import { InMemoryCache } from 'apollo-cache-inmemory';
+import fetch from 'fetch';
+
+let customDataIdFromObject = o => o.name;
+class OverriddenApollo extends ApolloService {
+  clientOptions() {
+    let opts = super.clientOptions();
+    return { ...opts, dataIdFromObject: customDataIdFromObject };
+  }
+}
 
 module('Unit | Service | apollo', function(hooks) {
   setupTest(hooks);
 
   test('it exists', function(assert) {
-    let options = {
-      apiURL: 'https://test.example/graphql',
-    };
-    let service = this.owner.factoryFor('service:apollo').create({ options });
+    let service = this.owner.lookup('service:apollo');
     assert.ok(service);
   });
 
   test('it uses clientOptions', function(assert) {
-    let customDataIdFromObject = o => o.name;
-    this.owner.register(
-      'service:overridden-apollo',
-      ApolloService.extend({
-        // Override the clientOptions.
-        clientOptions: computed(function() {
-          let opts = this._super(...arguments);
-          opts.dataIdFromObject = customDataIdFromObject;
-          return opts;
-        }),
-      })
-    );
+    this.owner.register('service:overridden-apollo', OverriddenApollo);
     let service = this.owner.lookup('service:overridden-apollo');
 
     // make sure the override was used.
@@ -160,5 +157,48 @@ module('Unit | Service | apollo', function(hooks) {
     // Still have last event
     assert.equal(result.get('lastEvent.name'), '3 Greg');
     assert.equal(names.join(' '), '1 Link 2 Luke 3 Greg');
+  });
+
+  test('it works when cache and link are computed properties, deprecated computed', function(assert) {
+    assert.expect(3);
+    this.owner.register(
+      'service:deprecated-overridden-apollo',
+      ApolloService.extend({
+        cache: computed(function() {
+          assert.ok('should have called cache in computed');
+
+          return new InMemoryCache();
+        }),
+        link: computed(function() {
+          assert.ok('should have called link in computed');
+
+          return createHttpLink({ uri: '/some-api', fetch });
+        }),
+      })
+    );
+    let service = this.owner.lookup('service:deprecated-overridden-apollo');
+
+    assert.ok(service);
+  });
+
+  test('it works when clientOptions is a computed property, deprecated computed', function(assert) {
+    this.owner.register(
+      'service:client-options-overridden-apollo',
+      ApolloService.extend({
+        clientOptions: computed(function() {
+          return {
+            cache: this.cache(),
+            link: this.link(),
+            dataIdFromObject: customDataIdFromObject,
+          };
+        }),
+      })
+    );
+    let service = this.owner.lookup('service:client-options-overridden-apollo');
+    assert.ok(service);
+    // make sure the override was used.
+    assert.equal(
+      service.get('apollo.dataIdFromObject', customDataIdFromObject)
+    );
   });
 });
