@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [v2.0.0-beta.4] - 2019-04-22
+
 ### Breaking
 
 - `graphql` has been added as a peer dependency and removed from the addon's direct dependency. Please run `ember install ember-apollo-client` to add the default dependencies to your project or run `yarn add -D graphql`.
