@@ -50,7 +50,7 @@ This addon works and is fully tested with:
 * Ember.js 3.4+
 * FastBoot 1.0+
 
-For compatibility with Ember versions below 3.4, use version 1.x. 
+For compatibility with Ember versions below 3.4, use version 1.x.
 
 ## Example App
 
@@ -249,7 +249,7 @@ While this library should work w/ any back-end implementation, here's an example
 `my-app/services/apollo.js`
 ```js
 import ApolloService from 'ember-apollo-client/services/apollo';
-import { inject as service } from '@ember-decorators/service';
+import { inject as service } from '@ember/service';
 import { Socket } from 'phoenix';
 import { createAbsintheSocketLink } from '@absinthe/socket-apollo-link';
 import AbsintheSocket from '@absinthe/socket';
@@ -274,7 +274,7 @@ Note: This will switch **all** gql communication to use websockets versus `http`
 `my-app/services/apollo.js`
 ```js
 import ApolloService from 'ember-apollo-client/services/apollo';
-import { inject as service } from '@ember-decorators/service';
+import { inject as service } from '@ember/service';
 import { Socket } from 'phoenix';
 import { split } from 'apollo-link';
 import { getMainDefinition } from 'apollo-utilities';
@@ -454,7 +454,7 @@ The `apollo` service has the following public API:
 
   ```js
   import ApolloService from 'ember-apollo-client/services/apollo';
-  import { inject as service } from '@ember-decorators/service';
+  import { inject as service } from '@ember/service';
   import { setContext } from 'apollo-link-context';
   import { Promise } from 'rsvp';
 
@@ -525,8 +525,7 @@ result of `query` via a method `_apolloUnsubscribe`.
 
 ### queryManager as decorator
 
-The `queryManager` computed macro can be used as a decorator. `ember-apollo-client` uses `ember-decorators` to implement the computed macro, and as per [Decorators RFC](https://github.com/emberjs/rfcs/pull/408) computed properties will work in both classic objects as well as classes by using decorators.
-
+The `queryManager` computed macro can be used as a decorator when using Ember v3.10.0 or above.
 
 ```js
 import Route from '@ember/routing/route';
@@ -545,11 +544,11 @@ export default class MyAwesomeRoute extends Route {
 
 ### queryManager options
 
-The `queryManager` computed macro can accept an options hash with the name of the service to use as apollo. 
+The `queryManager` computed macro can accept an options hash with the name of the service to use as apollo.
 If your application has a custom apollo service or multiple apollo services that extends from `ember-apollo-client/services/apollo`, you can use this option to specify which apollo service to use.
 
 ```js
-// imports ... 
+// imports ...
 
 export default class MyAwesomeRoute extends Route {
   @queryManager({ service: 'my-custom-apollo-service' }) apollo;

@@ -9,11 +9,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Add queryManager computed macro/decorator with support for classic Ember Object and Classes through decorators.
+- Add `queryManager` computed macro with support for classic Ember Object and ES6 classes through decorators (decorator syntax requires Ember v3.10.0).
 
 ### Deprecated
 
-- Mixins are deprecated in favor of queryManager computed macro.
+- Mixins are deprecated in favor of `queryManager` computed macro.
 
 ## [v2.0.0-beta.4] - 2019-04-22
 
