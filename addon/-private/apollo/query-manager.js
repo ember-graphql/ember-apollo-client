@@ -1,28 +1,49 @@
 import { getOwner } from '@ember/application';
 import { computed } from '@ember/object';
 import setupHooks from './setup-hooks';
-import { computedDecoratorWithParams } from '@ember-decorators/utils/computed';
 
-function macro(options = {}) {
+// https://github.com/emberjs/ember.js/blob/70bcd9facdaf37ba19f60e6a10a511a34724f0f4/packages/%40ember/-internals/metal/lib/decorator.ts#L20-L41
+function isElementDescriptor(args) {
+  let [maybeTarget, maybeKey, maybeDesc] = args;
+
+  return (
+    // Ensure we have the right number of args
+    args.length === 3 &&
+    // Make sure the target is a class or object (prototype)
+    (typeof maybeTarget === 'function' ||
+      (typeof maybeTarget === 'object' && maybeTarget !== null)) &&
+    // Make sure the key is a string
+    typeof maybeKey === 'string' &&
+    // Make sure the descriptor is the right shape
+    ((typeof maybeDesc === 'object' &&
+      maybeDesc !== null &&
+      'enumerable' in maybeDesc &&
+      'configurable' in maybeDesc) ||
+      // TS compatibility
+      maybeDesc === undefined)
+  );
+}
+
+export function queryManager(options) {
   let serviceName = 'apollo';
   if (typeof options === 'object' && options.service) {
     serviceName = options.service;
   }
 
-  return computed(function() {
+  let setupQueryManager = computed(function() {
     const service = getOwner(this).lookup(`service:${serviceName}`);
     const queryManager = new QueryManager(service);
     setupHooks(queryManager, this);
     return queryManager;
   });
-}
 
-export const queryManager = computedDecoratorWithParams(function(_, params) {
-  if (typeof params === 'undefined') {
-    return macro();
+  if (isElementDescriptor(arguments)) {
+    // Needed to suport @queryManager apollo; (no arguments)
+    return setupQueryManager(arguments[0], arguments[1], arguments[2]);
+  } else {
+    return setupQueryManager;
   }
-  return macro(...params);
-});
+}
 
 export default class QueryManager {
   apollo = undefined;

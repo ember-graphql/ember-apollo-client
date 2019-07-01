@@ -3,6 +3,7 @@ import { queryManager } from 'ember-apollo-client';
 import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
 import ApolloService from 'ember-apollo-client/services/apollo';
+import { gte } from 'ember-compatibility-helpers';
 
 let TestObject;
 let unsubscribeCalled;
@@ -91,28 +92,30 @@ module('Unit | queryManager | Setup Hooks in Ember Components', function(
     );
   });
 
-  test('it works using decorator syntax', function(assert) {
-    assert.expect(5);
-    TestObject = class MyTestClassOjbect extends EmberComponent {
-      @queryManager({ service: 'overridden-apollo' }) apollo;
+  if (gte('3.10.0')) {
+    test('it works using decorator syntax', function(assert) {
+      assert.expect(5);
+      TestObject = class MyTestClassOjbect extends EmberComponent {
+        @queryManager({ service: 'overridden-apollo' }) apollo;
 
-      willDestroyElement() {
-        assert.ok(true, 'Should have called the original willDestroyElement');
-      }
-    };
+        willDestroyElement() {
+          assert.ok(true, 'Should have called the original willDestroyElement');
+        }
+      };
 
-    let subject = this.subject();
-    assert.equal(unsubscribeCalled, 0, 'should have been initialized with 0');
+      let subject = this.subject();
+      assert.equal(unsubscribeCalled, 0, 'should have been initialized with 0');
 
-    subject.apollo.watchQuery({ query: 'fakeQuery' });
-    subject.apollo.watchQuery({ query: 'fakeQuery' });
+      subject.apollo.watchQuery({ query: 'fakeQuery' });
+      subject.apollo.watchQuery({ query: 'fakeQuery' });
 
-    subject.willDestroyElement();
+      subject.willDestroyElement();
 
-    assert.equal(
-      unsubscribeCalled,
-      2,
-      '_apolloUnsubscribe() was called once per watchQuery'
-    );
-  });
+      assert.equal(
+        unsubscribeCalled,
+        2,
+        '_apolloUnsubscribe() was called once per watchQuery'
+      );
+    });
+  }
 });
