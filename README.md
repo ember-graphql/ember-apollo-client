@@ -415,15 +415,18 @@ The `apollo` service has the following public API:
       let httpLink = super.link()
 
       // Middleware
-      let authMiddleware = setContext(async request => {
+      let authMiddleware = setContext(async(request, context) => {
         if (!token) {
           token = await localStorage.getItem('token') || null;
         }
-        return {
+
+        Object.assign(context.headers, {
           headers: {
             authorization: token
           }
-        };
+        });
+
+        return context;
       });
 
       // Afterware
