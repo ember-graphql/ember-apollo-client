@@ -4,6 +4,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+
 ## [Unreleased]
 
 ## [v2.0.0-beta.4] - 2019-04-22
@@ -14,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - If you are using Ember versions 3.4 or 3.5 you must add `ember-native-class-polyfill` to your application. Please run `ember install ember-native-class-polyfill`. Later Ember versions are not required to have this polyfill.
 - Dropped support for Ember LTS 2.18. We now only support the last LTS version (3.4) and above.
 - The way to overwrite `clientOptions`, `link` and `chache` has been changed from computed properties to functions. Previous behavior will be removed in the next major version.
+- Drop support for node.js v6
 
 
 ## [v2.0.0-beta.3] - 2019-03-09
