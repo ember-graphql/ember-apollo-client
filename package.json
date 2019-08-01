@@ -33,11 +33,11 @@
     "apollo-link-context": "^1.0.18",
     "apollo-link-http": "^1.5.15",
     "broccoli-graphql-filter": "^0.3.2",
-    "ember-auto-import": "^1.2.19",
-    "ember-cli-babel": "^7.7.3"
+    "ember-auto-import": "^1.5.2",
+    "ember-cli-babel": "^7.8.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.4.3",
+    "@babel/core": "^7.5.5",
     "@ember/optional-features": "^0.7.0",
     "@playlyfe/gql": "^2.6.1",
     "babel-eslint": "^10.0.2",
@@ -76,9 +76,6 @@
   },
   "peerDependencies": {
     "graphql": "^14.0.2"
-  },
-  "resolutions": {
-    "@babel/preset-env": "7.3.4"
   },
   "engines": {
     "node": "6.* || 8.* || >= 10.*"
