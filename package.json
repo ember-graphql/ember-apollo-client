@@ -38,7 +38,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.5.5",
-    "@ember-decorators/object": "^5.1.4",
+    "@ember-decorators/object": "^6.0.0",
     "@ember/optional-features": "^0.7.0",
     "@playlyfe/gql": "^2.6.1",
     "babel-eslint": "^10.0.2",
