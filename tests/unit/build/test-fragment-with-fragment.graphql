@@ -1,0 +1,5 @@
+#import './test-fragment'
+
+fragment testFragmentWithFragment on Object {
+  ...testFragment
+}
