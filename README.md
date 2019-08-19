@@ -50,6 +50,8 @@ This addon works and is fully tested with:
 * Ember.js 3.4+
 * FastBoot 1.0+
 
+For compatibility with Ember versions below 3.4, use version 1.x.
+
 ## Example App
 
 If you are looking for a full tutorial using `ember-apollo-client` check out the tutorial on [How To GraphQL](https://howtographql.com), written by [DevanB](https://github.com/DevanB).
@@ -136,20 +138,22 @@ const query = gql`
 `;
 ```
 
-Within your routes, you can query for data using the `RouteQueryManager`
-mixin and `watchQuery`:
+Within your routes, you can query for data using the `queryManager`
+computed macro and `watchQuery`:
 
 `app/routes/some-route.js`
 
 ```js
 import Route from "@ember/routing/route";
-import { RouteQueryManager } from "ember-apollo-client";
+import { queryManager } from "ember-apollo-client";
 import query from "my-app/gql/queries/human";
 
-export default Route.extend(RouteQueryManager, {
+export default Route.extend({
+  apollo: queryManager(),
+
   model(params) {
     let variables = { id: params.id };
-    return this.get('apollo').watchQuery({ query, variables }, "human");
+    return this.apollo.watchQuery({ query, variables }, "human");
   }
 });
 ```
@@ -165,10 +169,8 @@ the latest attributes (just like ember-data).
 Please note that when using `watchQuery`, you must
 [unsubscribe][unsubscribing] when you're done with the query data. You should
 only have to worry about this if you're using the [Apollo
-service][apollo-service-api] directly. If you use the `RouteQueryManager`
-mixin in your routes, or the `ComponentQueryManager` in your data-loading
-components, or the `ObjectQueryManager` in your data-loading on service or class that extend `Ember.Object`, all active watch queries are tracked and unsubscribed when the route is exited or the component and Ember.Object is destroyed. These mixins work by injecting a query manager named `apollo` that functions as a proxy to the `apollo`
-service.
+service][apollo-service-api] directly. If you use the `queryManager` computed macro in your routes, or in your data-loading
+components or class that extend `Ember.Object`, all active watch queries are tracked and unsubscribed when the route is exited or the component and Ember.Object is destroyed.
 
 You can instead use `query` if you just want a single query with a POJO
 response and no watch updates.
@@ -221,10 +223,12 @@ subscription {
 
 ```js
 import Route from '@ember/routing/route';
-import { RouteQueryManager } from 'ember-apollo-client';
+import { queryManager } from 'ember-apollo-client';
 import query from 'app/gql/subscriptions/new-human';
 
-export default Route.extend(RouteQueryManager, {
+export default Route.extend({
+  apollo: queryManager(),
+
   model() {
     return this.get('apollo')
                .subscribe({ query }, 'human');
@@ -236,7 +240,7 @@ export default Route.extend(RouteQueryManager, {
 });
 ```
 
-The big advantage of using the `RouteQueryManager` is that when you navigate away from this route, all subscriptions created will be terminated. That said, if you want to manually unsubscribe (or are not using the `RouteQueryManager`) `subscription.unsubscribe()` will do the trick.
+The big advantage of using the `queryManager` is that when you navigate away from this route, all subscriptions created will be terminated. That said, if you want to manually unsubscribe (or are not using the `queryManager`) `subscription.unsubscribe()` will do the trick.
 
 **Enabling Websockets**
 
@@ -245,7 +249,7 @@ While this library should work w/ any back-end implementation, here's an example
 `my-app/services/apollo.js`
 ```js
 import ApolloService from 'ember-apollo-client/services/apollo';
-import { inject as service } from '@ember-decorators/service';
+import { inject as service } from '@ember/service';
 import { Socket } from 'phoenix';
 import { createAbsintheSocketLink } from '@absinthe/socket-apollo-link';
 import AbsintheSocket from '@absinthe/socket';
@@ -270,7 +274,7 @@ Note: This will switch **all** gql communication to use websockets versus `http`
 `my-app/services/apollo.js`
 ```js
 import ApolloService from 'ember-apollo-client/services/apollo';
-import { inject as service } from '@ember-decorators/service';
+import { inject as service } from '@ember/service';
 import { Socket } from 'phoenix';
 import { split } from 'apollo-link';
 import { getMainDefinition } from 'apollo-utilities';
@@ -393,7 +397,7 @@ export default Route.extend({
 ### Apollo service API
 
 You should not need to use the Apollo service directly for most regular
-usage, instead utilizing the `RouteQueryManager`, `ObjectQueryManager` and `ComponentQueryManager` mixins. However, you will probably need to customize options on the `apollo` service, and might need to query it directly for some use cases (such as
+usage, instead utilizing the `queryManager` computed macro. However, you will probably need to customize options on the `apollo` service, and might need to query it directly for some use cases (such as
 loading data from a service rather than a route or component).
 
 The `apollo` service has the following public API:
@@ -450,7 +454,7 @@ The `apollo` service has the following public API:
 
   ```js
   import ApolloService from 'ember-apollo-client/services/apollo';
-  import { inject as service } from '@ember-decorators/service';
+  import { inject as service } from '@ember/service';
   import { setContext } from 'apollo-link-context';
   import { Promise } from 'rsvp';
 
@@ -512,39 +516,45 @@ whenever the store is updated with new data about the resolved objects. This
 happens until you explicitly unsubscribe from it.
 
 In ember-apollo-client, most unsubscriptions are handled automatically by the
-`RouteQueryManager`, `ObjectQueryManager` and `ComponentQueryManager` mixins,
-so long as you use them.
+`queryManager` computed macro, so long as you use it.
 
 If you're fetching data elsewhere, such as in an Ember Service, or if you use
 the Apollo service directly, you are responsible for unsubscribing from
 `watchQuery` results when you're done with them. This is exposed on the
 result of `query` via a method `_apolloUnsubscribe`.
 
-### Injecting the `RouteQueryManager` mixin into all routes
+### queryManager as decorator
 
-ember-apollo-client does not automatically inject any dependencies into your
-routes. If you want to inject this mixin into all routes, you should utilize
-a base route class:
-
-`app/routes/base.js`
+The `queryManager` computed macro can be used as a decorator when using Ember v3.10.0 or above.
 
 ```js
-import Route from "@ember/routing/route";
-import { RouteQueryManager } from "ember-apollo-client";
+import Route from '@ember/routing/route';
+import { queryManager } from 'ember-apollo-client'
+import query from 'my-app/gql/queries/human';
 
-export default Route.extend(RouteQueryManager);
+export default class MyAwesomeRoute extends Route {
+  @queryManager apollo;
+
+  model({ id }) {
+    let variables = { id };
+    return this.apollo.watchQuery({ query, variables });
+  }
+}
 ```
 
-Then extend from that in your other routes:
+### queryManager options
 
-`app/routes/a-real-route.js`
+The `queryManager` computed macro can accept an options hash with the name of the service to use as apollo.
+If your application has a custom apollo service or multiple apollo services that extends from `ember-apollo-client/services/apollo`, you can use this option to specify which apollo service to use.
 
 ```js
-import Base from "my-app/routes/base";
+// imports ...
 
-export default Base.extend(
-  ...
-)
+export default class MyAwesomeRoute extends Route {
+  @queryManager({ service: 'my-custom-apollo-service' }) apollo;
+
+  // ...
+}
 ```
 
 ### Use with Fastboot
