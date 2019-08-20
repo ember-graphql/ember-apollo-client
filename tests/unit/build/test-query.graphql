@@ -1,4 +1,4 @@
-#import './test-fragment'
+#import testFragment from './test-fragment'
 
 query TestQuery {
   subject {

@@ -6,6 +6,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Upgrade broccoli-graphql-filter to allow new import syntax
+
+
 ## [v2.0.0-beta.5] - 2019-08-19
 
 ### Added
