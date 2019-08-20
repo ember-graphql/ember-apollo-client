@@ -1,4 +1,4 @@
-#import './test-fragment'
+#import testFragment from './test-fragment'
 
 mutation TestMutation($id: ID!) {
   subject_update(id: $id) {
