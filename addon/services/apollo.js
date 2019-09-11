@@ -1,23 +1,22 @@
 import Ember from 'ember';
 import EmberObject, { get, setProperties } from '@ember/object';
 import Evented from '@ember/object/evented';
+import RSVP from 'rsvp';
 import Service from '@ember/service';
+import copyWithExtras from '../utils/copy-with-extras';
+import fetch from 'fetch';
 import { A } from '@ember/array';
+import { ApolloClient } from 'apollo-client';
+import { InMemoryCache } from 'apollo-cache-inmemory';
+import { assign } from '@ember/polyfills';
+import { createHttpLink } from 'apollo-link-http';
+import { getOwner } from '@ember/application';
 import { isArray } from '@ember/array';
 import { isNone, isPresent } from '@ember/utils';
-import { getOwner } from '@ember/application';
-import { assign } from '@ember/polyfills';
-import RSVP from 'rsvp';
-import { run } from '@ember/runloop';
-import { ApolloClient } from 'apollo-client';
-import { createHttpLink } from 'apollo-link-http';
-import { InMemoryCache } from 'apollo-cache-inmemory';
-import { apolloObservableKey } from 'ember-apollo-client';
-import QueryManager from 'ember-apollo-client/apollo/query-manager';
-import copyWithExtras from 'ember-apollo-client/utils/copy-with-extras';
 import { registerWaiter } from '@ember/test';
-import fetch from 'fetch';
 import deprecateComputed from 'ember-apollo-client/-private/deprecate-computed';
+import { run } from '@ember/runloop';
+import { apolloObservableKey, QueryManager } from '../index';
 
 class EmberApolloSubscription extends EmberObject.extend(Evented) {
   lastEvent = null;

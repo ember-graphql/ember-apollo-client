@@ -3,12 +3,7 @@
 const EmberAddon = require('ember-cli/lib/broccoli/ember-addon');
 
 module.exports = function(defaults) {
-  let app = new EmberAddon(defaults, {
-    'ember-cli-babel': {
-      // Necessary for Object.assign when testing in the dummy app with PhantomJS
-      includePolyfill: true,
-    },
-  });
+  let app = new EmberAddon(defaults, {});
 
   /*
     This build file specifies the options for the dummy test app of this

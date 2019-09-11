@@ -1,10 +1,12 @@
 import Route from '@ember/routing/route';
-import { RouteQueryManager } from 'ember-apollo-client';
+import { queryManager } from 'ember-apollo-client';
 import query from 'dummy/gql/queries/human';
 
 const variables = { id: '1000' };
 
-export default Route.extend(RouteQueryManager, {
+export default Route.extend({
+  apollo: queryManager(),
+
   model() {
     return this.get('apollo').watchQuery(
       {
