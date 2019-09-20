@@ -26,10 +26,8 @@
     "test:all": "ember try:each"
   },
   "dependencies": {
-    "apollo-cache": "^1.3.2",
     "apollo-cache-inmemory": "^1.6.3",
     "apollo-client": "^2.6.4",
-    "apollo-link": "^1.2.12",
     "apollo-link-context": "^1.0.18",
     "apollo-link-http": "^1.5.15",
     "broccoli-graphql-filter": "^0.4.1",

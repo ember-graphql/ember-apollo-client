@@ -9,6 +9,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Upgrade broccoli-graphql-filter to allow new import syntax
+- It's not recommended to import dependencies of other dependencies in your
+    application. Therefore, if you depend on any apollo package that this
+    addons depends on, you should add to your `package.json`. You should also add
+    ember-auto-import to make sure you are able to import them.
 
 
 ## [v2.0.0-beta.5] - 2019-08-19
