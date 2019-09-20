@@ -40,7 +40,6 @@
     "@babel/core": "^7.5.5",
     "@ember-decorators/object": "^6.1.0",
     "@ember/optional-features": "^0.7.0",
-    "@playlyfe/gql": "^2.6.2",
     "babel-eslint": "^10.0.3",
     "broccoli-asset-rev": "^3.0.0",
     "common-tags": "^1.8.0",
