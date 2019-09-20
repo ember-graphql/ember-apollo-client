@@ -3,6 +3,7 @@ import gql from 'graphql-tag';
 
 import testFragment from './test-fragment';
 import testQuery from './test-query';
+import testQueryWithNestedFragments from './test-query-with-nested-fragment';
 import testSubscription from './test-subscription';
 
 module('Unit | graphql-filter', function() {
@@ -46,6 +47,26 @@ module('Unit | graphql-filter', function() {
 
       fragment testFragment on Object {
         name
+      }
+    `,
+  });
+
+  testCompilation('compilation with nested fragments', {
+    actual: testQueryWithNestedFragments,
+    expected: gql`
+      query TestQueryWithNestedFragment {
+        subject {
+          ...testFragmentWithFragment
+          ...testFragment
+        }
+      }
+
+      fragment testFragment on Object {
+        name
+      }
+
+      fragment testFragmentWithFragment on Object {
+        ...testFragment
       }
     `,
   });

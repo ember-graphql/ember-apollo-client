@@ -1,0 +1,9 @@
+#import testFragment from './test-fragment'
+#import testFragmentWithFragment from './test-fragment-with-fragment'
+
+query TestQueryWithNestedFragment {
+  subject {
+    ...testFragmentWithFragment
+    ...testFragment
+  }
+}
