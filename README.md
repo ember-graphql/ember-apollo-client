@@ -7,31 +7,7 @@ _Use [apollo-client][apollo-client] and GraphQL from your Ember app._
 [![Build Status](https://travis-ci.org/ember-graphql/ember-apollo-client.svg?branch=master)](https://travis-ci.org/ember-graphql/ember-apollo-client)
 [![Ember Observer Score](https://emberobserver.com/badges/ember-apollo-client.svg)](https://emberobserver.com/addons/ember-apollo-client)
 
-This addon exposes the following dependencies to an ember application:
-
-* [apollo-client][apollo-client]
-* [apollo-cache][apollo-cache]
-* [apollo-cache-inmemory][apollo-cache-inmemory]
-* [apollo-link][apollo-link]
-* [apollo-link-context][apollo-link-context]
-* [apollo-link-http][apollo-link-http]
-* [graphql][graphql-repo]
-
-You may want to install these optional dependencies as well:
-
-* [graphql-tag][graphql-tag-repo]
-* [graphql-tools][graphql-tools-repo]
-
 This addon is battle tested: it has been used to build several large apps. As such, we've solved real-world problems such as reliable testing and preventing resource leaks by unsubscribing from watch queries.
-
-[graphql-repo]: https://github.com/graphql/graphql-js "GraphQL"
-[apollo-cache]: https://www.npmjs.com/package/apollo-cache
-[apollo-cache-inmemory]: https://www.npmjs.com/package/apollo-cache-inmemory
-[apollo-link]: https://github.com/apollographql/apollo-link
-[apollo-link-context]: https://www.npmjs.com/package/apollo-link-context
-[apollo-link-http]: https://www.npmjs.com/package/apollo-link-http
-[graphql-tag-repo]: https://github.com/apollographql/graphql-tag "graphql-tag"
-[graphql-tools-repo]: https://github.com/apollographql/graphql-tools "graphql-tools"
 
 ## Installation
 
@@ -104,7 +80,38 @@ module.exports = function(defaults) {
 
 This addon uses [ember-auto-import](https://github.com/ef4/ember-auto-import) to import dependencies.
 
-If you desire any additional graphql dependencies, install them with npm/yarn and import as desired.
+This addon does not exposes any dependencies directly to your application, so
+if you desire any additional graphql or apollo dependencies, install them with
+npm/yarn and import as desired.
+
+Here are some useful packages:
+
+* [apollo-client][apollo-client]
+* [apollo-cache][apollo-cache]
+* [apollo-cache-inmemory][apollo-cache-inmemory]
+* [apollo-link][apollo-link]
+* [apollo-link-context][apollo-link-context]
+* [apollo-link-http][apollo-link-http]
+* [graphql-tag][graphql-tag-repo]
+* [graphql-tools][graphql-tools-repo]
+
+[graphql-repo]: https://github.com/graphql/graphql-js "GraphQL"
+[apollo-cache]: https://www.npmjs.com/package/apollo-cache
+[apollo-cache-inmemory]: https://www.npmjs.com/package/apollo-cache-inmemory
+[apollo-link]: https://github.com/apollographql/apollo-link
+[apollo-link-context]: https://www.npmjs.com/package/apollo-link-context
+[apollo-link-http]: https://www.npmjs.com/package/apollo-link-http
+[graphql-tag-repo]: https://github.com/apollographql/graphql-tag "graphql-tag"
+[graphql-tools-repo]: https://github.com/apollographql/graphql-tools "graphql-tools"
+
+Make sure to use ember-auto-import in your application to import these
+additional packages.
+
+#### Peer Dependencies
+
+This addon has a peer dependency of:
+
+* [graphql][graphql-repo]
 
 ## Usage
 
@@ -269,7 +276,12 @@ class OverriddenApollo extends ApolloService {
 }
 
 ```
-Note: This will switch **all** gql communication to use websockets versus `http`. If you want to conditionally use websockets for only subscriptions (a common pattern) this is where [Apollo Link Composition](https://www.apollographql.com/docs/link/composition.html) comes in. Specifically, the `split` function is what we're after (note we are using [apollo-utilities](https://www.npmjs.com/package/apollo-utilities), a helpful `npm` package):
+
+Note: This will switch **all** gql communication to use websockets versus `http`.
+If you want to conditionally use websockets for only subscriptions (a common pattern)
+this is where [Apollo Link Composition](https://www.apollographql.com/docs/link/composition.html) comes in.
+Specifically, the `split` function is what we're after (note we are using
+[apollo-utilities](https://www.npmjs.com/package/apollo-utilities), a helpful `npm` package):
 
 `my-app/services/apollo.js`
 ```js
@@ -306,6 +318,14 @@ class OverriddenApollo extends ApolloService {
 }
 ```
 
+Note: You will need to add the following dependencies to your project:
+
+```sh
+yarn add -D apollo-link
+yarn add -D apollo-utilities
+yarn add -D @absinthe/socket
+yarn add -D @absinthe/socket-apollo-link
+```
 
 ### Mutations and Fragments
 
@@ -452,6 +472,7 @@ The `apollo` service has the following public API:
 
   Example with [ember-simple-auth](https://github.com/simplabs/ember-simple-auth):
 
+
   ```js
   import ApolloService from 'ember-apollo-client/services/apollo';
   import { inject as service } from '@ember/service';
@@ -487,6 +508,12 @@ The `apollo` service has the following public API:
       });
     }
   }
+  ```
+
+  Note: You will need to add the following dependencies to your project:
+
+  ```sh
+  yarn add -D apollo-link-context
   ```
 
 * `watchQuery(options, resultKey)`: This calls the
