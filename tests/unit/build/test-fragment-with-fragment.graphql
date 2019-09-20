@@ -1,4 +1,4 @@
-#import './test-fragment'
+#import testFragment from './test-fragment'
 
 fragment testFragmentWithFragment on Object {
   ...testFragment

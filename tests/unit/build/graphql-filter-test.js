@@ -56,17 +56,17 @@ module('Unit | graphql-filter', function() {
     expected: gql`
       query TestQueryWithNestedFragment {
         subject {
-          ...testFragmentWithNestedFragment
+          ...testFragmentWithFragment
           ...testFragment
         }
       }
 
-      fragment testFragmentWithFragment on Object {
-        ...testFragment
-      }
-
       fragment testFragment on Object {
         name
+      }
+
+      fragment testFragmentWithFragment on Object {
+        ...testFragment
       }
     `,
   });
