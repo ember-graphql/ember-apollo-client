@@ -37,7 +37,6 @@ module('Unit | Service | apollo', function(hooks) {
   });
 
   test('.mutate resolves with __typename', async function(assert) {
-    let done = assert.async();
     let service = this.owner.lookup('service:apollo');
 
     service.set('client', {
@@ -53,11 +52,9 @@ module('Unit | Service | apollo', function(hooks) {
     const result = await service.mutate({ mutation: testMutation });
 
     assert.equal(result.__typename, 'person');
-    done();
   });
 
   test('.query resolves with __typename', async function(assert) {
-    let done = assert.async();
     let service = this.owner.lookup('service:apollo');
 
     service.set('client', {
@@ -73,7 +70,6 @@ module('Unit | Service | apollo', function(hooks) {
     const result = await service.query({ query: testQuery });
 
     assert.equal(result.__typename, 'person');
-    done();
   });
 
   test('.watchQuery with key', async function(assert) {

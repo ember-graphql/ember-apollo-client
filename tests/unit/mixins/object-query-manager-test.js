@@ -15,8 +15,7 @@ module('Unit | Mixin | ember object query manager', function(hooks) {
     };
   });
 
-  test('it unsubscribes from any watchQuery subscriptions', function(assert) {
-    let done = assert.async();
+  test('it unsubscribes from any watchQuery subscriptions', async function(assert) {
     let subject = this.subject();
     let unsubscribeCalled = 0;
 
@@ -31,8 +30,8 @@ module('Unit | Mixin | ember object query manager', function(hooks) {
       return {};
     });
 
-    subject.get('apollo').watchQuery({ query: 'fakeQuery' });
-    subject.get('apollo').watchQuery({ query: 'fakeQuery' });
+    await subject.get('apollo').watchQuery({ query: 'fakeQuery' });
+    await subject.get('apollo').watchQuery({ query: 'fakeQuery' });
 
     subject.willDestroy();
     assert.equal(
@@ -40,11 +39,9 @@ module('Unit | Mixin | ember object query manager', function(hooks) {
       2,
       '_apolloUnsubscribe() was called once per watchQuery'
     );
-    done();
   });
 
-  test('it unsubscribes from any subscriptions', function(assert) {
-    let done = assert.async();
+  test('it unsubscribes from any subscriptions', async function(assert) {
     let subject = this.subject();
     let unsubscribeCalled = 0;
 
@@ -59,8 +56,8 @@ module('Unit | Mixin | ember object query manager', function(hooks) {
       return {};
     });
 
-    subject.get('apollo').subscribe({ query: 'fakeSubscription' });
-    subject.get('apollo').subscribe({ query: 'fakeSubscription' });
+    await subject.get('apollo').subscribe({ query: 'fakeSubscription' });
+    await subject.get('apollo').subscribe({ query: 'fakeSubscription' });
 
     subject.willDestroy();
     assert.equal(
@@ -68,7 +65,6 @@ module('Unit | Mixin | ember object query manager', function(hooks) {
       2,
       '_apolloUnsubscribe() was called once per subscribe'
     );
-    done();
   });
 
   test('it exposes an apollo client object', function(assert) {
