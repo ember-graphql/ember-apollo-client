@@ -1,0 +1,46 @@
+# Configuration for Release Drafter - https://github.com/toolmantim/release-drafter
+
+name-template: v$NEXT_MINOR_VERSION
+tag-template: v$NEXT_MINOR_VERSION
+categories:
+  - title: ':boom: Breaking Change'
+    label: 'Type: Breaking Change'
+
+  - title: ':zap: New Feature'
+    label: 'Type: Feature'
+
+  - title: ':rocket: Enhancement'
+    label: 'Type: Enhancement'
+
+  - title: ':bug: Bug Fix'
+    label: 'Type: Bug'
+
+  - title: ':nail_care: Refactor'
+    label: 'Type: Refactor'
+
+  - title: ':memo: Documentation'
+    label: 'Type: Documentation'
+
+  - title: ':house: Internal'
+    label: 'Type: Internal'
+
+  - title: ':wrench: Tooling'
+    label: 'Type: Tooling'
+
+  - title: ':package: Dependencies'
+    label: 'Type: Dependencies'
+
+change-template: '- $TITLE (#$NUMBER) @$AUTHOR'
+no-changes-template: '- No changes'
+template: |
+  $CHANGES
+
+  ***
+
+  ### Contributors
+
+  $CONTRIBUTORS
+
+  ***
+
+  For full changes, see the [comparison between $PREVIOUS_TAG and v$NEXT_MINOR_VERSION](https://github.com/ember-graphql/ember-apollo-client/compare/$PREVIOUS_TAG...v$NEXT_MINOR_VERSION)
