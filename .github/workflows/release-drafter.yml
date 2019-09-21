@@ -1,0 +1,18 @@
+name: Release Drafter
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  draftRelease:
+    runs-on: ubuntu-latest
+
+    name: Draft Release
+    steps:
+      - uses: actions/checkout@master
+      - name: Draft Release
+        uses: toolmantim/release-drafter@v5.2.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
