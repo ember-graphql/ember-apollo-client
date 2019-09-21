@@ -1,7 +1,7 @@
 import Route from '@ember/routing/route';
 import query from 'dummy/gql/queries/human';
 import mutation from 'dummy/gql/mutations/change-character-name';
-import { queryManager } from 'ember-apollo-client';
+import { queryManager, getObservable } from 'ember-apollo-client';
 
 const variables = { id: '1000' };
 
@@ -25,6 +25,11 @@ export default Route.extend({
         mutation,
         variables: { id, name },
       });
+    },
+
+    refetchData(model) {
+      const observable = getObservable(model);
+      observable.refetch();
     },
   },
 });
