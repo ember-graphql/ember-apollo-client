@@ -6,7 +6,7 @@ import { deprecate } from '@ember/application/deprecations';
 export default Mixin.create({
   apolloService: service('apollo'),
   apollo: computed('apolloService', function() {
-    return this.get('apolloService').createQueryManager();
+    return this.apolloService.createQueryManager();
   }),
   init() {
     this._super(...arguments);

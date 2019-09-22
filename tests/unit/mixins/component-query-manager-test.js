@@ -14,12 +14,11 @@ module('Unit | Mixin | component query manager', function(hooks) {
     };
   });
 
-  test('it unsubscribes from any watchQuery subscriptions', function(assert) {
-    let done = assert.async();
+  test('it unsubscribes from any watchQuery subscriptions', async function(assert) {
     let subject = this.subject();
     let unsubscribeCalled = 0;
 
-    let apolloService = subject.get('apollo.apollo');
+    let apolloService = subject.apollo.apollo;
     apolloService.set('managedWatchQuery', (manager, opts) => {
       assert.deepEqual(opts, { query: 'fakeQuery' });
       manager.trackSubscription({
@@ -30,8 +29,8 @@ module('Unit | Mixin | component query manager', function(hooks) {
       return {};
     });
 
-    subject.get('apollo').watchQuery({ query: 'fakeQuery' });
-    subject.get('apollo').watchQuery({ query: 'fakeQuery' });
+    await subject.apollo.watchQuery({ query: 'fakeQuery' });
+    await subject.apollo.watchQuery({ query: 'fakeQuery' });
 
     subject.willDestroyElement();
     assert.equal(
@@ -39,15 +38,13 @@ module('Unit | Mixin | component query manager', function(hooks) {
       2,
       '_apolloUnsubscribe() was called once per watchQuery'
     );
-    done();
   });
 
-  test('it unsubscribes from any subscriptions', function(assert) {
-    let done = assert.async();
+  test('it unsubscribes from any subscriptions', async function(assert) {
     let subject = this.subject();
     let unsubscribeCalled = 0;
 
-    let apolloService = subject.get('apollo.apollo');
+    let apolloService = subject.apollo.apollo;
     apolloService.set('managedSubscribe', (manager, opts) => {
       assert.deepEqual(opts, { query: 'fakeSubscription' });
       manager.trackSubscription({
@@ -58,8 +55,8 @@ module('Unit | Mixin | component query manager', function(hooks) {
       return {};
     });
 
-    subject.get('apollo').subscribe({ query: 'fakeSubscription' });
-    subject.get('apollo').subscribe({ query: 'fakeSubscription' });
+    await subject.apollo.subscribe({ query: 'fakeSubscription' });
+    await subject.apollo.subscribe({ query: 'fakeSubscription' });
 
     subject.willDestroyElement();
     assert.equal(
@@ -67,6 +64,5 @@ module('Unit | Mixin | component query manager', function(hooks) {
       2,
       '_apolloUnsubscribe() was called once per subscribe'
     );
-    done();
   });
 });

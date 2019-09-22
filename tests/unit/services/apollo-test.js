@@ -10,11 +10,12 @@ import { createHttpLink } from 'apollo-link-http';
 import { InMemoryCache } from 'apollo-cache-inmemory';
 import fetch from 'fetch';
 
-let customDataIdFromObject = o => o.name;
+let fakeLink = () => {};
+
 class OverriddenApollo extends ApolloService {
   clientOptions() {
     let opts = super.clientOptions();
-    return { ...opts, dataIdFromObject: customDataIdFromObject };
+    return { ...opts, link: fakeLink };
   }
 }
 
@@ -31,13 +32,10 @@ module('Unit | Service | apollo', function(hooks) {
     let service = this.owner.lookup('service:overridden-apollo');
 
     // make sure the override was used.
-    assert.equal(
-      service.get('apollo.dataIdFromObject', customDataIdFromObject)
-    );
+    assert.equal(service.client.link, fakeLink);
   });
 
   test('.mutate resolves with __typename', async function(assert) {
-    let done = assert.async();
     let service = this.owner.lookup('service:apollo');
 
     service.set('client', {
@@ -53,11 +51,9 @@ module('Unit | Service | apollo', function(hooks) {
     const result = await service.mutate({ mutation: testMutation });
 
     assert.equal(result.__typename, 'person');
-    done();
   });
 
   test('.query resolves with __typename', async function(assert) {
-    let done = assert.async();
     let service = this.owner.lookup('service:apollo');
 
     service.set('client', {
@@ -73,7 +69,6 @@ module('Unit | Service | apollo', function(hooks) {
     const result = await service.query({ query: testQuery });
 
     assert.equal(result.__typename, 'person');
-    done();
   });
 
   test('.watchQuery with key', async function(assert) {
@@ -92,7 +87,7 @@ module('Unit | Service | apollo', function(hooks) {
     });
 
     const result = await service.watchQuery({ query: testQuery }, 'human');
-    assert.equal(result.get('name'), 'Link');
+    assert.equal(result.name, 'Link');
   });
 
   test('.watchQuery with key gracefully handles null', async function(assert) {
@@ -109,7 +104,7 @@ module('Unit | Service | apollo', function(hooks) {
     });
 
     const result = await service.watchQuery({ query: testQuery }, 'human');
-    assert.equal(result.get('name'), undefined);
+    assert.equal(result.name, undefined);
   });
 
   test('.subscribe with key', async function(assert) {
@@ -139,14 +134,14 @@ module('Unit | Service | apollo', function(hooks) {
     result.on('event', e => names.push(e.name));
 
     // Things initialize as empty
-    assert.equal(result.get('lastEvent'), null);
+    assert.equal(result.lastEvent, null);
 
     // Two updates come in
     nextFunction({ data: { human: { name: '1 Link' }, __typename: 'person' } });
     nextFunction({ data: { human: { name: '2 Luke' }, __typename: 'person' } });
 
     // Events are in the correct order
-    assert.equal(result.get('lastEvent.name'), '2 Luke');
+    assert.equal(result.lastEvent.name, '2 Luke');
     // Event streams are in the correct order
     assert.equal(names.join(' '), '1 Link 2 Luke');
 
@@ -155,7 +150,7 @@ module('Unit | Service | apollo', function(hooks) {
     nextFunction({ loading: true });
     nextFunction({ loading: true, data: null });
     // Still have last event
-    assert.equal(result.get('lastEvent.name'), '3 Greg');
+    assert.equal(result.lastEvent.name, '3 Greg');
     assert.equal(names.join(' '), '1 Link 2 Luke 3 Greg');
   });
 
@@ -188,8 +183,7 @@ module('Unit | Service | apollo', function(hooks) {
         clientOptions: computed(function() {
           return {
             cache: this.cache(),
-            link: this.link(),
-            dataIdFromObject: customDataIdFromObject,
+            link: fakeLink,
           };
         }),
       })
@@ -197,9 +191,7 @@ module('Unit | Service | apollo', function(hooks) {
     let service = this.owner.lookup('service:client-options-overridden-apollo');
     assert.ok(service);
     // make sure the override was used.
-    assert.equal(
-      service.get('apollo.dataIdFromObject', customDataIdFromObject)
-    );
+    assert.equal(service.client.link, fakeLink);
   });
 
   test('tests should wait for response', async function(assert) {

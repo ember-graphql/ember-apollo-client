@@ -25,7 +25,6 @@ module('Acceptance | main', function(hooks) {
   });
 
   test('visiting /luke', async function(assert) {
-    let done = assert.async();
     let human = Object.assign({}, mockHuman);
     let resolvers = {
       Query: {
@@ -67,12 +66,9 @@ module('Acceptance | main', function(hooks) {
       Object.keys(queries).length,
       'there are no active watchQueries'
     );
-    done();
   });
 
   test('visiting /characters', async function(assert) {
-    let done = assert.async();
-
     let firstQuery = true;
     let resolvers = {
       Query: {
@@ -123,6 +119,5 @@ module('Acceptance | main', function(hooks) {
       1,
       'there is an active watchQuery'
     );
-    done();
   });
 });
