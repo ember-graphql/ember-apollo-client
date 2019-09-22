@@ -6,13 +6,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-### Added
+### Breaking
 
-- Upgrade broccoli-graphql-filter to allow new import syntax
-- It's not recommended to import dependencies of other dependencies in your
+- Don't create EmberObject for returned data:
+  Before this change, `ember-apollo-client` would always wrap the returned data
+  from the GraphQL (when not an array) with `EmberObject`. In this PR we removed
+  that and instead we return plain objects.
+- Remove unused prod dependencies:
+    It's not recommended to import dependencies of other dependencies in your
     application. Therefore, if you depend on any apollo package that this
     addons depends on, you should add to your `package.json`. You should also add
     ember-auto-import to make sure you are able to import them.
+
+### Added
+
+- Upgrade broccoli-graphql-filter to allow new import syntax
+- Add public alternative to unsubscribe from watchQuery
+  Before the recommended way was to access a property `_apolloUnsubscribe` from
+  the result query.
 
 
 ## [v2.0.0-beta.5] - 2019-08-19
