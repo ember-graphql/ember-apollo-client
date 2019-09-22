@@ -9,7 +9,7 @@ export default Route.extend({
   apollo: queryManager(),
 
   model() {
-    return this.get('apollo').watchQuery(
+    return this.apollo.watchQuery(
       {
         query,
         variables,
@@ -21,7 +21,7 @@ export default Route.extend({
 
   actions: {
     changeName(id, name) {
-      return this.get('apollo').mutate({
+      return this.apollo.mutate({
         mutation,
         variables: { id, name },
       });

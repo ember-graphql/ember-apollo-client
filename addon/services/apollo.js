@@ -22,7 +22,7 @@ class EmberApolloSubscription extends EmberObject.extend(Evented) {
   lastEvent = null;
 
   apolloUnsubscribe() {
-    this.get('_apolloClientSubscription').unsubscribe();
+    this._apolloClientSubscription.unsubscribe();
   }
 
   _apolloClientSubscription = null;
@@ -90,8 +90,7 @@ export default class ApolloService extends Service {
       deprecateComputed('clientOptions');
     }
 
-    const client = new ApolloClient(options);
-    this.set('client', client);
+    this.client = new ApolloClient(options);
 
     if (Ember.testing) {
       this._registerWaiter();
@@ -245,7 +244,7 @@ export default class ApolloService extends Service {
    * @public
    */
   subscribe(opts, resultKey = null) {
-    const observable = this.get('client').subscribe(opts);
+    const observable = this.client.subscribe(opts);
 
     const obj = EmberApolloSubscription.create();
 

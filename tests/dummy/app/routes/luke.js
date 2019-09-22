@@ -8,7 +8,7 @@ export default Route.extend({
   apollo: queryManager(),
 
   model() {
-    return this.get('apollo').watchQuery(
+    return this.apollo.watchQuery(
       {
         query,
         variables,
@@ -20,7 +20,7 @@ export default Route.extend({
 
   actions: {
     refetchModel() {
-      this.get('apollo').query({
+      this.apollo.query({
         query,
         variables,
         fetchPolicy: 'network-only',

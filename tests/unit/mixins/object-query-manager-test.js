@@ -19,7 +19,7 @@ module('Unit | Mixin | ember object query manager', function(hooks) {
     let subject = this.subject();
     let unsubscribeCalled = 0;
 
-    let apolloService = subject.get('apollo.apollo');
+    let apolloService = subject.apollo.apollo;
     apolloService.set('managedWatchQuery', (manager, opts) => {
       assert.deepEqual(opts, { query: 'fakeQuery' });
       manager.trackSubscription({
@@ -30,8 +30,8 @@ module('Unit | Mixin | ember object query manager', function(hooks) {
       return {};
     });
 
-    await subject.get('apollo').watchQuery({ query: 'fakeQuery' });
-    await subject.get('apollo').watchQuery({ query: 'fakeQuery' });
+    await subject.apollo.watchQuery({ query: 'fakeQuery' });
+    await subject.apollo.watchQuery({ query: 'fakeQuery' });
 
     subject.willDestroy();
     assert.equal(
@@ -45,7 +45,7 @@ module('Unit | Mixin | ember object query manager', function(hooks) {
     let subject = this.subject();
     let unsubscribeCalled = 0;
 
-    let apolloService = subject.get('apollo.apollo');
+    let apolloService = subject.apollo.apollo;
     apolloService.set('managedSubscribe', (manager, opts) => {
       assert.deepEqual(opts, { query: 'fakeSubscription' });
       manager.trackSubscription({
@@ -56,8 +56,8 @@ module('Unit | Mixin | ember object query manager', function(hooks) {
       return {};
     });
 
-    await subject.get('apollo').subscribe({ query: 'fakeSubscription' });
-    await subject.get('apollo').subscribe({ query: 'fakeSubscription' });
+    await subject.apollo.subscribe({ query: 'fakeSubscription' });
+    await subject.apollo.subscribe({ query: 'fakeSubscription' });
 
     subject.willDestroy();
     assert.equal(
@@ -69,7 +69,7 @@ module('Unit | Mixin | ember object query manager', function(hooks) {
 
   test('it exposes an apollo client object', function(assert) {
     let subject = this.subject();
-    let client = subject.get('apollo.apolloClient');
+    let client = subject.apollo.apolloClient;
     assert.ok(client instanceof ApolloClient);
   });
 });

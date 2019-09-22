@@ -12,6 +12,6 @@ export default Route.extend({
   },
 
   model(variables) {
-    return this.get('apollo').watchQuery({ query, variables }, 'characters');
+    return this.apollo.watchQuery({ query, variables }, 'characters');
   },
 });
