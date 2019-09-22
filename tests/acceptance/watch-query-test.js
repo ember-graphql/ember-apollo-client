@@ -18,14 +18,18 @@ module('Acceptance | watch query', function(hooks) {
     schema = this.pretender.schema;
   });
 
-  test('visiting /anakin', async function(assert) {
-    let done = assert.async();
+  test('visiting /anakin with delayed response', async function(assert) {
     let character = Object.assign({}, mockHuman);
     let resolvers = {
       Query: {
         human(obj, args) {
           assert.deepEqual(args, { id: '1000' });
-          return Object.assign({}, character);
+
+          return new Promise(resolve => {
+            setTimeout(() => {
+              resolve(character);
+            }, 200);
+          });
         },
       },
       Mutation: {
@@ -64,6 +68,54 @@ module('Acceptance | watch query', function(hooks) {
       'Darth Vader',
       'has updated name from mutation and watch query'
     );
-    done();
+  });
+
+  test('refetching should update data and should wait', async function(assert) {
+    let isRefetch = false;
+    let character = Object.assign({}, mockHuman);
+    let resolvers = {
+      Query: {
+        human(obj, args) {
+          assert.deepEqual(args, { id: '1000' });
+
+          if (isRefetch) {
+            return new Promise(resolve => {
+              setTimeout(() => {
+                resolve(
+                  Object.assign({}, character, { name: 'Anakin Skywalker 2' })
+                );
+              }, 200);
+            });
+          }
+
+          return Promise.resolve(character);
+        },
+      },
+      Character: {
+        __resolveType(obj) {
+          return obj.__typename;
+        },
+      },
+    };
+
+    addResolveFunctionsToSchema({ schema, resolvers });
+
+    await visit('/anakin');
+    assert.equal(currentURL(), '/anakin');
+
+    assert.equal(
+      find('.model-name').innerText,
+      'Anakin Skywalker',
+      'has correct name from initial query'
+    );
+
+    isRefetch = true;
+    await click('.refetch-data');
+
+    assert.equal(
+      find('.model-name').innerText,
+      'Anakin Skywalker 2',
+      'has refetched name'
+    );
   });
 });

@@ -201,4 +201,26 @@ module('Unit | Service | apollo', function(hooks) {
       service.get('apollo.dataIdFromObject', customDataIdFromObject)
     );
   });
+
+  test('tests should wait for response', async function(assert) {
+    let service = this.owner.lookup('service:apollo');
+
+    service.set('client', {
+      query() {
+        assert.ok(true, 'Called query function on apollo client');
+
+        return new Promise(resolve => {
+          setTimeout(() => {
+            resolve({
+              data: { human: { name: 'Link' }, __typename: 'person' },
+            });
+          }, 300);
+        });
+      },
+    });
+
+    const result = await service.query({ query: testQuery });
+
+    assert.equal(result.__typename, 'person');
+  });
 });
