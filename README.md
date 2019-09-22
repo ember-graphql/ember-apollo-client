@@ -537,13 +537,32 @@ Apollo Client's `watchQuery` will continue to update the query with new data
 whenever the store is updated with new data about the resolved objects. This
 happens until you explicitly unsubscribe from it.
 
-In ember-apollo-client, most unsubscriptions are handled automatically by the
+In `ember-apollo-client`, most unsubscriptions are handled automatically by the
 `queryManager` computed macro, so long as you use it.
 
 If you're fetching data elsewhere, such as in an Ember Service, or if you use
 the Apollo service directly, you are responsible for unsubscribing from
-`watchQuery` results when you're done with them. This is exposed on the
-result of `query` via a method `_apolloUnsubscribe`.
+`watchQuery` results when you're done with them, you can use `unsubscribe`:
+
+```js
+import Service from "@ember/service";
+import { unsubscribe } from "ember-apollo-client";
+import { inject as service } from '@ember/service';
+
+export default Service.extend( {
+  apollo: service(),
+  result: null,
+
+  init() {
+    this._super(...arguments);
+    this.result = this.apollo.watchQuery(...);
+  },
+
+  willDestroy() {
+    unsubscribe(this.result)
+  }
+});
+```
 
 ### queryManager as decorator
 

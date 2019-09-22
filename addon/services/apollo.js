@@ -15,7 +15,11 @@ import { isNone, isPresent } from '@ember/utils';
 import { registerWaiter } from '@ember/test';
 import deprecateComputed from 'ember-apollo-client/-private/deprecate-computed';
 import { run } from '@ember/runloop';
-import { apolloObservableKey, QueryManager } from '../index';
+import {
+  apolloObservableKey,
+  apolloUnsubscribeKey,
+  QueryManager,
+} from '../index';
 
 class EmberApolloSubscription extends EmberObject.extend(Evented) {
   lastEvent = null;
@@ -46,7 +50,7 @@ function extractNewData(resultKey, { data, loading }) {
   return copyWithExtras(keyedData || {}, [], []);
 }
 
-function newDataFunc(observable, resultKey, resolve) {
+function newDataFunc(observable, resultKey, resolve, unsubscribeFn = null) {
   let obj;
 
   return newData => {
@@ -62,6 +66,13 @@ function newDataFunc(observable, resultKey, resolve) {
         value: observable,
         writable: false,
       });
+
+      if (unsubscribeFn) {
+        Object.defineProperty(dataToSend, apolloUnsubscribeKey, {
+          value: unsubscribeFn,
+          writable: false,
+        });
+      }
 
       obj = dataToSend;
 
@@ -210,12 +221,17 @@ export default class ApolloService extends Service {
    */
   watchQuery(opts, resultKey) {
     let observable = this.client.watchQuery(opts);
+    let subscription;
+
+    function unsubscribe() {
+      subscription && subscription.unsubscribe();
+    }
 
     return this._waitFor(
       new RSVP.Promise((resolve, reject) => {
         // TODO: add an error function here for handling errors
-        observable.subscribe({
-          next: newDataFunc(observable, resultKey, resolve),
+        subscription = observable.subscribe({
+          next: newDataFunc(observable, resultKey, resolve, unsubscribe),
           error(e) {
             reject(e);
           },
@@ -309,11 +325,16 @@ export default class ApolloService extends Service {
    */
   managedWatchQuery(manager, opts, resultKey) {
     let observable = this.client.watchQuery(opts);
+    let subscription;
+
+    function unsubscribe() {
+      subscription && subscription.unsubscribe();
+    }
 
     return this._waitFor(
       new RSVP.Promise((resolve, reject) => {
-        let subscription = observable.subscribe({
-          next: newDataFunc(observable, resultKey, resolve),
+        subscription = observable.subscribe({
+          next: newDataFunc(observable, resultKey, resolve, unsubscribe),
           error(e) {
             reject(e);
           },
