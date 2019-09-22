@@ -8,7 +8,6 @@ import fetch from 'fetch';
 import { A } from '@ember/array';
 import { ApolloClient } from 'apollo-client';
 import { InMemoryCache } from 'apollo-cache-inmemory';
-import { assign } from '@ember/polyfills';
 import { createHttpLink } from 'apollo-link-http';
 import { getOwner } from '@ember/application';
 import { isArray } from '@ember/array';
@@ -47,9 +46,8 @@ function extractNewData(resultKey, { data, loading }) {
   return copyWithExtras(keyedData || {}, [], []);
 }
 
-function newDataFunc(observable, resultKey, resolve, mergedProps = {}) {
+function newDataFunc(observable, resultKey, resolve) {
   let obj;
-  mergedProps[apolloObservableKey] = observable;
 
   return newData => {
     let dataToSend = extractNewData(resultKey, newData);
@@ -60,12 +58,17 @@ function newDataFunc(observable, resultKey, resolve, mergedProps = {}) {
     }
 
     if (isNone(obj)) {
-      if (isArray(dataToSend)) {
-        obj = A(dataToSend);
-        obj.setProperties(mergedProps);
-      } else {
-        obj = EmberObject.create(assign(dataToSend, mergedProps));
+      Object.defineProperty(dataToSend, apolloObservableKey, {
+        value: observable,
+        writable: false,
+      });
+
+      obj = dataToSend;
+
+      if (isArray(obj)) {
+        obj = A(obj);
       }
+
       return resolve(obj);
     }
 
@@ -207,20 +210,12 @@ export default class ApolloService extends Service {
    */
   watchQuery(opts, resultKey) {
     let observable = this.client.watchQuery(opts);
-    let subscription;
-
-    let mergedProps = {
-      _apolloUnsubscribe() {
-        subscription.unsubscribe();
-      },
-    };
-    mergedProps[apolloObservableKey] = observable;
 
     return this._waitFor(
       new RSVP.Promise((resolve, reject) => {
         // TODO: add an error function here for handling errors
-        subscription = observable.subscribe({
-          next: newDataFunc(observable, resultKey, resolve, mergedProps),
+        observable.subscribe({
+          next: newDataFunc(observable, resultKey, resolve),
           error(e) {
             reject(e);
           },

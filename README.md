@@ -364,15 +364,10 @@ mutation createReview($ep: Episode!, $review: ReviewInput!) {
 ```js
 import Route from "@ember/routing/route";
 import { inject as service } from "@ember/service";
-import EmberObject from "@ember/object";
 import mutation from "my-app/gql/mutations/create-review";
 
 export default Route.extend({
   apollo: service(),
-
-  model() {
-    return EmberObject.create({});
-  },
 
   actions: {
     createReview(ep, review) {
