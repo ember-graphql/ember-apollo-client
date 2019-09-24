@@ -8,7 +8,6 @@ import fetch from 'fetch';
 import { A } from '@ember/array';
 import { ApolloClient } from 'apollo-client';
 import { InMemoryCache } from 'apollo-cache-inmemory';
-import { assign } from '@ember/polyfills';
 import { createHttpLink } from 'apollo-link-http';
 import { getOwner } from '@ember/application';
 import { isArray } from '@ember/array';
@@ -16,7 +15,11 @@ import { isNone, isPresent } from '@ember/utils';
 import { registerWaiter } from '@ember/test';
 import deprecateComputed from 'ember-apollo-client/-private/deprecate-computed';
 import { run } from '@ember/runloop';
-import { apolloObservableKey, QueryManager } from '../index';
+import {
+  apolloObservableKey,
+  apolloUnsubscribeKey,
+  QueryManager,
+} from '../index';
 
 class EmberApolloSubscription extends EmberObject.extend(Evented) {
   lastEvent = null;
@@ -47,9 +50,8 @@ function extractNewData(resultKey, { data, loading }) {
   return copyWithExtras(keyedData || {}, [], []);
 }
 
-function newDataFunc(observable, resultKey, resolve, mergedProps = {}) {
+function newDataFunc(observable, resultKey, resolve, unsubscribeFn = null) {
   let obj;
-  mergedProps[apolloObservableKey] = observable;
 
   return newData => {
     let dataToSend = extractNewData(resultKey, newData);
@@ -60,12 +62,24 @@ function newDataFunc(observable, resultKey, resolve, mergedProps = {}) {
     }
 
     if (isNone(obj)) {
-      if (isArray(dataToSend)) {
-        obj = A(dataToSend);
-        obj.setProperties(mergedProps);
-      } else {
-        obj = EmberObject.create(assign(dataToSend, mergedProps));
+      Object.defineProperty(dataToSend, apolloObservableKey, {
+        value: observable,
+        writable: false,
+      });
+
+      if (unsubscribeFn) {
+        Object.defineProperty(dataToSend, apolloUnsubscribeKey, {
+          value: unsubscribeFn,
+          writable: false,
+        });
       }
+
+      obj = dataToSend;
+
+      if (isArray(obj)) {
+        obj = A(obj);
+      }
+
       return resolve(obj);
     }
 
@@ -209,18 +223,15 @@ export default class ApolloService extends Service {
     let observable = this.client.watchQuery(opts);
     let subscription;
 
-    let mergedProps = {
-      _apolloUnsubscribe() {
-        subscription.unsubscribe();
-      },
-    };
-    mergedProps[apolloObservableKey] = observable;
+    function unsubscribe() {
+      subscription && subscription.unsubscribe();
+    }
 
     return this._waitFor(
       new RSVP.Promise((resolve, reject) => {
         // TODO: add an error function here for handling errors
         subscription = observable.subscribe({
-          next: newDataFunc(observable, resultKey, resolve, mergedProps),
+          next: newDataFunc(observable, resultKey, resolve, unsubscribe),
           error(e) {
             reject(e);
           },
@@ -314,11 +325,16 @@ export default class ApolloService extends Service {
    */
   managedWatchQuery(manager, opts, resultKey) {
     let observable = this.client.watchQuery(opts);
+    let subscription;
+
+    function unsubscribe() {
+      subscription && subscription.unsubscribe();
+    }
 
     return this._waitFor(
       new RSVP.Promise((resolve, reject) => {
-        let subscription = observable.subscribe({
-          next: newDataFunc(observable, resultKey, resolve),
+        subscription = observable.subscribe({
+          next: newDataFunc(observable, resultKey, resolve, unsubscribe),
           error(e) {
             reject(e);
           },

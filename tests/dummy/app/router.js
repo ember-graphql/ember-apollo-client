@@ -11,6 +11,7 @@ Router.map(function() {
   this.route('luke');
   this.route('anakin');
   this.route('new-review');
+  this.route('reviews');
 });
 
 export default Router;
