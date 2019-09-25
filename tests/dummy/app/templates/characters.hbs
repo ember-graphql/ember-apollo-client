@@ -1,8 +1,12 @@
+<button
+  {{action "refetchData" model}}
+  class="refetch-data"
+>
+  Refetch
+</button>
+
 <ul>
   {{#each model as |item|}}
-    <li>
-      <span class="model-name">{{item.name}}</span>:
-      <span class="model-typename">{{item.__typename}}</span>
-    </li>
+    {{character-item character=item}}
   {{/each}}
 </ul>

@@ -3,7 +3,6 @@ import EmberObject, { get, setProperties } from '@ember/object';
 import Evented from '@ember/object/evented';
 import RSVP from 'rsvp';
 import Service from '@ember/service';
-import copyWithExtras from '../utils/copy-with-extras';
 import fetch from 'fetch';
 import { A } from '@ember/array';
 import { ApolloClient } from 'apollo-client';
@@ -47,7 +46,7 @@ function extractNewData(resultKey, { data, loading }) {
   }
   let keyedData = isNone(resultKey) ? data : data && get(data, resultKey);
 
-  return copyWithExtras(keyedData || {}, [], []);
+  return keyedData || {};
 }
 
 function newDataFunc(observable, resultKey, resolve, unsubscribeFn = null) {
@@ -184,7 +183,6 @@ export default class ApolloService extends Service {
             let dataToSend = isNone(resultKey)
               ? result.data
               : get(result.data, resultKey);
-            dataToSend = copyWithExtras(dataToSend, [], []);
             return resolve(dataToSend);
           })
           .catch(error => {
@@ -303,7 +301,7 @@ export default class ApolloService extends Service {
             if (!isNone(resultKey)) {
               response = get(response, resultKey);
             }
-            return resolve(copyWithExtras(response, [], []));
+            return resolve(response);
           })
           .catch(error => {
             return reject(error);
