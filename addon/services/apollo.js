@@ -1,6 +1,6 @@
 import Ember from 'ember';
-import EmberObject, { get, setProperties } from '@ember/object';
-import Evented from '@ember/object/evented';
+import { get, set, setProperties } from '@ember/object';
+import { sendEvent } from '@ember/object/events';
 import RSVP from 'rsvp';
 import Service from '@ember/service';
 import fetch from 'fetch';
@@ -20,18 +20,17 @@ import {
   QueryManager,
 } from '../index';
 
-class EmberApolloSubscription extends EmberObject.extend(Evented) {
+class EmberApolloSubscription {
   lastEvent = null;
+  _apolloClientSubscription = null;
 
   apolloUnsubscribe() {
     this._apolloClientSubscription.unsubscribe();
   }
 
-  _apolloClientSubscription = null;
-
   _onNewData(newData) {
-    this.set('lastEvent', newData);
-    this.trigger('event', newData);
+    set(this, 'lastEvent', newData);
+    sendEvent(this, 'event', [newData]);
   }
 }
 
@@ -255,7 +254,7 @@ export default class ApolloService extends Service {
   subscribe(opts, resultKey = null) {
     const observable = this.client.subscribe(opts);
 
-    const obj = EmberApolloSubscription.create();
+    const obj = new EmberApolloSubscription();
 
     return this._waitFor(
       new RSVP.Promise((resolve, reject) => {
@@ -274,7 +273,7 @@ export default class ApolloService extends Service {
           },
         });
 
-        obj.set('_apolloClientSubscription', subscription);
+        obj._apolloClientSubscription = subscription;
 
         resolve(obj);
       })

@@ -9,6 +9,7 @@ import { computed } from '@ember/object';
 import { createHttpLink } from 'apollo-link-http';
 import { InMemoryCache } from 'apollo-cache-inmemory';
 import fetch from 'fetch';
+import { addListener, removeListener } from '@ember/object/events';
 
 let fakeLink = () => {};
 
@@ -131,7 +132,11 @@ module('Unit | Service | apollo', function(hooks) {
     );
 
     const names = [];
-    result.on('event', e => names.push(e.name));
+    const handleEvent = event => {
+      names.push(event.name);
+    };
+
+    addListener(result, 'event', handleEvent);
 
     // Things initialize as empty
     assert.equal(result.lastEvent, null);
@@ -152,6 +157,7 @@ module('Unit | Service | apollo', function(hooks) {
     // Still have last event
     assert.equal(result.lastEvent.name, '3 Greg');
     assert.equal(names.join(' '), '1 Link 2 Luke 3 Greg');
+    removeListener(result, 'event', handleEvent);
   });
 
   test('it works when cache and link are computed properties, deprecated computed', function(assert) {

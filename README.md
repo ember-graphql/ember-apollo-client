@@ -391,8 +391,27 @@ export default Route.extend({
   [`ApolloClient.subscribe`][subscribe] method. It returns a promise that
   resolves with an `EmberApolloSubscription`. You can use this object in a few ways to keep
   track of your subscription:
-  - emberApolloSubscription.on('event', event => do_something_with(event)); // manually act on event
-  - emberApolloSubscription.get('lastEvent'); // return the most recently received event data
+  - emberApolloSubscription.lastEvent; // return the most recently received event data
+
+  ```js
+  //import { addListener, removeListener } from '@ember/object/events';
+
+  const result = await this.apollo.subscribe(
+    {
+      subscription: mySubscription,
+    }
+  );
+
+  const handleEvent = event => {
+    console.log('event received', event)
+  };
+
+  // Add listener to new data
+  addListener(result, 'event', handleEvent);
+
+  // Remove the listener from new data
+  removeListener(result, 'event', handleEvent);
+  ```
 
   As before, the `resultKey` can be used to resolve beneath the root.
 
