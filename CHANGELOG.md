@@ -12,6 +12,45 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   Before this change, `ember-apollo-client` would always wrap the returned data
   from the GraphQL (when not an array) with `EmberObject`. In this PR we removed
   that and instead we return plain objects.
+
+- Remove usage of Evented mixin: `subscribe` no longer returns an Ember Object and
+    does not apply the Evented Ember mixin. Instead, it just returns an native class and
+    it triggers an event when new data comes in. You can use this event to add
+    a listener like so:
+
+  ```js
+  //import { addListener, removeListener } from '@ember/object/events';
+
+  const result = await this.apollo.subscribe(
+    {
+      subscription: mySubscription,
+    }
+  );
+
+  const handleEvent = event => {
+    console.log('event received', event)
+  };
+
+  // Add listener to new data
+  addListener(result, 'event', handleEvent);
+
+  // Remove the listener from new data
+  removeListener(result, 'event', handleEvent);
+  ```
+
+  The `lastEvent` property should be accessed directly or use `get` from Ember
+  Object.
+
+  ```js
+  console.log(result.lastEvent);
+
+  // or
+
+  // import { get } from '@ember/object';
+
+  console.log(get(result, 'lastEvent'));
+  ```
+
 - Remove unused prod dependencies:
     It's not recommended to import dependencies of other dependencies in your
     application. Therefore, if you depend on any apollo package that this
