@@ -130,8 +130,8 @@ query human($id: String!) {
 }
 ```
 
-Though it is not recommended, you can also use the `graphql-tag` package to
-write your queries within your JS file:
+You can also use the `graphql-tag` package to write your queries within your
+JS file:
 
 ```js
 import gql from "graphql-tag";
@@ -144,6 +144,14 @@ const query = gql`
   }
 `;
 ```
+
+> **Note:** Inline queries like the one above are compiled at *runtime*. This is
+> both slower than external files (which are precompiled) and involves shipping
+> extra dependencies in your vendor.js. For the time being, we recommend using
+> external files for your queries. 
+>
+> If you are looking for an opportunity to contribute, enabling precompilation
+> of inline queries would be a fantastic feature to work on.
 
 Within your routes, you can query for data using the `queryManager`
 computed macro and `watchQuery`:
