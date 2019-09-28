@@ -1,13 +1,18 @@
 import { module, test } from 'qunit';
 import { setupApplicationTest } from 'dummy/tests/helpers/setup';
 import { addResolveFunctionsToSchema } from 'graphql-tools';
-import { click, currentURL, find, findAll, visit } from '@ember/test-helpers';
+import { click, currentURL, findAll, visit } from '@ember/test-helpers';
 
-const mockReviews = [
+const mockMovies = [
   {
-    stars: 3,
-    commentary: 'Nice!',
-    __typename: 'Review',
+    id: 680,
+    title: 'Pulp Fiction',
+    popularity: 30.437,
+    posterUrl:
+      'https://image.tmdb.org/t/p/w185_and_h278_bestv2/dM2w364MScsjFf8pfMbaWUcWrR.jpg',
+    overview: 'Lorem ipsum',
+    releaseDate: '1994-10-14',
+    __typename: 'Movie',
   },
 ];
 
@@ -23,10 +28,10 @@ module('Acceptance | array watchQuery', function(hooks) {
   test('should re-render updating an array using watchQuery', async function(assert) {
     let resolvers = {
       Query: {
-        reviews(/*obj, args*/) {
+        movies(/*obj, args*/) {
           return new Promise(resolve => {
             setTimeout(() => {
-              resolve(mockReviews);
+              resolve(mockMovies);
             }, 200);
           });
         },
@@ -35,35 +40,40 @@ module('Acceptance | array watchQuery', function(hooks) {
 
     addResolveFunctionsToSchema({ schema, resolvers });
 
-    await visit('/reviews');
-    assert.equal(currentURL(), '/reviews');
+    await visit('/');
+    assert.equal(currentURL(), '/');
 
-    assert.equal(findAll('.reviews-list li').length, 1, 'has one item');
-    assert.equal(find('.model-stars').innerText, '3', 'has correct stars');
+    assert.equal(findAll('.movie-list .item').length, 1, 'has one item');
+    assert.dom('.movie-overview').hasText('Lorem ipsum');
 
-    mockReviews[0].stars = 2;
-    mockReviews.push({
-      stars: 5,
-      commentary: 'Awesome!',
+    mockMovies[0].overview = 'Updated overview';
+    mockMovies.push({
+      id: 13,
+      title: 'Forrest Gump',
+      popularity: 31.962,
+      posterUrl:
+        'https://image.tmdb.org/t/p/w185_and_h278_bestv2/yE5d3BUhE8hCnkMUJOo1QDoOGNz.jpg',
+      overview: 'lorem',
+      releaseDate: '1994-07-06',
     });
 
-    await click('.refetch-data');
+    await click('.refresh-data');
     assert.equal(
-      findAll('.reviews-list li').length,
+      findAll('.movie-list .item').length,
       2,
       'should have updated the list'
     );
 
     assert.equal(
-      findAll('.model-stars')[0].innerText,
-      '2',
-      'has correct updated stars'
+      findAll('.movie-overview')[0].innerText,
+      'Updated overview',
+      'has correct updated overview'
     );
 
     assert.equal(
-      findAll('.model-stars')[1].innerText,
-      '5',
-      'has correct stars for new data'
+      findAll('.movie-overview')[1].innerText,
+      'lorem',
+      'has correct overview for new data'
     );
   });
 });
