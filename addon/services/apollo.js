@@ -60,12 +60,19 @@ function newDataFunc(observable, resultKey, resolve, unsubscribeFn = null) {
     }
 
     if (isNone(obj)) {
-      Object.defineProperty(dataToSend, apolloObservableKey, {
-        value: observable,
-        writable: false,
-      });
+      if (
+        !Object.prototype.hasOwnProperty.call(dataToSend, apolloObservableKey)
+      ) {
+        Object.defineProperty(dataToSend, apolloObservableKey, {
+          value: observable,
+          writable: false,
+        });
+      }
 
-      if (unsubscribeFn) {
+      if (
+        unsubscribeFn &&
+        !Object.prototype.hasOwnProperty.call(dataToSend, apolloUnsubscribeKey)
+      ) {
         Object.defineProperty(dataToSend, apolloUnsubscribeKey, {
           value: unsubscribeFn,
           writable: false,
