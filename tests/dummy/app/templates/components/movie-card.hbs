@@ -1,0 +1,27 @@
+<div class="item card">
+  <div class="poster">
+    {{#if @movie.posterUrl}}
+      <img src={{@movie.posterUrl}} alt={{@movie.title}}>
+    {{else}}
+      <img src="https://via.placeholder.com/140x210" alt={{@movie.title}}>
+    {{/if}}
+  </div>
+  <div class="info">
+    <div>
+      {{#link-to "index" class="movie-title"}}
+        {{@movie.title}}
+      {{/link-to}}
+      <span class="movie-release-date">
+        {{this.formattedReleaseDate}}
+      </span>
+    </div>
+    <p class="movie-overview">
+      {{@movie.overview}}
+    </p>
+
+    <div class="movie-vote-average">
+      User Rating: {{@movie.voteAverage}}
+    </div>
+  </div>
+</div>
+
