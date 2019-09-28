@@ -6,16 +6,30 @@ import { click, currentURL, find, settled, visit } from '@ember/test-helpers';
 module('Acceptance | main', function(hooks) {
   setupApplicationTest(hooks);
 
+  const mockMovieNotTop = {
+    id: 680,
+    title: 'Pulp Fiction',
+    voteAverage: 8.4,
+    posterUrl:
+      'https://image.tmdb.org/t/p/w185_and_h278_bestv2/dM2w364MScsjFf8pfMbaWUcWrR.jpg',
+    overview: 'lorem',
+    releaseDate: '1994-10-14',
+  };
+
+  const mockMovieTopRated = {
+    id: 238,
+    title: 'The Godfather',
+    voteAverage: 8.6,
+    posterUrl:
+      'https://image.tmdb.org/t/p/w185_and_h278_bestv2/rPdtLWNsZmAtoZl9PK7S2wE3qiS.jpg',
+    overview: 'lorem',
+    releaseDate: '1972-03-15',
+  };
+
   const mockHuman = {
     id: '1000',
     name: 'Luke Skywalker',
     __typename: 'Human',
-  };
-
-  const mockDroid = {
-    id: '1001',
-    name: 'BB8',
-    __typename: 'Droid',
   };
 
   let schema;
@@ -68,19 +82,19 @@ module('Acceptance | main', function(hooks) {
     );
   });
 
-  test('visiting /characters', async function(assert) {
+  test('visiting /', async function(assert) {
     let firstQuery = true;
     let resolvers = {
       Query: {
-        characters(obj, args) {
+        movies(obj, args) {
           if (firstQuery) {
             firstQuery = false;
-            assert.deepEqual(args, { kind: 'human' });
-            return [mockHuman];
+            assert.deepEqual(args, { topRated: false });
+            return [mockMovieNotTop];
           }
 
-          assert.deepEqual(args, { kind: 'droid' });
-          return [mockDroid];
+          assert.deepEqual(args, { topRated: true });
+          return [mockMovieTopRated];
         },
       },
     };
@@ -89,11 +103,9 @@ module('Acceptance | main', function(hooks) {
     let apollo = this.owner.lookup('service:apollo');
     let getQueries = () => apollo.client.queryManager.queryStore.getStore();
 
-    await visit('/characters?kind=human');
+    await visit('/');
 
-    assert.equal(currentURL(), '/characters?kind=human');
-    assert.equal(find('.model-name').innerText, 'Luke Skywalker');
-    assert.equal(find('.model-typename').innerText, 'Human');
+    assert.dom('.movie-title').hasText(mockMovieNotTop.title);
 
     // Because we used watchQuery() there should be an ongoing query in the
     // apollo query manager:
@@ -103,21 +115,25 @@ module('Acceptance | main', function(hooks) {
       1,
       'there is an active watchQuery'
     );
+    assert.deepEqual(queries[Object.keys(queries)[0]].variables, {
+      topRated: false,
+    });
 
-    // Change the query param to re-fetch model, which will trigger
-    // resetController() when it's done:
-    await visit('/characters?kind=droid');
+    await click('.toggle-top-rated');
+    assert.equal(currentURL(), '/?topRated=true');
+    assert.dom('.movie-title').hasText(mockMovieTopRated.title);
 
-    assert.equal(currentURL(), '/characters?kind=droid');
-    assert.equal(find('.model-name').innerText, 'BB8');
-    // Since we changed the query kind from 'human' to 'droid', a new
-    // watchQuery should have been fetched referencing 'droid'. It should
-    // still be active, while the 'human' query should not.
+    // Since we changed the query topRated from 'false' to 'true', a new
+    // watchQuery should have been fetched referencing 'topRated'. It should
+    // still be active, while the 'topRated false' query should not.
     queries = getQueries();
     assert.equal(
       Object.keys(queries).length,
       1,
       'there is an active watchQuery'
     );
+    assert.deepEqual(queries[Object.keys(queries)[0]].variables, {
+      topRated: true,
+    });
   });
 });

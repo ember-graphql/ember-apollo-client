@@ -7,7 +7,6 @@ const Router = EmberRouter.extend({
 });
 
 Router.map(function() {
-  this.route('characters');
   this.route('luke');
   this.route('anakin');
   this.route('new-review');
