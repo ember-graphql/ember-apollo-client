@@ -11,10 +11,12 @@ type Query {
 
   # -------------
   human(id: ID!): Human
+  movie(id: ID!): Movie
 }
 
 # The mutation type, represents all updates we can make to our data
 type Mutation {
+  changeMovieTitle(id: ID!, title: String!): Movie
   createReview(episode: Episode, review: ReviewInput!): Review
   changeCharacterName(id: ID!, name: String!): Character
 }
@@ -24,7 +26,7 @@ type Movie {
   title: String!
   overview: String!
   voteAverage: Float
-  posterUrl: String
+  posterPath: String
   releaseDate: Date
 }
 

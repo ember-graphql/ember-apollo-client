@@ -10,6 +10,7 @@ Router.map(function() {
   this.route('luke');
   this.route('anakin');
   this.route('new-review');
+  this.route('movie', { path: '/movie/:id' });
 });
 
 export default Router;

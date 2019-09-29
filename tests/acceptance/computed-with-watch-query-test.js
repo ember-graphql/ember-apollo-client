@@ -9,8 +9,7 @@ module('Acceptance | computed with watch query', function(hooks) {
   const mockMovie = {
     id: 238,
     popularity: 26.83,
-    posterUrl:
-      'https://image.tmdb.org/t/p/w185_and_h278_bestv2/rPdtLWNsZmAtoZl9PK7S2wE3qiS.jpg',
+    posterPath: '/rPdtLWNsZmAtoZl9PK7S2wE3qiS.jpg',
     title: 'The Godfather',
     overview:
       'Spanning the years 1945 to 1955, a chronicle of the fictional Italian-American Corleone crime family. When organized crime family patriarch, Vito Corleone barely survives an attempt on his life, his youngest son, Michael steps in to take care of the would-be killers, launching a campaign of bloody revenge.',

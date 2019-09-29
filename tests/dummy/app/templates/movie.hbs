@@ -1,0 +1,30 @@
+<h2>Movie Detail</h2>
+
+{{#link-to "index"}}
+  Back
+{{/link-to}}
+
+<div class="actions-menu">
+  <button
+    {{action "changeTitle" this.model.movie.id "Rambo: Last Blood"}}
+    class="button change-movie-title"
+  >
+    Change Movie Title
+  </button>
+
+  <button
+    {{action "refetchData" this.model.movie.id}}
+    class="button refresh-data"
+  >
+    Refetch (new query)
+  </button>
+
+  <button
+    {{action "refetchUsingObservable" this.model}}
+    class="button refetch-data-using-observable"
+  >
+    Refetch (using observable)
+  </button>
+</div>
+
+<MovieDetail @movie={{this.model.movie}} />

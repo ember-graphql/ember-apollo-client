@@ -10,8 +10,7 @@ module('Acceptance | main', function(hooks) {
     id: 680,
     title: 'Pulp Fiction',
     voteAverage: 8.4,
-    posterUrl:
-      'https://image.tmdb.org/t/p/w185_and_h278_bestv2/dM2w364MScsjFf8pfMbaWUcWrR.jpg',
+    posterPath: '/dM2w364MScsjFf8pfMbaWUcWrR.jpg',
     overview: 'lorem',
     releaseDate: '1994-10-14',
   };
@@ -20,8 +19,7 @@ module('Acceptance | main', function(hooks) {
     id: 238,
     title: 'The Godfather',
     voteAverage: 8.6,
-    posterUrl:
-      'https://image.tmdb.org/t/p/w185_and_h278_bestv2/rPdtLWNsZmAtoZl9PK7S2wE3qiS.jpg',
+    posterPath: '/rPdtLWNsZmAtoZl9PK7S2wE3qiS.jpg',
     overview: 'lorem',
     releaseDate: '1972-03-15',
   };

@@ -1,5 +1,5 @@
-query GetMovies($topRated: Boolean) {
-  movies(topRated: $topRated) {
+query GetMovie($id: ID!) {
+  movie(id: $id) {
     id
     title
     overview

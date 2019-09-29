@@ -8,8 +8,7 @@ const mockMovies = [
     id: 680,
     title: 'Pulp Fiction',
     popularity: 30.437,
-    posterUrl:
-      'https://image.tmdb.org/t/p/w185_and_h278_bestv2/dM2w364MScsjFf8pfMbaWUcWrR.jpg',
+    posterPath: '/dM2w364MScsjFf8pfMbaWUcWrR.jpg',
     overview: 'Lorem ipsum',
     releaseDate: '1994-10-14',
     __typename: 'Movie',
@@ -51,8 +50,7 @@ module('Acceptance | array watchQuery', function(hooks) {
       id: 13,
       title: 'Forrest Gump',
       popularity: 31.962,
-      posterUrl:
-        'https://image.tmdb.org/t/p/w185_and_h278_bestv2/yE5d3BUhE8hCnkMUJOo1QDoOGNz.jpg',
+      posterPath: '/yE5d3BUhE8hCnkMUJOo1QDoOGNz.jpg',
       overview: 'lorem',
       releaseDate: '1994-07-06',
     });
