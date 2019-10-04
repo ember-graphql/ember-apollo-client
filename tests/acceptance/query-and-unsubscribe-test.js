@@ -1,7 +1,7 @@
 import { module, test } from 'qunit';
 import { setupApplicationTest } from 'dummy/tests/helpers/setup';
 import { addResolveFunctionsToSchema } from 'graphql-tools';
-import { click, currentURL, find, settled, visit } from '@ember/test-helpers';
+import { click, currentURL, visit } from '@ember/test-helpers';
 
 module('Acceptance | main', function(hooks) {
   setupApplicationTest(hooks);
@@ -24,45 +24,32 @@ module('Acceptance | main', function(hooks) {
     releaseDate: '1972-03-15',
   };
 
-  const mockHuman = {
-    id: '1000',
-    name: 'Luke Skywalker',
-    __typename: 'Human',
-  };
-
-  let schema;
-
-  hooks.beforeEach(function() {
-    schema = this.pretender.schema;
-  });
-
-  test('visiting /luke', async function(assert) {
-    let human = Object.assign({}, mockHuman);
+  test('visiting /movie/id', async function(assert) {
+    let movie = Object.assign({}, mockMovieNotTop);
     let resolvers = {
       Query: {
-        human(obj, args) {
-          assert.deepEqual(args, { id: '1000' });
-          return Object.assign({}, human);
+        movie(obj, args) {
+          assert.deepEqual(args, { id: '680' });
+          return Object.assign({}, movie);
         },
       },
     };
-    addResolveFunctionsToSchema({ schema, resolvers });
+    addResolveFunctionsToSchema({ schema: this.pretender.schema, resolvers });
 
     let apollo = this.owner.lookup('service:apollo');
     let getQueries = () => apollo.client.queryManager.queryStore.getStore();
 
-    await visit('/luke');
+    await visit('/movie/680');
 
-    assert.equal(currentURL(), '/luke');
-    assert.equal(find('.model-name').innerText, 'Luke Skywalker');
+    assert.equal(currentURL(), '/movie/680');
+    assert.dom('.movie-title').hasText('Pulp Fiction');
 
     // try updating the mock, refetching the result (w/ query), and ensuring
     // that there are no errors:
-    human.name = 'Lucas Skywalker';
-    await click('.refetch-button');
-    await settled();
+    movie.title = 'Rambo: Last Blood';
+    await click('.refresh-data');
 
-    assert.equal(find('.model-name').innerText, 'Lucas Skywalker');
+    assert.dom('.movie-title').hasText('Rambo: Last Blood');
     // Because we used watchQuery() there should be an ongoing query in the
     // apollo query manager:
     let queries = getQueries();
@@ -84,7 +71,7 @@ module('Acceptance | main', function(hooks) {
     let firstQuery = true;
     let resolvers = {
       Query: {
-        movies(obj, args) {
+        movies(_, args) {
           if (firstQuery) {
             firstQuery = false;
             assert.deepEqual(args, { topRated: false });
@@ -96,7 +83,7 @@ module('Acceptance | main', function(hooks) {
         },
       },
     };
-    addResolveFunctionsToSchema({ schema, resolvers });
+    addResolveFunctionsToSchema({ schema: this.pretender.schema, resolvers });
 
     let apollo = this.owner.lookup('service:apollo');
     let getQueries = () => apollo.client.queryManager.queryStore.getStore();

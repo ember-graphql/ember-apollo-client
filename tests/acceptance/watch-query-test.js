@@ -1,121 +1,90 @@
 import { module, test } from 'qunit';
 import { setupApplicationTest } from 'dummy/tests/helpers/setup';
 import { addResolveFunctionsToSchema } from 'graphql-tools';
-import { click, currentURL, find, visit } from '@ember/test-helpers';
-
-const mockHuman = {
-  id: '1000',
-  name: 'Anakin Skywalker',
-  __typename: 'Human',
-};
+import { click, currentURL, visit } from '@ember/test-helpers';
 
 module('Acceptance | watch query', function(hooks) {
   setupApplicationTest(hooks);
 
-  let schema;
+  const mockMovie = {
+    id: 680,
+    title: 'Pulp Fiction',
+    voteAverage: 8.4,
+    posterPath: '/dM2w364MScsjFf8pfMbaWUcWrR.jpg',
+    overview: 'lorem',
+    releaseDate: '1994-10-14',
+  };
 
-  hooks.beforeEach(function() {
-    schema = this.pretender.schema;
-  });
-
-  test('visiting /anakin with delayed response', async function(assert) {
-    let character = Object.assign({}, mockHuman);
+  test('data should be updated when executing a mutation', async function(assert) {
+    let movie = Object.assign({}, mockMovie);
     let resolvers = {
       Query: {
-        human(obj, args) {
-          assert.deepEqual(args, { id: '1000' });
+        movie(_, args) {
+          assert.deepEqual(args, { id: '680' });
 
           return new Promise(resolve => {
             setTimeout(() => {
-              resolve(character);
+              resolve(movie);
             }, 200);
           });
         },
       },
       Mutation: {
-        changeCharacterName(_, { id, name }) {
-          assert.equal(id, mockHuman.id, 'correct mutation id is passed in');
+        changeMovieTitle(_, { id, title }) {
+          assert.equal(id, movie.id, 'correct mutation id is passed in');
           assert.equal(
-            name,
-            'Darth Vader',
-            'correct mutation name is passed in'
+            title,
+            'Rambo: Last Blood',
+            'correct mutation title is passed in'
           );
-          return Object.assign({}, character, { name });
-        },
-      },
-      Character: {
-        __resolveType(obj) {
-          // Character interface needs to resolve to a specific type
-          // so it's just pulled from the object's type that was queried
-          return obj.__typename;
+          return Object.assign({}, movie, { title });
         },
       },
     };
 
-    addResolveFunctionsToSchema({ schema, resolvers });
+    addResolveFunctionsToSchema({ schema: this.pretender.schema, resolvers });
 
-    await visit('/anakin');
-    assert.equal(currentURL(), '/anakin');
+    await visit('/movie/680');
+    assert.equal(currentURL(), '/movie/680');
 
-    assert.equal(
-      find('.model-name').innerText,
-      'Anakin Skywalker',
-      'has correct name from initial query'
-    );
-    await click('.change-name');
-    assert.equal(
-      find('.model-name').innerText,
-      'Darth Vader',
-      'has updated name from mutation and watch query'
-    );
+    assert.dom('.movie-title').hasText('Pulp Fiction');
+    await click('.change-movie-title');
+
+    assert.dom('.movie-title').hasText('Rambo: Last Blood');
   });
 
-  test('refetching should update data and should wait', async function(assert) {
+  test('refetch using observable should update data and wait for response', async function(assert) {
     let isRefetch = false;
-    let character = Object.assign({}, mockHuman);
     let resolvers = {
       Query: {
-        human(obj, args) {
-          assert.deepEqual(args, { id: '1000' });
+        movie(_, args) {
+          assert.deepEqual(args, { id: '680' });
 
           if (isRefetch) {
             return new Promise(resolve => {
               setTimeout(() => {
                 resolve(
-                  Object.assign({}, character, { name: 'Anakin Skywalker 2' })
+                  Object.assign({}, mockMovie, { title: 'The Godfather' })
                 );
               }, 200);
             });
           }
 
-          return Promise.resolve(character);
-        },
-      },
-      Character: {
-        __resolveType(obj) {
-          return obj.__typename;
+          return Promise.resolve(mockMovie);
         },
       },
     };
 
-    addResolveFunctionsToSchema({ schema, resolvers });
+    addResolveFunctionsToSchema({ schema: this.pretender.schema, resolvers });
 
-    await visit('/anakin');
-    assert.equal(currentURL(), '/anakin');
+    await visit('/movie/680');
+    assert.equal(currentURL(), '/movie/680');
 
-    assert.equal(
-      find('.model-name').innerText,
-      'Anakin Skywalker',
-      'has correct name from initial query'
-    );
+    assert.dom('.movie-title').hasText('Pulp Fiction');
 
     isRefetch = true;
-    await click('.refetch-data');
+    await click('.refetch-data-using-observable');
 
-    assert.equal(
-      find('.model-name').innerText,
-      'Anakin Skywalker 2',
-      'has refetched name'
-    );
+    assert.dom('.movie-title').hasText('The Godfather');
   });
 });

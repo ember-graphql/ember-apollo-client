@@ -39,7 +39,6 @@ export default function startPretender() {
 
     // We set up __resolveType for this interface type here, then it is inherited
     // when we build the schema:
-    Character: { __resolveType },
     SearchResult: { __resolveType },
   };
   let typeResolvers = {
