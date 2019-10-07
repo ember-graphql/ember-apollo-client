@@ -1,0 +1,6 @@
+mutation ChangeMovieTitle($id: ID!, $title: String!) {
+  changeMovieTitle(id: $id, title: $title) {
+    id
+    title
+  }
+}

@@ -6,7 +6,7 @@ import {
   addResolveFunctionsToSchema,
   makeExecutableSchema,
 } from 'graphql-tools';
-import schemaString from '../fixtures/test-schema';
+import schemaString from 'dummy/schema';
 
 const interfaceResolveType = {
   __resolveType(data) {
@@ -39,7 +39,6 @@ export default function startPretender() {
 
     // We set up __resolveType for this interface type here, then it is inherited
     // when we build the schema:
-    Character: { __resolveType },
     SearchResult: { __resolveType },
   };
   let typeResolvers = {
@@ -57,6 +56,10 @@ export default function startPretender() {
     // Time() {
     //   return moment().utc().format('YYYY-MM-DDTHH:mm:ss.SSSZ');
     // }
+
+    Date() {
+      return '2019-09-28';
+    },
   };
 
   let schema = makeExecutableSchema({ typeDefs: schemaString, resolvers });

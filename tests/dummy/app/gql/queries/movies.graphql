@@ -1,0 +1,10 @@
+query GetMovies($topRated: Boolean) {
+  movies(topRated: $topRated) {
+    id
+    title
+    overview
+    voteAverage
+    posterPath
+    releaseDate
+  }
+}

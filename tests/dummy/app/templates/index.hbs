@@ -1,0 +1,31 @@
+<h2>My movie list</h2>
+
+<div class="actions-menu">
+  {{#if this.topRated}}
+    {{#link-to "index" (query-params topRated=false) class="button toggle-top-rated"}}
+      Show all
+    {{/link-to}}
+  {{else}}
+    {{#link-to "index" (query-params topRated=true) class="button toggle-top-rated"}}
+      Show Top Rated
+    {{/link-to}}
+  {{/if}}
+
+  {{#link-to "index" class="button"}}
+    Add movie
+  {{/link-to}}
+
+  <button
+    {{action "refetchData" this.model}}
+    class="button refresh-data"
+  >
+    Refetch
+  </button>
+</div>
+
+
+<div class="movie-list">
+  {{#each this.model.movies as |movie|}}
+    <MovieCard @movie={{movie}} />
+  {{/each}}
+</div>

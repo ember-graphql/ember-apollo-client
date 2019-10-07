@@ -1,6 +1,0 @@
-query {
-  reviews(episode: NEWHOPE) {
-    stars
-    commentary
-  }
-}

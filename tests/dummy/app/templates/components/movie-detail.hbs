@@ -1,0 +1,28 @@
+<div class="movie-detail">
+  <div class="poster">
+    {{#if @movie.posterPath}}
+      <img src="https://image.tmdb.org/t/p/w300_and_h450_bestv2{{@movie.posterPath}}" alt={{@movie.title}}>
+    {{else}}
+      <img src="https://via.placeholder.com/140x210" alt={{@movie.title}}>
+    {{/if}}
+  </div>
+  <div class="info">
+    <div>
+      <span class="movie-title">
+        {{@movie.title}}
+      </span>
+      <span class="movie-release-date">
+        {{#if this.releaseYear}}
+          ({{this.releaseYear}})
+        {{/if}}
+      </span>
+    </div>
+    <p class="movie-overview">
+      {{@movie.overview}}
+    </p>
+
+    <div class="movie-vote-average">
+      User Rating: {{@movie.voteAverage}}
+    </div>
+  </div>
+</div>

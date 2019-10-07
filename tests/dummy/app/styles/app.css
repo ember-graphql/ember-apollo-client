@@ -1,0 +1,98 @@
+body {
+  font-family: 'Roboto', BlinkMacSystemFont, -apple-system, 'Segoe UI', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    'Helvetica', 'Arial', sans-serif;
+}
+
+.movie-list {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.actions-menu {
+  text-align: right;
+  margin-bottom: 3rem;
+}
+
+.button {
+  display: inline-block;
+  border: none;
+  padding: 1rem 2rem;
+  margin: 0 0.25rem;
+  text-decoration: none;
+  background: #0069ed;
+  color: #ffffff;
+  font-family: sans-serif;
+  font-size: 1rem;
+  cursor: pointer;
+  text-align: center;
+  transition: background 250ms ease-in-out, transform 150ms ease;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+}
+
+.button:hover,
+.button:focus {
+  background: #0053ba;
+}
+
+.movie-list .item {
+  display: flex;
+  max-width: 33rem;
+  box-sizing: border-box;
+  margin: 0.75rem;
+}
+
+.movie-list .poster img {
+  display: block;
+  width: 8.75rem;
+  height: 13.125rem;
+}
+
+.card {
+  box-shadow: 0 0.125rem 0.5rem rgba(0, 0, 0, 0.1);
+  background-color: #fff;
+}
+
+.movie-list .info {
+  padding: 0.75rem;
+}
+
+.movie-list .movie-title {
+  width: 100%;
+  font-weight: bold;
+  font-size: 1.3rem;
+  color: #000;
+  text-decoration: none;
+}
+
+.movie-list .movie-release-date {
+  font-size: 0.75rem;
+}
+
+.movie-overview {
+  color: #888;
+  font-size: 0.9em;
+  line-height: 1.4em;
+}
+
+.movie-vote-average {
+  color: #888;
+  font-size: 0.75em;
+  font-style: italic;
+}
+
+.movie-detail {
+  margin-top: 3rem;
+  display: flex;
+}
+
+.movie-detail .info {
+  padding: 0 0.75rem;
+}
+
+.movie-detail .movie-title {
+  font-weight: bold;
+  font-size: 2.5rem;
+  color: #000;
+}

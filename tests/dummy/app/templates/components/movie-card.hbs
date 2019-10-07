@@ -1,0 +1,28 @@
+<div class="item card">
+  <div class="poster">
+    {{#link-to "movie" @movie.id}}
+      {{#if @movie.posterPath}}
+        <img src="https://image.tmdb.org/t/p/w185_and_h278_bestv2{{@movie.posterPath}}" alt={{@movie.title}}>
+      {{else}}
+        <img src="https://via.placeholder.com/140x210" alt={{@movie.title}}>
+      {{/if}}
+    {{/link-to}}
+  </div>
+  <div class="info">
+    <div>
+      {{#link-to "movie" @movie.id class="movie-title"}}
+        {{@movie.title}}
+      {{/link-to}}
+      <span class="movie-release-date">
+        {{this.formattedReleaseDate}}
+      </span>
+    </div>
+    <p class="movie-overview">
+      {{@movie.overview}}
+    </p>
+
+    <div class="movie-vote-average">
+      User Rating: {{@movie.voteAverage}}
+    </div>
+  </div>
+</div>
