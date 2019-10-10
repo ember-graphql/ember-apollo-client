@@ -1,7 +1,7 @@
 #import ReviewFragment from 'dummy/gql/fragments/review-fragment'
 
-mutation createReview($ep: Episode!, $review: ReviewInput!) {
-  createReview(episode: $ep, review: $review) {
+mutation createReview($movieId: ID!, $review: ReviewInput!) {
+  createReview(movieId: $movieId, review: $review) {
     ...ReviewFragment
   }
 }
