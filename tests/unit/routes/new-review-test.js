@@ -21,8 +21,8 @@ module('Unit | Route | new-review', function(hooks) {
 
     // expect a mutation to create a review
     let expectedMutation = stripIndent`
-      mutation createReview($ep: Episode!, $review: ReviewInput!) {
-        createReview(episode: $ep, review: $review) {
+      mutation createReview($movieId: ID!, $review: ReviewInput!) {
+        createReview(movieId: $movieId, review: $review) {
           ...ReviewFragment
         }
       }
@@ -37,13 +37,13 @@ module('Unit | Route | new-review', function(hooks) {
         assert.equal(print(mutation).trim(), expectedMutation.trim());
         assert.deepEqual(
           variables,
-          { ep: 'JEDI', review },
+          { movieId: '123', review },
           'it passes in the mutation variables'
         );
         return {
           createReview: {
             review: {
-              ep: 'JEDI',
+              movieId: '123',
               commentary: "It's a trap",
             },
           },
@@ -54,7 +54,7 @@ module('Unit | Route | new-review', function(hooks) {
 
     // actually send the createReview action
     run(() => {
-      route.send('createReview', 'JEDI', review);
+      route.send('createReview', '123', review);
     });
   });
 });
