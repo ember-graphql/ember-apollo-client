@@ -4,16 +4,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## v2.0.0-beta.5 - 2019-10-11
 
-### Breaking
+### :boom: Breaking Change
 
-- Don't create EmberObject for returned data:
+- Don't create EmberObject for returned data  (#310) @josemarluedke
   Before this change, `ember-apollo-client` would always wrap the returned data
   from the GraphQL (when not an array) with `EmberObject`. In this PR we removed
   that and instead we return plain objects.
 
-- Remove usage of Evented mixin: `subscribe` no longer returns an Ember Object and
+- Remove usage of Evented mixin (#313) @josemarluedke
+   `subscribe` no longer returns an Ember Object and
     does not apply the Evented Ember mixin. Instead, it just returns an native class and
     it triggers an event when new data comes in. You can use this event to add
     a listener like so:
@@ -51,18 +52,44 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   console.log(get(result, 'lastEvent'));
   ```
 
-- Remove unused prod dependencies:
+- Remove unused prod dependencies (#306) @josemarluedke
     It's not recommended to import dependencies of other dependencies in your
     application. Therefore, if you depend on any apollo package that this
     addons depends on, you should add to your `package.json`. You should also add
     ember-auto-import to make sure you are able to import them.
 
-### Added
+- Return the actual returned data, not a copy (#312) @josemarluedke
 
-- Upgrade broccoli-graphql-filter to allow new import syntax
-- Add public alternative to unsubscribe from watchQuery
+### :rocket: Enhancement
+
+- Add public alternative to unsubscribe from watchQuery (#310) @josemarluedke
+- Upgrade broccoli-graphql-filter to v0.4 to allow new import syntax (#300) @josemarluedke
   Before the recommended way was to access a property `_apolloUnsubscribe` from
   the result query.
+
+### :memo: Documentation
+
+- Clarify status of graphql-tag in README (#314) @jgwhite
+
+### :house: Internal
+
+- Remove Episode GraphQL type from dummy app (#316) @josemarluedke
+- Rework tests and dummy app (#315) @josemarluedke
+- Cleanup to use async/await and move away from Ember get/set when possible (#309) @josemarluedke
+- Add tests with delayed responses (#308) @josemarluedke
+- Using nested fragments creates invalid graphql document (#298) @lstrzebinczyk
+
+### :wrench: Tooling
+
+- Add Release Drafter as GitHub Actions (#307) @josemarluedke
+
+### :package: Dependencies
+
+- Remove unused dev dep & Upgrade to Ember v3.13 & Cleanup dependencies (#305) @josemarluedke
+- Upgrade dependencies (#302) @josemarluedke
+- Upgrade to Ember 3.12 & other dependencies (#301) @josemarluedke
+
+***
 
 
 ## [v2.0.0-beta.5] - 2019-08-19
