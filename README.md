@@ -76,6 +76,12 @@ module.exports = function(defaults) {
 
 `keepGraphqlFileExtension = false`, optional – If `true`, creates files called `my-query.graphql.js` instead of `my-query.js`, so that you can import them as `./my-query.graphql` instead of `./my-query`.
 
+Example:
+
+```js
+import myQuery from 'my-app/queries/my-query.graphql';
+```
+
 ### Dependencies
 
 This addon uses [ember-auto-import](https://github.com/ef4/ember-auto-import) to import dependencies.
@@ -148,7 +154,7 @@ const query = gql`
 > **Note:** Inline queries like the one above are compiled at *runtime*. This is
 > both slower than external files (which are precompiled) and involves shipping
 > extra dependencies in your vendor.js. For the time being, we recommend using
-> external files for your queries. 
+> external files for your queries.
 >
 > If you are looking for an opportunity to contribute, enabling precompilation
 > of inline queries would be a fantastic feature to work on.
