@@ -173,9 +173,7 @@ export default Route.extend({
 });
 ```
 
-This performs a [`watchQuery` on the ApolloClient][watch-query]. The resulting object is an
-`Ember.Object` and therefore has full support for computed properties,
-observers, etc.
+This performs a [`watchQuery` on the ApolloClient][watch-query]. The resulting object is a POJO.
 
 If a subsequent query (such as a mutation) happens to fetch the same data while
 this query's subscription is still active, the object will immediately receive
@@ -390,7 +388,7 @@ export default Route.extend({
 
 * `watchQuery(options, resultKey)`: This calls the
   [`ApolloClient.watchQuery`][watch-query] method. It returns a promise that
-  resolves with an `Ember.Object`. That object will be updated whenever the
+  resolves with a POJO. That object will be updated whenever the
   `watchQuery` subscription resolves with new data. As before, the `resultKey`
   can be used to resolve beneath the root.
 
@@ -540,7 +538,7 @@ The `apollo` service has the following public API:
 
 * `watchQuery(options, resultKey)`: This calls the
   [`ApolloClient.watchQuery`][watch-query] method. It returns a promise that
-  resolves with an `Ember.Object`. That object will be updated whenever the
+  resolves with a POJO. That object will be updated whenever the
   `watchQuery` subscription resolves with new data. As before, the
   `resultKey` can be used to resolve beneath the root.
 
