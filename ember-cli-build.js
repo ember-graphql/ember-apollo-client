@@ -7,6 +7,9 @@ module.exports = function(defaults) {
     pretender: {
       enabled: true,
     },
+    emberApolloClient: {
+      keepGraphqlFileExtension: false,
+    },
   });
 
   /*

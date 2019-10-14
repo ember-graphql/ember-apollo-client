@@ -28,6 +28,20 @@ module.exports = {
   },
 
   getOptions() {
+    if (
+      this.app &&
+      (typeof this.app.options.emberApolloClient === 'undefined' ||
+        typeof this.app.options.emberApolloClient.keepGraphqlFileExtension ===
+          'undefined')
+    ) {
+      this.ui.writeDeprecateLine(`[ember-apollo-client] Deprecation:
+        The configuration option keepGraphqlFileExtension was not defined.
+        The current default is 'false', but it will change to 'true' after the next major release.
+        This option allows you to import graphql files using its extension. eg. 'import myQuery from 'my-app/queries/my-query.graphql';'
+        To continue with the current behavior, explicit set it to 'false' in your 'ember-cli-build.js'.
+        Please refer to 'Build time configuration' section in ember-apollo-client's README for more information.`);
+    }
+
     return (
       (this.app && this.app.options.emberApolloClient) || {
         keepGraphqlFileExtension: false,
@@ -37,6 +51,7 @@ module.exports = {
 
   setupPreprocessorRegistry(type, registry) {
     let getOptions = this.getOptions.bind(this);
+    let options = getOptions();
 
     if (type === 'parent') {
       registry.add('js', {
@@ -44,8 +59,6 @@ module.exports = {
         ext: 'graphql',
         toTree(tree) {
           const GraphQLFilter = require('broccoli-graphql-filter');
-
-          let options = getOptions();
 
           return new GraphQLFilter(tree, {
             keepExtension: options.keepGraphqlFileExtension,
