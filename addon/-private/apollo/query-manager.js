@@ -155,7 +155,6 @@ export default class QueryManager {
    *
    * @method unsubscribeAll
    * @param {Boolean} onlyStale Whether to unsubscribe only from subscriptions which were previously marked as stale.
-   * @return {!Promise}
    * @public
    */
   unsubscribeAll(onlyStale = false) {
