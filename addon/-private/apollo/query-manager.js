@@ -24,8 +24,9 @@ function isElementDescriptor(args) {
   );
 }
 
-export function queryManager(options) {
+export function queryManager(...theArgs) {
   let serviceName = 'apollo';
+  let [options] = theArgs
   if (typeof options === 'object' && options.service) {
     serviceName = options.service;
   }
@@ -37,13 +38,13 @@ export function queryManager(options) {
     return queryManager;
   });
 
-  // if (isElementDescriptor(arguments)) {
-  //   // Needed to suport @queryManager apollo; (no arguments)
-  //   return setupQueryManager(arguments[0], arguments[1], arguments[2]);
-  // } else {
-  //
-  // }
-  return setupQueryManager;
+
+  if (isElementDescriptor(theArgs)) {
+    // Needed to suport @queryManager apollo; (no arguments)
+    return setupQueryManager(...theArgs);
+  } else {
+    return setupQueryManager;
+  }
 }
 
 export default class QueryManager {
