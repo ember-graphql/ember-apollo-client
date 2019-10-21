@@ -26,7 +26,7 @@ function isElementDescriptor(args) {
 
 export function queryManager(...theArgs) {
   let serviceName = 'apollo';
-  let [options] = theArgs
+  let [options] = theArgs;
   if (typeof options === 'object' && options.service) {
     serviceName = options.service;
   }
@@ -37,7 +37,6 @@ export function queryManager(...theArgs) {
     setupHooks(queryManager, this);
     return queryManager;
   });
-
 
   if (isElementDescriptor(theArgs)) {
     // Needed to suport @queryManager apollo; (no arguments)
