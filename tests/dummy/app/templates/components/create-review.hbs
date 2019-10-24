@@ -1,0 +1,39 @@
+<div>
+  <label>
+    Movie ID:
+    <Input @value={{this.review.movieId}} class="movie-id" />
+  </label>
+
+  <br>
+  <label>
+    Stars:
+    <Input @value={{this.review.stars}} @type="number" class="review-stars" />
+  </label>
+
+  <br>
+  <label>
+    Review:
+    <Textarea @value={{this.review.commentary}} class="review-commentary" />
+  </label>
+</div>
+
+<div class="actions-menu">
+  <button
+    {{action
+      "createReview"
+      this.review.movieId
+      this.review.stars
+      this.review.commentary
+    }}
+    class="button create-review-button"
+  >
+    Create
+  </button>
+</div>
+
+{{#if this.response}}
+  <h3>Response:</h3>
+  <pre class="create-review-response">
+    {{this.response}}
+  </pre>
+{{/if}}
