@@ -717,13 +717,14 @@ A special thanks to the following contributors:
 * Greg Coladarci ([@coladarci](https://github.com/coladarci))
 * Josemar Luedke ([@josemarluedke](https://github.com/josemarluedke))
 
-[ac-constructor]: https://www.apollographql.com/docs/react/api/apollo-client.html#ApolloClientOptions
+[ac-constructor]: https://www.apollographql.com/docs/react/api/apollo-client/#ApolloClientOptions
 [apollo-client]: https://github.com/apollographql/apollo-client
 [apollo-service-api]: #apollo-service-api
-[observable-query]: https://www.apollographql.com/docs/react/api/apollo-client.html#ObservableQuery
+[observable-query]: https://www.apollographql.com/docs/react/api/apollo-client/#observablequery-functions
 [query-manager-api]: #query-manager-api
 [unsubscribing]: #unsubscribing-from-watch-queries
-[watch-query]: https://www.apollographql.com/docs/react/api/apollo-client.html#ApolloClient.watchQuery
+[watch-query]: https://www.apollographql.com/docs/react/api/apollo-client/#ApolloClient.watchQuery
+[subscribe]: https://www.apollographql.com/docs/react/api/apollo-client/#ApolloClient.subscribe
 
 ## Contributing
 
