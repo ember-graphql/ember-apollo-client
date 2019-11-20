@@ -1,19 +1,19 @@
 <div>
   <label>
     Movie ID:
-    <Input @value={{this.review.movieId}} class="movie-id" />
+    {{input value=this.review.movieId class="movie-id"}}
   </label>
 
   <br>
   <label>
     Stars:
-    <Input @value={{this.review.stars}} @type="number" class="review-stars" />
+    {{input value=this.review.stars type="number" class="review-stars"}}
   </label>
 
   <br>
   <label>
     Review:
-    <Textarea @value={{this.review.commentary}} class="review-commentary" />
+    {{textarea value=this.review.commentary class="review-commentary"}}
   </label>
 </div>
 
