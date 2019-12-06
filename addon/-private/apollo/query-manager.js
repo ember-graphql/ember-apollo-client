@@ -164,6 +164,11 @@ export default class QueryManager {
         subscription.subscription.unsubscribe();
       }
     });
-    this.activeSubscriptions = [];
+
+    this.activeSubscriptions = onlyStale
+      ? this.activeSubscriptions.filter(subscription => {
+          return !subscription.closed;
+        })
+      : [];
   }
 }
