@@ -95,6 +95,14 @@ module('Unit | queryManager | Setup Hooks in route', function(hooks) {
       1,
       '_apolloUnsubscribe() was called only once, for the first query'
     );
+    
+    subject.beforeModel();
+    subject.willDestroy();
+    assert.equal(
+      unsubscribeCalled,
+      2,
+      '_apolloUnsubscribe() was called for all quries'
+    );
   });
 
   test('it unsubscribes from any watchQuery subscriptions on willDestroy', function(assert) {

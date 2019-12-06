@@ -167,7 +167,7 @@ export default class QueryManager {
 
     this.activeSubscriptions = onlyStale
       ? this.activeSubscriptions.filter(subscription => {
-          return !subscription.closed;
+          return !subscription.stale;
         })
       : [];
   }
