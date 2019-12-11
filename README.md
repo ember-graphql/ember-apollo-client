@@ -670,19 +670,19 @@ This addon is test-ready! All promises from the apollo service are tracked with
 
 The dummy app contains example routes for mutations and queries:
 
-* [Acceptance test for a regular query](https://github.com/bgentry/ember-apollo-client/blob/master/tests/acceptance/query-and-unsubscribe-test.js)
-* [Route integration test for a mutation with a fragment](https://github.com/bgentry/ember-apollo-client/blob/master/tests/unit/routes/new-review-test.js)
+* [Acceptance test for a regular query](https://github.com/ember-graphql/ember-apollo-client/blob/master/tests/acceptance/query-and-unsubscribe-test.js)
+* [Route integration test for a mutation with a fragment](https://github.com/ember-graphql/ember-apollo-client/blob/master/tests/unit/routes/new-review-test.js)
 
 The tests also contain a sample Star Wars GraphQL schema with an
-[ember-cli-pretender setup][pretender-setup] for mock data.
+[pretender setup][pretender-setup] for mock data.
 
-[pretender-setup]: https://github.com/bgentry/ember-apollo-client/blob/master/tests/helpers/start-pretender.js
+[pretender-setup]: https://github.com/ember-graphql/ember-apollo-client/blob/master/tests/helpers/start-pretender.js
 
 ## Development
 
 ### Installation
 
-* `git clone https://github.com/bgentry/ember-apollo-client` this repository
+* `git clone https://github.com/ember-graphql/ember-apollo-client` this repository
 * `cd ember-apollo-client`
 * `yarn install`
 
