@@ -95,7 +95,7 @@ module('Unit | queryManager | Setup Hooks in route', function(hooks) {
       1,
       '_apolloUnsubscribe() was called only once, for the first query'
     );
-    
+
     subject.beforeModel();
     subject.willDestroy();
     assert.equal(
