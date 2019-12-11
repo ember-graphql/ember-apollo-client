@@ -4,6 +4,34 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v2.0.0-beta.8 - 2019-12-11
+
+## :bug: Bug Fix
+
+- unsubscribeAll does not forget active subscriptions (#330) @josemarluedke
+
+## :memo: Documentation
+
+- Fix references in the README to apollo docs (#323) @brunoocasali
+
+## :house: Internal
+
+- Upgrade project dependencies & Ember 3.14 (#327) @josemarluedke
+- Refactor mutation tests to acceptance instead of unit tests (#322) @josemarluedke
+- Fix ESLint issues with latest version (#326) @josemarluedke
+
+## :wrench: Tooling
+
+- Only run tests on ubuntu & Improve testem (#329) @josemarluedke
+- Run tests in GitHub Actions (#328) @josemarluedke
+
+***
+
+### Contributors
+
+@FabHof, @brunoocasali and @josemarluedke
+
+
 ## v2.0.0-beta.7 - 2019-10-21
 
 ### :rocket: Enhancement
