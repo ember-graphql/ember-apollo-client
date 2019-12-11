@@ -15,7 +15,6 @@ module.exports = {
     browser: true,
   },
   rules: {
-    'comma-dangle': ['error', 'always-multiline'],
     'ember/no-new-mixins': 'off',
   },
   overrides: [
