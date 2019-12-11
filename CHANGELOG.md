@@ -8,7 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## :bug: Bug Fix
 
-- unsubscribeAll does not forget active subscriptions (#330) @josemarluedke
+- unsubscribeAll does not forget active subscriptions (#325, #330) @FabHof
 
 ## :memo: Documentation
 
