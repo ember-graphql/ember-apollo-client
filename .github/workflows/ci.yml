@@ -1,0 +1,60 @@
+name: CI
+
+on: [push]
+
+jobs:
+  test:
+    name: Tests
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macOS-latest]
+
+    steps:
+      - uses: actions/checkout@v1
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 8.x
+      - name: Install yarn
+        run: npm install -g yarn
+      - name: Install dependencies
+        run: yarn install
+      - name: Lint JS
+        run: yarn lint:js
+      - name: Lint HBS
+        run: yarn lint:hbs
+      - name: Test
+        run: yarn test
+
+  try-scenarios:
+    name: ${{ matrix.ember-try-scenario }}
+
+    runs-on: ubuntu-latest
+
+    needs: test
+
+    strategy:
+      fail-fast: true
+      matrix:
+        ember-try-scenario:
+          - ember-lts-3.4
+          - ember-lts-3.8
+          - ember-release
+          - ember-beta
+          - ember-canary
+          - ember-default-with-jquery
+
+    steps:
+      - uses: actions/checkout@v1
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 12.x
+      - name: Install yarn
+        run: npm install -g yarn
+      - name: Install dependencies
+        run: yarn install
+      - name: Test
+        env:
+          EMBER_TRY_SCENARIO: ${{ matrix.ember-try-scenario }}
+        run: yarn ember try:one $EMBER_TRY_SCENARIO

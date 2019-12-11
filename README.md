@@ -4,7 +4,7 @@ _Use [apollo-client][apollo-client] and GraphQL from your Ember app._
 
 ![Download count all time](https://img.shields.io/npm/dt/ember-apollo-client.svg)
 [![npm version](https://badge.fury.io/js/ember-apollo-client.svg)](https://badge.fury.io/js/ember-apollo-client)
-[![Build Status](https://travis-ci.org/ember-graphql/ember-apollo-client.svg?branch=master)](https://travis-ci.org/ember-graphql/ember-apollo-client)
+[![Build Status](https://github.com/ember-graphql/ember-apollo-client/workflows/CI/badge.svg)](https://github.com/ember-graphql/ember-apollo-client/actions)
 [![Ember Observer Score](https://emberobserver.com/badges/ember-apollo-client.svg)](https://emberobserver.com/addons/ember-apollo-client)
 
 This addon is battle tested: it has been used to build several large apps. As such, we've solved real-world problems such as reliable testing and preventing resource leaks by unsubscribing from watch queries.
