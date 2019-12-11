@@ -25,14 +25,9 @@ This addon works and is fully tested with:
 
 * Ember.js 3.4+
 * FastBoot 1.0+
+* Node 8.0+
 
 For compatibility with Ember versions below 3.4, use version 1.x.
-
-## Example App
-
-If you are looking for a full tutorial using `ember-apollo-client` check out the tutorial on [How To GraphQL](https://howtographql.com), written by [DevanB](https://github.com/DevanB).
-
-The application built in the tutorial is also available on the [How To GraphQL repository](http://github.com/howtographql/ember-apollo).
 
 ## Configuration
 
@@ -200,11 +195,13 @@ such as for pagination, you can retrieve it from a `watchQuery` result using
 
 ```js
 import Route from "@ember/routing/route";
-import { getObservable } from "ember-apollo-client";
+import { getObservable, queryManager} from "ember-apollo-client";
 
-export default Route.extend(RouteQueryManager, {
+export default Route.extend({
+  apollo: queryManager(),
+
   model() {
-    let result = this.get('apollo').watchQuery(...);
+    let result = this.apollo.watchQuery(...);
     let observable = getObservable(result);
     observable.fetchMore(...) // utilize the ObservableQuery
     ...
@@ -244,18 +241,26 @@ subscription {
 import Route from '@ember/routing/route';
 import { queryManager } from 'ember-apollo-client';
 import query from 'app/gql/subscriptions/new-human';
+import { addListener, removeListener } from '@ember/object/events';
+
+const handleEvent = event => alert(`${event.name} was just born!`);
 
 export default Route.extend({
   apollo: queryManager(),
 
   model() {
-    return this.get('apollo')
-               .subscribe({ query }, 'human');
+    return this.get('apollo').subscribe({ query }, 'human');
   },
 
   setupController(controller, model) {
-    model.on('event', event => alert(`${event.name} was just born!`));
+    addListener(model, 'event', handleEvent);
   },
+
+  resetController(controller, isExiting, transition) {
+    if (isExiting) {
+      removeListener(controller.model, 'event', handleEvent);
+    }
+  }
 });
 ```
 
@@ -688,8 +693,9 @@ The tests also contain a sample Star Wars GraphQL schema with an
 
 ### Linting
 
+* `yarn run lint:hbs`
 * `yarn run lint:js`
-* `yarn run lint:js -- --fix`
+* `yarn run lint:js --fix`
 
 ### Running tests
 
