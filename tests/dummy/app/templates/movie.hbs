@@ -13,17 +13,17 @@
   </button>
 
   <button
-    {{action "refetchData" this.model.movie.id}}
-    class="button refresh-data"
-  >
-    Refetch (new query)
-  </button>
-
-  <button
     {{action "refetchUsingObservable" this.model}}
     class="button refetch-data-using-observable"
   >
     Refetch (using observable)
+  </button>
+
+  <button
+    {{action "refreshUsingRoute"}}
+    class="button refresh-data"
+  >
+    Refetch (using route refresh())
   </button>
 </div>
 
