@@ -87,4 +87,39 @@ module('Acceptance | watch query', function(hooks) {
 
     assert.dom('.movie-title').hasText('The Godfather');
   });
+
+  test('refetch using reoute refresh should update template', async function(assert) {
+    let isRefetch = false;
+    let resolvers = {
+      Query: {
+        movie(_, args) {
+          assert.deepEqual(args, { id: '680' });
+
+          if (isRefetch) {
+            return new Promise(resolve => {
+              setTimeout(() => {
+                resolve(
+                  Object.assign({}, mockMovie, { title: 'The Godfather' })
+                );
+              }, 200);
+            });
+          }
+
+          return Promise.resolve(mockMovie);
+        },
+      },
+    };
+
+    addResolveFunctionsToSchema({ schema: this.pretender.schema, resolvers });
+
+    await visit('/movie/680');
+    assert.equal(currentURL(), '/movie/680');
+
+    assert.dom('.movie-title').hasText('Pulp Fiction');
+
+    isRefetch = true;
+    await click('.refresh-data');
+
+    assert.dom('.movie-title').hasText('The Godfather');
+  });
 });

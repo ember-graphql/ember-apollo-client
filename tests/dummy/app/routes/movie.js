@@ -12,16 +12,13 @@ export default Route.extend({
       variables: {
         id,
       },
+      fetchPolicy: 'network-only',
     });
   },
 
   actions: {
-    refetchData(id) {
-      this.apollo.query({
-        query,
-        variables: { id },
-        fetchPolicy: 'network-only',
-      });
+    refreshUsingRoute() {
+      this.refresh();
     },
 
     refetchUsingObservable(model) {
