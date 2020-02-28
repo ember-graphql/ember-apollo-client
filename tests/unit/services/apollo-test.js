@@ -3,6 +3,7 @@ import { setupTest } from 'ember-qunit';
 import ApolloService, {
   unsubscribe,
   getObservable,
+  ApolloErrorWithResponse,
 } from 'ember-apollo-client/services/apollo';
 import testQuery from '../build/test-query';
 import testMutation from '../build/test-mutation';
@@ -264,5 +265,155 @@ module('Unit | Service | apollo', function (hooks) {
 
     const result = await service.watchQuery({ query: testQuery }, 'human');
     assert.ok(getObservable(result));
+  });
+
+  module('.query errors', function () {
+    test('it handles errors with default errorPolicy', async function (assert) {
+      let service = this.owner.lookup('service:apollo');
+
+      service.set('client', {
+        query() {
+          assert.step('Called query function on apollo client');
+
+          return new Promise((resolve, reject) => {
+            reject('Test error');
+          });
+        },
+      });
+
+      try {
+        await service.query({ query: testQuery });
+      } catch (error) {
+        assert.step('.query rejects');
+        assert.equal(error, 'Test error', 'an error is thrown');
+      }
+
+      assert.verifySteps([
+        'Called query function on apollo client',
+        '.query rejects',
+      ]);
+    });
+
+    test('it works with errorPolicy="all" without resultKey', async function (assert) {
+      let service = this.owner.lookup('service:apollo');
+
+      service.set('client', {
+        query() {
+          assert.step('Called query function on apollo client');
+
+          return new Promise((resolve) => {
+            resolve({
+              data: { human: { name: 'Anne' } },
+              errors: ['Test error #1', 'Test error #2'],
+            });
+          });
+        },
+      });
+
+      try {
+        await service.query({ query: testQuery, errorPolicy: 'all' });
+      } catch (error) {
+        assert.step('.query rejects');
+        assert.ok(
+          error instanceof ApolloErrorWithResponse,
+          'error is of type ApolloErrorWithResponse'
+        );
+        assert.deepEqual(
+          error.errors,
+          ['Test error #1', 'Test error #2'],
+          'errors are correct'
+        );
+        assert.deepEqual(
+          error.response,
+          { human: { name: 'Anne' } },
+          'response is correct'
+        );
+      }
+
+      assert.verifySteps([
+        'Called query function on apollo client',
+        '.query rejects',
+      ]);
+    });
+
+    test('it works with errorPolicy="all" with resultKey', async function (assert) {
+      let service = this.owner.lookup('service:apollo');
+
+      service.set('client', {
+        query() {
+          assert.step('Called query function on apollo client');
+
+          return new Promise((resolve) => {
+            resolve({
+              data: { human: { name: 'Anne' } },
+              errors: ['Test error #1', 'Test error #2'],
+            });
+          });
+        },
+      });
+
+      try {
+        await service.query({ query: testQuery, errorPolicy: 'all' }, 'human');
+      } catch (error) {
+        assert.step('.query rejects');
+        assert.ok(
+          error instanceof ApolloErrorWithResponse,
+          'error is of type ApolloErrorWithResponse'
+        );
+        assert.deepEqual(
+          error.errors,
+          ['Test error #1', 'Test error #2'],
+          'errors are correct'
+        );
+        assert.deepEqual(
+          error.response,
+          { name: 'Anne' },
+          'response is correct'
+        );
+      }
+
+      assert.verifySteps([
+        'Called query function on apollo client',
+        '.query rejects',
+      ]);
+    });
+
+    test('it works with errorPolicy="all" with resultKey and without data', async function (assert) {
+      let service = this.owner.lookup('service:apollo');
+
+      service.set('client', {
+        query() {
+          assert.step('Called query function on apollo client');
+
+          return new Promise((resolve) => {
+            resolve({
+              data: null,
+              errors: ['Test error #1', 'Test error #2'],
+            });
+          });
+        },
+      });
+
+      try {
+        await service.query({ query: testQuery, errorPolicy: 'all' }, 'human');
+      } catch (error) {
+        assert.step('.query rejects');
+        assert.ok(
+          error instanceof ApolloErrorWithResponse,
+          'error is of type ApolloErrorWithResponse'
+        );
+        assert.deepEqual(
+          error.errors,
+          ['Test error #1', 'Test error #2'],
+          'errors are correct'
+        );
+        assert.deepEqual(error.response, null, 'response is correct');
+      }
+
+      assert.verifySteps([
+        'Called query function on apollo client',
+        '.query rejects',
+      ]);
+    });
   });
 });
