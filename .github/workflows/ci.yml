@@ -11,18 +11,14 @@ jobs:
       CI: 'true'
 
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v2
       - uses: actions/setup-node@v1
         with:
-          node-version: 8.x
+          node-version: 12.x
       - name: Install yarn
         run: npm install -g yarn
       - name: Install dependencies
         run: yarn install
-      - name: Lint JS
-        run: yarn lint:js
-      - name: Lint HBS
-        run: yarn lint:hbs
       - name: Test
         run: yarn test
 
@@ -38,15 +34,16 @@ jobs:
       fail-fast: true
       matrix:
         ember-try-scenario:
-          - ember-lts-3.4
-          - ember-lts-3.8
+          - ember-lts-3.12
+          - ember-lts-3.16
           - ember-release
           - ember-beta
           - ember-canary
           - ember-default-with-jquery
+          - ember-classic
 
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v2
       - uses: actions/setup-node@v1
         with:
           node-version: 12.x
