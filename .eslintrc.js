@@ -18,6 +18,8 @@ module.exports = {
   },
   rules: {
     'ember/no-new-mixins': 'off',
+    'ember/no-mixins': 'off',
+    'ember/no-legacy-test-waiters': 'off',
   },
   overrides: [
     // node files
