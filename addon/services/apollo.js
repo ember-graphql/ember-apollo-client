@@ -14,11 +14,22 @@ import { isNone, isPresent } from '@ember/utils';
 import { registerWaiter } from '@ember/test';
 import deprecateComputed from 'ember-apollo-client/-private/deprecate-computed';
 import { run } from '@ember/runloop';
-import {
-  apolloObservableKey,
-  apolloUnsubscribeKey,
-  QueryManager,
-} from '../index';
+import { QueryManager } from '../index';
+
+const apolloObservableWeakMap = new WeakMap();
+const apolloUnsubscribeWeakMap = new WeakMap();
+
+export function getObservable(queryResult) {
+  return apolloObservableWeakMap.get(queryResult);
+}
+
+export function unsubscribe(queryResult) {
+  let fn = apolloUnsubscribeWeakMap.get(queryResult);
+
+  if (typeof fn === 'function') {
+    return fn();
+  }
+}
 
 class EmberApolloSubscription {
   lastEvent = null;
@@ -60,29 +71,18 @@ function newDataFunc(observable, resultKey, resolve, unsubscribeFn = null) {
     }
 
     if (isNone(obj)) {
-      if (
-        !Object.prototype.hasOwnProperty.call(dataToSend, apolloObservableKey)
-      ) {
-        Object.defineProperty(dataToSend, apolloObservableKey, {
-          value: observable,
-          writable: false,
-        });
-      }
-
-      if (
-        unsubscribeFn &&
-        !Object.prototype.hasOwnProperty.call(dataToSend, apolloUnsubscribeKey)
-      ) {
-        Object.defineProperty(dataToSend, apolloUnsubscribeKey, {
-          value: unsubscribeFn,
-          writable: false,
-        });
-      }
-
       obj = dataToSend;
 
       if (isArray(obj)) {
         obj = A(obj);
+      }
+
+      if (!apolloObservableWeakMap.has(obj)) {
+        apolloObservableWeakMap.set(obj, observable);
+      }
+
+      if (unsubscribeFn && !apolloUnsubscribeWeakMap.has(obj)) {
+        apolloUnsubscribeWeakMap.set(obj, unsubscribeFn);
       }
 
       return resolve(obj);

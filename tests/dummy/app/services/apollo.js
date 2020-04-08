@@ -8,6 +8,7 @@ import TypeIntrospectionQuery from 'dummy/utils/graphql-type-query';
 export default class CustomApollo extends ApolloService {
   cache() {
     return new InMemoryCache({
+      // freezeResults: true,
       fragmentMatcher: new IntrospectionFragmentMatcher({
         introspectionQueryResultData: TypeIntrospectionQuery,
       }),
