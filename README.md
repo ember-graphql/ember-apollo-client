@@ -21,11 +21,10 @@ Install the [Apollo Client Developer tools for Chrome](https://chrome.google.com
 
 ## Compatibility
 
-This addon works and is fully tested with:
-
-* Ember.js 3.4+
+* Ember.js v3.12 or above
+* Ember CLI v2.13 or above
+* Node.js v10 or above
 * FastBoot 1.0+
-* Node 8.0+
 
 For compatibility with Ember versions below 3.4, use version 1.x.
 
