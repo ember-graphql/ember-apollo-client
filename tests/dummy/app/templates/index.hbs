@@ -2,22 +2,23 @@
 
 <div class="actions-menu">
   {{#if this.topRated}}
-    {{#link-to "index" (query-params topRated=false) class="button toggle-top-rated"}}
+    <LinkTo @route="index" @query={{hash topRated=false}} class="button toggle-top-rated">
       Show all
-    {{/link-to}}
+    </LinkTo>
   {{else}}
-    {{#link-to "index" (query-params topRated=true) class="button toggle-top-rated"}}
+    <LinkTo @route="index" @query={{hash topRated=true}} class="button toggle-top-rated">
       Show Top Rated
-    {{/link-to}}
+    </LinkTo>
   {{/if}}
 
-  {{#link-to "index" class="button"}}
+  <LinkTo @route="index" class="button">
     Add movie
-  {{/link-to}}
+  </LinkTo>
 
   <button
     {{action "refetchData" this.model}}
     class="button refresh-data"
+    type="button"
   >
     Refetch
   </button>

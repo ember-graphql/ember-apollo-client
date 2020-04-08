@@ -42,7 +42,7 @@ module('Acceptance | array watchQuery', function(hooks) {
     await visit('/');
     assert.equal(currentURL(), '/');
 
-    assert.equal(findAll('.movie-list .item').length, 1, 'has one item');
+    assert.dom('.movie-list .item').exists({ count: 1 }, 'has one item');
     assert.dom('.movie-overview').hasText('Lorem ipsum');
 
     mockMovies[0].overview = 'Updated overview';
@@ -56,11 +56,9 @@ module('Acceptance | array watchQuery', function(hooks) {
     });
 
     await click('.refresh-data');
-    assert.equal(
-      findAll('.movie-list .item').length,
-      2,
-      'should have updated the list'
-    );
+    assert
+      .dom('.movie-list .item')
+      .exists({ count: 2 }, 'should have updated the list');
 
     assert.equal(
       findAll('.movie-overview')[0].innerText,

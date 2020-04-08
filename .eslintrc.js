@@ -1,3 +1,5 @@
+'use strict';
+
 module.exports = {
   root: true,
   parser: 'babel-eslint',
@@ -16,6 +18,8 @@ module.exports = {
   },
   rules: {
     'ember/no-new-mixins': 'off',
+    'ember/no-mixins': 'off',
+    'ember/no-legacy-test-waiters': 'off',
   },
   overrides: [
     // node files

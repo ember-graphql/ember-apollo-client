@@ -1,13 +1,14 @@
 <h2>Movie Detail</h2>
 
-{{#link-to "index"}}
+<LinkTo @route="index">
   Back
-{{/link-to}}
+</LinkTo>
 
 <div class="actions-menu">
   <button
     {{action "changeTitle" this.model.movie.id "Rambo: Last Blood"}}
     class="button change-movie-title"
+    type="button"
   >
     Change Movie Title
   </button>
@@ -15,6 +16,7 @@
   <button
     {{action "refetchUsingObservable" this.model}}
     class="button refetch-data-using-observable"
+    type="button"
   >
     Refetch (using observable)
   </button>
@@ -22,6 +24,7 @@
   <button
     {{action "refreshUsingRoute"}}
     class="button refresh-data"
+    type="button"
   >
     Refetch (using route refresh())
   </button>
