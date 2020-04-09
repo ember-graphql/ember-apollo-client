@@ -1,6 +1,9 @@
 import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
-import ApolloService from 'ember-apollo-client/services/apollo';
+import ApolloService, {
+  unsubscribe,
+  getObservable,
+} from 'ember-apollo-client/services/apollo';
 import testQuery from '../build/test-query';
 import testMutation from '../build/test-mutation';
 import testSubscription from '../build/test-subscription';
@@ -220,5 +223,46 @@ module('Unit | Service | apollo', function(hooks) {
     const result = await service.query({ query: testQuery });
 
     assert.equal(result.__typename, 'person');
+  });
+
+  test('unsubscribe works from a watched query', async function(assert) {
+    let service = this.owner.lookup('service:apollo');
+    assert.expect(1);
+
+    service.set('client', {
+      watchQuery() {
+        return {
+          subscribe({ next }) {
+            next({ data: { human: { name: 'Link' }, __typename: 'person' } });
+            return {
+              unsubscribe: () => {
+                assert.ok('Unsbuscribe was called');
+              },
+            };
+          },
+        };
+      },
+    });
+
+    const result = await service.watchQuery({ query: testQuery }, 'human');
+    unsubscribe(result);
+  });
+
+  test('getObservable works from a watched query', async function(assert) {
+    let service = this.owner.lookup('service:apollo');
+    assert.expect(1);
+
+    service.set('client', {
+      watchQuery() {
+        return {
+          subscribe({ next }) {
+            next({ data: { human: { name: 'Link' }, __typename: 'person' } });
+          },
+        };
+      },
+    });
+
+    const result = await service.watchQuery({ query: testQuery }, 'human');
+    assert.ok(getObservable(result));
   });
 });
