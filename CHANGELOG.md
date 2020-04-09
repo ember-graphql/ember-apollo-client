@@ -4,6 +4,40 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v2.1.0 - 2020-04-08
+
+### :boom: Breaking Change
+
+- Upgrade to Ember v3.17 & Drop node v8 (#342) @josemarluedke
+
+### :bug: Bug Fix
+
+- Use WeakMap for storing observables and unsubscribeFn (#343) @josemarluedke
+
+### :memo: Documentation
+
+- Update README to show new fragment import syntax (#344) @josemarluedke
+
+### :house: Internal
+
+- Upgrade to Prettier v2.0.0 (#345) @josemarluedke
+- Add tests to make sure refresh a route renders new data (#337) @josemarluedke
+
+### :package: Dependencies
+
+- Bump acorn from 5.7.3 to 5.7.4 (#339) @dependabot
+
+***
+
+#### Contributors
+
+@dependabot, @dependabot[bot] and @josemarluedke
+
+***
+
+For full changes, see the [comparison between v2.0.0 and v2.1.0](https://github.com/ember-graphql/ember-apollo-client/compare/v2.0.0...v2.1.0)
+
+
 ## v2.0.0 - 2019-12-11
 
 After a long cycle of beta releases and a lot of changes, this is the first
