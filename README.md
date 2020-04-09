@@ -364,7 +364,7 @@ fragment ReviewFragment on Human {
 `app/gql/mutations/create-review.graphql`
 
 ```graphql
-#import 'my-app/gql/fragments/review-fragment'
+#import ReviewFragment from 'my-app/gql/fragments/review-fragment'
 
 mutation createReview($ep: Episode!, $review: ReviewInput!) {
   createReview(episode: $ep, review: $review) {
