@@ -24,6 +24,10 @@
 /tests/
 /yarn.lock
 .gitkeep
+/.github
+.gqlconfig
+.prettierrc.js
+jsconfig.json
 
 # ember-try
 /.node_modules.ember-try/
