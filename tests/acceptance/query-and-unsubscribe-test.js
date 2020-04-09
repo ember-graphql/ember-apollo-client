@@ -3,7 +3,7 @@ import { setupApplicationTest } from 'dummy/tests/helpers/setup';
 import { addResolveFunctionsToSchema } from 'graphql-tools';
 import { click, currentURL, visit } from '@ember/test-helpers';
 
-module('Acceptance | main', function(hooks) {
+module('Acceptance | main', function (hooks) {
   setupApplicationTest(hooks);
 
   const mockMovieNotTop = {
@@ -24,7 +24,7 @@ module('Acceptance | main', function(hooks) {
     releaseDate: '1972-03-15',
   };
 
-  test('visiting /movie/id', async function(assert) {
+  test('visiting /movie/id', async function (assert) {
     let movie = Object.assign({}, mockMovieNotTop);
     let resolvers = {
       Query: {
@@ -67,7 +67,7 @@ module('Acceptance | main', function(hooks) {
     );
   });
 
-  test('visiting /', async function(assert) {
+  test('visiting /', async function (assert) {
     let firstQuery = true;
     let resolvers = {
       Query: {

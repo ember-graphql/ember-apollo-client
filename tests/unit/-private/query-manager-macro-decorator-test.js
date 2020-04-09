@@ -9,19 +9,19 @@ class OverriddenApollo extends ApolloService {}
 
 let TestObject;
 
-module('Unit | queryManager | macro - decorator', function(hooks) {
+module('Unit | queryManager | macro - decorator', function (hooks) {
   setupTest(hooks);
 
-  hooks.beforeEach(function() {
+  hooks.beforeEach(function () {
     this.owner.register('service:overridden-apollo', OverriddenApollo);
 
-    this.subject = function() {
+    this.subject = function () {
       this.owner.register('test-container:test-object', TestObject);
       return this.owner.lookup('test-container:test-object');
     };
   });
 
-  test('it works in a regular ember object', function(assert) {
+  test('it works in a regular ember object', function (assert) {
     TestObject = EmberObject.extend({
       apollo: queryManager({ service: 'overridden-apollo' }),
     });
@@ -39,7 +39,7 @@ module('Unit | queryManager | macro - decorator', function(hooks) {
   });
 
   if (gte('3.10.0')) {
-    test('it works using decorator syntax without options', function(assert) {
+    test('it works using decorator syntax without options', function (assert) {
       TestObject = class MyTestClassOjbect extends EmberObject {
         @queryManager apollo;
       };
@@ -56,7 +56,7 @@ module('Unit | queryManager | macro - decorator', function(hooks) {
       );
     });
 
-    test('it works using decorator syntax with options', function(assert) {
+    test('it works using decorator syntax with options', function (assert) {
       TestObject = class MyTestClassOjbect extends EmberObject {
         @queryManager({ service: 'overridden-apollo' }) apollo;
       };

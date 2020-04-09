@@ -15,20 +15,20 @@ const mockMovies = [
   },
 ];
 
-module('Acceptance | array watchQuery', function(hooks) {
+module('Acceptance | array watchQuery', function (hooks) {
   setupApplicationTest(hooks);
 
   let schema;
 
-  hooks.beforeEach(function() {
+  hooks.beforeEach(function () {
     schema = this.pretender.schema;
   });
 
-  test('should re-render updating an array using watchQuery', async function(assert) {
+  test('should re-render updating an array using watchQuery', async function (assert) {
     let resolvers = {
       Query: {
         movies(/*obj, args*/) {
-          return new Promise(resolve => {
+          return new Promise((resolve) => {
             setTimeout(() => {
               resolve(mockMovies);
             }, 200);

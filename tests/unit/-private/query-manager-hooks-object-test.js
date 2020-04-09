@@ -31,21 +31,21 @@ let OverriddenApollo = class extends ApolloService {
   }
 };
 
-module('Unit | queryManager | Setup Hooks in EmberOject', function(hooks) {
+module('Unit | queryManager | Setup Hooks in EmberOject', function (hooks) {
   setupTest(hooks);
 
-  hooks.beforeEach(function(assert) {
+  hooks.beforeEach(function (assert) {
     assertDeepEqual = assert.deepEqual.bind(assert);
     unsubscribeCalled = 0;
 
-    this.subject = function() {
+    this.subject = function () {
       this.owner.register('service:overridden-apollo', OverriddenApollo);
       this.owner.register('test-container:test-object', TestObject);
       return this.owner.lookup('test-container:test-object');
     };
   });
 
-  test('it unsubscribes from any watchQuery subscriptions', function(assert) {
+  test('it unsubscribes from any watchQuery subscriptions', function (assert) {
     assert.expect(6);
 
     TestObject = EmberObject.extend({
@@ -70,7 +70,7 @@ module('Unit | queryManager | Setup Hooks in EmberOject', function(hooks) {
     );
   });
 
-  test('it unsubscribes from any subscriptions', async function(assert) {
+  test('it unsubscribes from any subscriptions', async function (assert) {
     TestObject = EmberObject.extend({
       apollo: queryManager({ service: 'overridden-apollo' }),
     });
@@ -91,7 +91,7 @@ module('Unit | queryManager | Setup Hooks in EmberOject', function(hooks) {
   });
 
   if (gte('3.10.0')) {
-    test('it works using decorator syntax', function(assert) {
+    test('it works using decorator syntax', function (assert) {
       assert.expect(6);
       TestObject = class MyTestClassOjbect extends EmberObject {
         @queryManager({ service: 'overridden-apollo' }) apollo;

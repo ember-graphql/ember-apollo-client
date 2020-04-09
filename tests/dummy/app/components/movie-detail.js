@@ -5,7 +5,7 @@ import { computed } from '@ember/object';
 export default Component.extend({
   layout,
 
-  formattedReleaseDate: computed('movie.releaseDate', function() {
+  formattedReleaseDate: computed('movie.releaseDate', function () {
     if (this.movie.releaseDate) {
       return new Intl.DateTimeFormat('en-US', { dateStyle: 'long' }).format(
         new Date(this.movie.releaseDate + ' 00:00:00')
@@ -15,7 +15,7 @@ export default Component.extend({
     return '';
   }),
 
-  releaseYear: computed('movie.releaseDate', function() {
+  releaseYear: computed('movie.releaseDate', function () {
     if (this.movie.releaseDate) {
       return new Intl.DateTimeFormat('en-US', { year: 'numeric' }).format(
         new Date(this.movie.releaseDate + ' 00:00:00')

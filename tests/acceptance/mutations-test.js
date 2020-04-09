@@ -3,16 +3,16 @@ import { setupApplicationTest } from 'dummy/tests/helpers/setup';
 import { addResolveFunctionsToSchema } from 'graphql-tools';
 import { click, visit, fillIn } from '@ember/test-helpers';
 
-module('Acceptance | mutations', function(hooks) {
+module('Acceptance | mutations', function (hooks) {
   setupApplicationTest(hooks);
 
   let schema;
 
-  hooks.beforeEach(function() {
+  hooks.beforeEach(function () {
     schema = this.pretender.schema;
   });
 
-  test('creates a review and return data from the mutation', async function(assert) {
+  test('creates a review and return data from the mutation', async function (assert) {
     assert.expect(2);
 
     let resolvers = {

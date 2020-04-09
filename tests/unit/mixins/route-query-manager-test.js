@@ -3,18 +3,18 @@ import { RouteQueryManager } from 'ember-apollo-client';
 import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
 
-module('Unit | Mixin | route query manager', function(hooks) {
+module('Unit | Mixin | route query manager', function (hooks) {
   setupTest(hooks);
 
-  hooks.beforeEach(function() {
-    this.subject = function() {
+  hooks.beforeEach(function () {
+    this.subject = function () {
       let TestObject = EmberObject.extend(RouteQueryManager);
       this.owner.register('test-container:test-object', TestObject);
       return this.owner.lookup('test-container:test-object');
     };
   });
 
-  test('it unsubscribes from any watchQuery subscriptions with isExiting=true', async function(assert) {
+  test('it unsubscribes from any watchQuery subscriptions with isExiting=true', async function (assert) {
     let subject = this.subject();
     let unsubscribeCalled = 0;
 
@@ -41,7 +41,7 @@ module('Unit | Mixin | route query manager', function(hooks) {
     );
   });
 
-  test('it unsubscribes from any subscriptions', async function(assert) {
+  test('it unsubscribes from any subscriptions', async function (assert) {
     let subject = this.subject();
     let unsubscribeCalled = 0;
 
@@ -68,7 +68,7 @@ module('Unit | Mixin | route query manager', function(hooks) {
     );
   });
 
-  test('it only unsubscribes from stale watchQuery subscriptions with isExiting=false', async function(assert) {
+  test('it only unsubscribes from stale watchQuery subscriptions with isExiting=false', async function (assert) {
     let subject = this.subject();
     let unsubscribeCalled = 0;
 
@@ -97,7 +97,7 @@ module('Unit | Mixin | route query manager', function(hooks) {
     );
   });
 
-  test('it unsubscribes from any watchQuery subscriptions on willDestroy', async function(assert) {
+  test('it unsubscribes from any watchQuery subscriptions on willDestroy', async function (assert) {
     let subject = this.subject();
     let unsubscribeCalled = 0;
 

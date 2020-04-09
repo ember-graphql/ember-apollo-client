@@ -76,7 +76,7 @@ function startPretender() {
     Query: {
       movies(_, args) {
         if (args.topRated) {
-          return movies.filter(movie => {
+          return movies.filter((movie) => {
             if (movie.voteAverage >= 8.5) {
               return movie;
             }
@@ -86,14 +86,14 @@ function startPretender() {
         return movies;
       },
       movie(_, args) {
-        return movies.find(movie => {
+        return movies.find((movie) => {
           return movie.id == args.id;
         });
       },
     },
     Mutation: {
       changeMovieTitle(_, { id, title }) {
-        let movie = movies.find(movie => {
+        let movie = movies.find((movie) => {
           return movie.id == id;
         });
         return Object.assign(movie, { title });
@@ -127,19 +127,21 @@ function startPretender() {
 
   let pretender = new Pretender();
 
-  pretender.post('https://test.example/graphql', function(request) {
+  pretender.post('https://test.example/graphql', function (request) {
     let body = JSON.parse(request.requestBody);
 
-    return graphql(schema, body.query, {}, {}, body.variables).then(result => {
-      return [200, { 'Content-Type': 'application/json' }, result];
-    });
+    return graphql(schema, body.query, {}, {}, body.variables).then(
+      (result) => {
+        return [200, { 'Content-Type': 'application/json' }, result];
+      }
+    );
   });
 
-  pretender.prepareBody = function(body) {
+  pretender.prepareBody = function (body) {
     return JSON.stringify(body);
   };
 
-  pretender.handledRequest = function(verb, path, request) {
+  pretender.handledRequest = function (verb, path, request) {
     console.group('Mocked Request');
     console.info(verb, path);
     try {

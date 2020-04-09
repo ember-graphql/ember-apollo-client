@@ -25,7 +25,7 @@ function installHook(queryManager, context, hookName) {
   let hook = hooks[hookName].bind(queryManager);
   let originalHook = context[hookName];
 
-  context[hookName] = function() {
+  context[hookName] = function () {
     if (typeof originalHook === 'function') {
       originalHook.call(this, ...arguments);
     }

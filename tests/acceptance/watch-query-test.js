@@ -3,7 +3,7 @@ import { setupApplicationTest } from 'dummy/tests/helpers/setup';
 import { addResolveFunctionsToSchema } from 'graphql-tools';
 import { click, currentURL, visit } from '@ember/test-helpers';
 
-module('Acceptance | watch query', function(hooks) {
+module('Acceptance | watch query', function (hooks) {
   setupApplicationTest(hooks);
 
   const mockMovie = {
@@ -15,14 +15,14 @@ module('Acceptance | watch query', function(hooks) {
     releaseDate: '1994-10-14',
   };
 
-  test('data should be updated when executing a mutation', async function(assert) {
+  test('data should be updated when executing a mutation', async function (assert) {
     let movie = Object.assign({}, mockMovie);
     let resolvers = {
       Query: {
         movie(_, args) {
           assert.deepEqual(args, { id: '680' });
 
-          return new Promise(resolve => {
+          return new Promise((resolve) => {
             setTimeout(() => {
               resolve(movie);
             }, 200);
@@ -53,7 +53,7 @@ module('Acceptance | watch query', function(hooks) {
     assert.dom('.movie-title').hasText('Rambo: Last Blood');
   });
 
-  test('refetch using observable should update data and wait for response', async function(assert) {
+  test('refetch using observable should update data and wait for response', async function (assert) {
     let isRefetch = false;
     let resolvers = {
       Query: {
@@ -61,7 +61,7 @@ module('Acceptance | watch query', function(hooks) {
           assert.deepEqual(args, { id: '680' });
 
           if (isRefetch) {
-            return new Promise(resolve => {
+            return new Promise((resolve) => {
               setTimeout(() => {
                 resolve(
                   Object.assign({}, mockMovie, { title: 'The Godfather' })
@@ -88,7 +88,7 @@ module('Acceptance | watch query', function(hooks) {
     assert.dom('.movie-title').hasText('The Godfather');
   });
 
-  test('refetch using reoute refresh should update template', async function(assert) {
+  test('refetch using reoute refresh should update template', async function (assert) {
     let isRefetch = false;
     let resolvers = {
       Query: {
@@ -96,7 +96,7 @@ module('Acceptance | watch query', function(hooks) {
           assert.deepEqual(args, { id: '680' });
 
           if (isRefetch) {
-            return new Promise(resolve => {
+            return new Promise((resolve) => {
               setTimeout(() => {
                 resolve(
                   Object.assign({}, mockMovie, { title: 'The Godfather' })
