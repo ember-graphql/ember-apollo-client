@@ -3,18 +3,18 @@ import { ComponentQueryManager } from 'ember-apollo-client';
 import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
 
-module('Unit | Mixin | component query manager', function(hooks) {
+module('Unit | Mixin | component query manager', function (hooks) {
   setupTest(hooks);
 
-  hooks.beforeEach(function() {
-    this.subject = function() {
+  hooks.beforeEach(function () {
+    this.subject = function () {
       let TestObject = EmberObject.extend(ComponentQueryManager);
       this.owner.register('test-container:test-object', TestObject);
       return this.owner.lookup('test-container:test-object');
     };
   });
 
-  test('it unsubscribes from any watchQuery subscriptions', async function(assert) {
+  test('it unsubscribes from any watchQuery subscriptions', async function (assert) {
     let subject = this.subject();
     let unsubscribeCalled = 0;
 
@@ -40,7 +40,7 @@ module('Unit | Mixin | component query manager', function(hooks) {
     );
   });
 
-  test('it unsubscribes from any subscriptions', async function(assert) {
+  test('it unsubscribes from any subscriptions', async function (assert) {
     let subject = this.subject();
     let unsubscribeCalled = 0;
 

@@ -70,8 +70,8 @@ export default function startPretender() {
   });
   addMockFunctionsToSchema({ schema, mocks, preserveResolvers: true });
 
-  let pretender = new Pretender(function() {
-    this.unhandledRequest = function(verb, path) {
+  let pretender = new Pretender(function () {
+    this.unhandledRequest = function (verb, path) {
       path = decodeURI(path);
       throw `Your Ember app tried to ${verb} '${path}', but there was no route defined to handle this request.`;
     };
@@ -84,17 +84,17 @@ export default function startPretender() {
   window.fetch = fetch;
 
   pretender.originalShutdown = pretender.shutdown;
-  pretender.shutdown = function() {
+  pretender.shutdown = function () {
     window.fetch = pretender._ogFetch;
     pretender.originalShutdown(...arguments);
   };
 
   pretender.schema = schema;
 
-  pretender.post('https://test.example/graphql', function(request) {
+  pretender.post('https://test.example/graphql', function (request) {
     let body = JSON.parse(request.requestBody);
-    return new RSVP.Promise(resolve => {
-      graphql(schema, body.query, {}, {}, body.variables).then(result => {
+    return new RSVP.Promise((resolve) => {
+      graphql(schema, body.query, {}, {}, body.variables).then((result) => {
         if (result.errors && result.errors.length > 0) {
           console.log('ERROR:', result.errors[0]); // eslint-disable-line no-console
           debugger; // eslint-disable-line no-debugger

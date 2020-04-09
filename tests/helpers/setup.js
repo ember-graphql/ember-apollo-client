@@ -2,11 +2,11 @@ import { setupApplicationTest as defaultSetup } from 'ember-qunit';
 import startPretender from '../helpers/start-pretender';
 
 function setupPretender(hooks) {
-  hooks.beforeEach(function() {
+  hooks.beforeEach(function () {
     this.pretender = startPretender();
   });
 
-  hooks.afterEach(function() {
+  hooks.afterEach(function () {
     this.pretender.shutdown();
   });
 }

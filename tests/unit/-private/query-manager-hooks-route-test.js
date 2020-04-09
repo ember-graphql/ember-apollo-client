@@ -33,21 +33,21 @@ let OverriddenApollo = class extends ApolloService {
   }
 };
 
-module('Unit | queryManager | Setup Hooks in route', function(hooks) {
+module('Unit | queryManager | Setup Hooks in route', function (hooks) {
   setupTest(hooks);
 
-  hooks.beforeEach(function(assert) {
+  hooks.beforeEach(function (assert) {
     assertDeepEqual = assert.deepEqual.bind(assert);
     unsubscribeCalled = 0;
 
-    this.subject = function() {
+    this.subject = function () {
       this.owner.register('service:overridden-apollo', OverriddenApollo);
       this.owner.register('test-container:test-object', TestObject);
       return this.owner.lookup('test-container:test-object');
     };
   });
 
-  test('it unsubscribes from any watchQuery subscriptions with isExiting=true', function(assert) {
+  test('it unsubscribes from any watchQuery subscriptions with isExiting=true', function (assert) {
     let subject = this.subject();
 
     assert.equal(unsubscribeCalled, 0, 'should have been initialized with 0');
@@ -63,7 +63,7 @@ module('Unit | queryManager | Setup Hooks in route', function(hooks) {
     );
   });
 
-  test('it unsubscribes from any subscriptions', function(assert) {
+  test('it unsubscribes from any subscriptions', function (assert) {
     let subject = this.subject();
 
     assert.equal(unsubscribeCalled, 0, 'should have been initialized with 0');
@@ -79,7 +79,7 @@ module('Unit | queryManager | Setup Hooks in route', function(hooks) {
     );
   });
 
-  test('it only unsubscribes from stale watchQuery subscriptions with isExiting=false', function(assert) {
+  test('it only unsubscribes from stale watchQuery subscriptions with isExiting=false', function (assert) {
     let subject = this.subject();
 
     assert.equal(unsubscribeCalled, 0, 'should have been initialized with 0');
@@ -105,7 +105,7 @@ module('Unit | queryManager | Setup Hooks in route', function(hooks) {
     );
   });
 
-  test('it unsubscribes from any watchQuery subscriptions on willDestroy', function(assert) {
+  test('it unsubscribes from any watchQuery subscriptions on willDestroy', function (assert) {
     let subject = this.subject();
 
     assert.equal(unsubscribeCalled, 0, 'should have been initialized with 0');

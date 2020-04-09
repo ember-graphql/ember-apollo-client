@@ -31,7 +31,7 @@ export function queryManager(...theArgs) {
     serviceName = options.service;
   }
 
-  let setupQueryManager = computed(function() {
+  let setupQueryManager = computed(function () {
     const service = getOwner(this).lookup(`service:${serviceName}`);
     const queryManager = new QueryManager(service);
     setupHooks(queryManager, this);
@@ -143,7 +143,7 @@ export default class QueryManager {
    * @private
    */
   markSubscriptionsStale() {
-    this.activeSubscriptions.forEach(subscription => {
+    this.activeSubscriptions.forEach((subscription) => {
       subscription.stale = true;
     });
   }
@@ -159,14 +159,14 @@ export default class QueryManager {
    * @public
    */
   unsubscribeAll(onlyStale = false) {
-    this.activeSubscriptions.forEach(subscription => {
+    this.activeSubscriptions.forEach((subscription) => {
       if (!onlyStale || subscription.stale) {
         subscription.subscription.unsubscribe();
       }
     });
 
     this.activeSubscriptions = onlyStale
-      ? this.activeSubscriptions.filter(subscription => {
+      ? this.activeSubscriptions.filter((subscription) => {
           return !subscription.stale;
         })
       : [];

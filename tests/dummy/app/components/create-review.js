@@ -25,7 +25,7 @@ export default Component.extend({
         },
       };
 
-      return this.apollo.mutate({ mutation, variables }).then(response => {
+      return this.apollo.mutate({ mutation, variables }).then((response) => {
         this.set('response', JSON.stringify(response));
       });
     },

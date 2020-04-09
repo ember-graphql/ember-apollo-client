@@ -23,15 +23,15 @@ class OverriddenApollo extends ApolloService {
   }
 }
 
-module('Unit | Service | apollo', function(hooks) {
+module('Unit | Service | apollo', function (hooks) {
   setupTest(hooks);
 
-  test('it exists', function(assert) {
+  test('it exists', function (assert) {
     let service = this.owner.lookup('service:apollo');
     assert.ok(service);
   });
 
-  test('it uses clientOptions', function(assert) {
+  test('it uses clientOptions', function (assert) {
     this.owner.register('service:overridden-apollo', OverriddenApollo);
     let service = this.owner.lookup('service:overridden-apollo');
 
@@ -39,14 +39,14 @@ module('Unit | Service | apollo', function(hooks) {
     assert.equal(service.client.link, fakeLink);
   });
 
-  test('.mutate resolves with __typename', async function(assert) {
+  test('.mutate resolves with __typename', async function (assert) {
     let service = this.owner.lookup('service:apollo');
 
     service.set('client', {
       mutate() {
         assert.ok(true, 'Called mutate function on apollo client');
 
-        return new Promise(resolve => {
+        return new Promise((resolve) => {
           resolve({ data: { human: { name: 'Link' }, __typename: 'person' } });
         });
       },
@@ -57,14 +57,14 @@ module('Unit | Service | apollo', function(hooks) {
     assert.equal(result.__typename, 'person');
   });
 
-  test('.query resolves with __typename', async function(assert) {
+  test('.query resolves with __typename', async function (assert) {
     let service = this.owner.lookup('service:apollo');
 
     service.set('client', {
       query() {
         assert.ok(true, 'Called query function on apollo client');
 
-        return new Promise(resolve => {
+        return new Promise((resolve) => {
           resolve({ data: { human: { name: 'Link' }, __typename: 'person' } });
         });
       },
@@ -75,7 +75,7 @@ module('Unit | Service | apollo', function(hooks) {
     assert.equal(result.__typename, 'person');
   });
 
-  test('.watchQuery with key', async function(assert) {
+  test('.watchQuery with key', async function (assert) {
     let service = this.owner.lookup('service:apollo');
 
     service.set('client', {
@@ -94,7 +94,7 @@ module('Unit | Service | apollo', function(hooks) {
     assert.equal(result.name, 'Link');
   });
 
-  test('.watchQuery with key gracefully handles null', async function(assert) {
+  test('.watchQuery with key gracefully handles null', async function (assert) {
     let service = this.owner.lookup('service:apollo');
 
     service.set('client', {
@@ -111,7 +111,7 @@ module('Unit | Service | apollo', function(hooks) {
     assert.equal(result.name, undefined);
   });
 
-  test('.subscribe with key', async function(assert) {
+  test('.subscribe with key', async function (assert) {
     let service = this.owner.lookup('service:apollo');
     let nextFunction = null;
 
@@ -135,7 +135,7 @@ module('Unit | Service | apollo', function(hooks) {
     );
 
     const names = [];
-    const handleEvent = event => {
+    const handleEvent = (event) => {
       names.push(event.name);
     };
 
@@ -163,17 +163,17 @@ module('Unit | Service | apollo', function(hooks) {
     removeListener(result, 'event', handleEvent);
   });
 
-  test('it works when cache and link are computed properties, deprecated computed', function(assert) {
+  test('it works when cache and link are computed properties, deprecated computed', function (assert) {
     assert.expect(3);
     this.owner.register(
       'service:deprecated-overridden-apollo',
       ApolloService.extend({
-        cache: computed(function() {
+        cache: computed(function () {
           assert.ok('should have called cache in computed');
 
           return new InMemoryCache();
         }),
-        link: computed(function() {
+        link: computed(function () {
           assert.ok('should have called link in computed');
 
           return createHttpLink({ uri: '/some-api', fetch });
@@ -185,11 +185,11 @@ module('Unit | Service | apollo', function(hooks) {
     assert.ok(service);
   });
 
-  test('it works when clientOptions is a computed property, deprecated computed', function(assert) {
+  test('it works when clientOptions is a computed property, deprecated computed', function (assert) {
     this.owner.register(
       'service:client-options-overridden-apollo',
       ApolloService.extend({
-        clientOptions: computed(function() {
+        clientOptions: computed(function () {
           return {
             cache: this.cache(),
             link: fakeLink,
@@ -203,14 +203,14 @@ module('Unit | Service | apollo', function(hooks) {
     assert.equal(service.client.link, fakeLink);
   });
 
-  test('tests should wait for response', async function(assert) {
+  test('tests should wait for response', async function (assert) {
     let service = this.owner.lookup('service:apollo');
 
     service.set('client', {
       query() {
         assert.ok(true, 'Called query function on apollo client');
 
-        return new Promise(resolve => {
+        return new Promise((resolve) => {
           setTimeout(() => {
             resolve({
               data: { human: { name: 'Link' }, __typename: 'person' },
@@ -225,7 +225,7 @@ module('Unit | Service | apollo', function(hooks) {
     assert.equal(result.__typename, 'person');
   });
 
-  test('unsubscribe works from a watched query', async function(assert) {
+  test('unsubscribe works from a watched query', async function (assert) {
     let service = this.owner.lookup('service:apollo');
     assert.expect(1);
 
@@ -248,7 +248,7 @@ module('Unit | Service | apollo', function(hooks) {
     unsubscribe(result);
   });
 
-  test('getObservable works from a watched query', async function(assert) {
+  test('getObservable works from a watched query', async function (assert) {
     let service = this.owner.lookup('service:apollo');
     assert.expect(1);
 

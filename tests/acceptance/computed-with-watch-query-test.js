@@ -3,7 +3,7 @@ import { setupApplicationTest } from 'dummy/tests/helpers/setup';
 import { addResolveFunctionsToSchema } from 'graphql-tools';
 import { click, visit } from '@ember/test-helpers';
 
-module('Acceptance | computed with watch query', function(hooks) {
+module('Acceptance | computed with watch query', function (hooks) {
   setupApplicationTest(hooks);
 
   const mockMovie = {
@@ -19,11 +19,11 @@ module('Acceptance | computed with watch query', function(hooks) {
 
   let schema;
 
-  hooks.beforeEach(function() {
+  hooks.beforeEach(function () {
     schema = this.pretender.schema;
   });
 
-  test('visiting /', async function(assert) {
+  test('visiting /', async function (assert) {
     let resolvers = {
       Query: {
         movies() {

@@ -62,7 +62,7 @@ function extractNewData(resultKey, { data, loading }) {
 function newDataFunc(observable, resultKey, resolve, unsubscribeFn = null) {
   let obj;
 
-  return newData => {
+  return (newData) => {
     let dataToSend = extractNewData(resultKey, newData);
 
     if (dataToSend === null) {
@@ -185,13 +185,13 @@ export default class ApolloService extends Service {
       new RSVP.Promise((resolve, reject) => {
         this.client
           .mutate(opts)
-          .then(result => {
+          .then((result) => {
             let dataToSend = isNone(resultKey)
               ? result.data
               : get(result.data, resultKey);
             return resolve(dataToSend);
           })
-          .catch(error => {
+          .catch((error) => {
             let errors;
             if (isPresent(error.networkError)) {
               error.networkError.code = 'network_error';
@@ -266,7 +266,7 @@ export default class ApolloService extends Service {
     return this._waitFor(
       new RSVP.Promise((resolve, reject) => {
         let subscription = observable.subscribe({
-          next: newData => {
+          next: (newData) => {
             let dataToSend = extractNewData(resultKey, newData);
             if (dataToSend === null) {
               // see comment in extractNewData
@@ -302,14 +302,14 @@ export default class ApolloService extends Service {
       new RSVP.Promise((resolve, reject) => {
         this.client
           .query(opts)
-          .then(result => {
+          .then((result) => {
             let response = result.data;
             if (!isNone(resultKey)) {
               response = get(response, resultKey);
             }
             return resolve(response);
           })
-          .catch(error => {
+          .catch((error) => {
             return reject(error);
           });
       })
@@ -360,7 +360,7 @@ export default class ApolloService extends Service {
    * @private
    */
   managedSubscribe(manager, opts, resultKey = null) {
-    return this.subscribe(opts, resultKey).then(obj => {
+    return this.subscribe(opts, resultKey).then((obj) => {
       manager.trackSubscription(obj._apolloClientSubscription);
 
       return obj;

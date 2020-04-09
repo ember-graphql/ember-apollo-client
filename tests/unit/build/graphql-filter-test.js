@@ -6,9 +6,9 @@ import testQuery from './test-query';
 import testQueryWithNestedFragments from './test-query-with-nested-fragment';
 import testSubscription from './test-subscription';
 
-module('Unit | graphql-filter', function() {
+module('Unit | graphql-filter', function () {
   function testCompilation(description, { actual, expected }) {
-    test(description, function(assert) {
+    test(description, function (assert) {
       assert.deepEqual(
         actual.definitions,
         JSON.parse(JSON.stringify(expected.definitions))
