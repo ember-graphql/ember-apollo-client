@@ -10,7 +10,7 @@
     "graphql",
     "graphql-client"
   ],
-  "repository": "https://github.com/bgentry/ember-apollo-client",
+  "repository": "https://github.com/ember-graphql/ember-apollo-client",
   "license": "MIT",
   "author": "Blake Gentry",
   "directories": {
