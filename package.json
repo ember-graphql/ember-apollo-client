@@ -13,6 +13,13 @@
   "repository": "https://github.com/ember-graphql/ember-apollo-client",
   "license": "MIT",
   "author": "Blake Gentry",
+  "maintainers": [
+    {
+      "name": "Josemar Luedke",
+      "email": "josemarluedke@gmail.com",
+      "url": "https://github.com/josemarluedke"
+    }
+  ],
   "directories": {
     "doc": "doc",
     "test": "tests"
