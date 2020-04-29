@@ -686,7 +686,7 @@ declare module '*.graphql' {
 }
 ```
 
-Note: The `graphql` module above is included when you `ember install ember-cli-typescript`.
+Note: The `graphql` module above is included when you `ember install ember-apollo-client`.
 
 ### Testing
 
