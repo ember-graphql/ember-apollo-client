@@ -667,6 +667,27 @@ actions: {
 }
 ```
 
+### Using With TypeScript
+
+When using TypeScript (with [ember-cli-typescript](https://github.com/typed-ember/ember-cli-typescript) in your Ember app) you will quickly run into an error like:
+
+> Cannot find module './users.graphql'.
+
+This error happens when you import a `*.graphql` file, e.g. `import query from './users.graphql';`.
+The quick solution is to use `// @ts-ignore`, but that is only a patch for the one place you've used the import.
+
+To define basic types for those imports, you need to add the following to `types/global.d.ts`:
+
+```ts
+// Apollo GraphQL imports
+declare module '*.graphql' {
+  const doc: import('graphql').DocumentNode;
+  export default doc;
+}
+```
+
+Note: The `graphql` module above is included when you `ember install ember-apollo-client`.
+
 ### Testing
 
 This addon is test-ready! All promises from the apollo service are tracked with
