@@ -734,6 +734,7 @@ For more information on using ember-cli, visit [https://ember-cli.com/](https://
 
 A special thanks to the following contributors:
 
+* Blake Gentry ([@bgentry](https://github.com/bgentry))
 * Michael Villander ([@villander](https://github.com/villander))
 * Dan Freeman ([@dfreeman](https://github.com/dfreeman))
 * Vinícius Sales ([@viniciussbs](https://github.com/viniciussbs))
