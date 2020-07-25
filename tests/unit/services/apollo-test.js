@@ -9,8 +9,7 @@ import testMutation from '../build/test-mutation';
 import testSubscription from '../build/test-subscription';
 import { Promise } from 'rsvp';
 import { computed } from '@ember/object';
-import { createHttpLink } from 'apollo-link-http';
-import { InMemoryCache } from 'apollo-cache-inmemory';
+import { InMemoryCache, createHttpLink } from '@apollo/client/core';
 import fetch from 'fetch';
 import { addListener, removeListener } from '@ember/object/events';
 
