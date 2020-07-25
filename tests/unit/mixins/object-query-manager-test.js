@@ -1,6 +1,6 @@
 import EmberObject from '@ember/object';
 import { ObjectQueryManager } from 'ember-apollo-client';
-import { ApolloClient } from 'apollo-client';
+import { ApolloClient } from '@apollo/client/core';
 import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
 
