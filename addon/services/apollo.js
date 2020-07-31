@@ -304,9 +304,23 @@ export default class ApolloService extends Service {
           .query(opts)
           .then((result) => {
             let response = result.data;
-            if (!isNone(resultKey)) {
+            if (!isNone(resultKey) && response) {
               response = get(response, resultKey);
             }
+
+            if (
+              opts.errorPolicy === 'all' &&
+              result.errors &&
+              result.errors.length > 0
+            ) {
+              return reject(
+                new ApolloErrorWithResponse({
+                  response,
+                  errors: result.errors,
+                })
+              );
+            }
+
             return resolve(response);
           })
           .catch((error) => {
@@ -403,5 +417,16 @@ export default class ApolloService extends Service {
       return this._shouldWait();
     };
     registerWaiter(this._waiter);
+  }
+}
+
+export class ApolloErrorWithResponse extends Error {
+  constructor({ response, errors }) {
+    let message = 'The server responded with an error.';
+    super(message);
+
+    this.name = 'ApolloErrorWithResponse';
+    this.response = response;
+    this.errors = errors || [];
   }
 }
