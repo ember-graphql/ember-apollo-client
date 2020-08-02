@@ -5,9 +5,11 @@ import RSVP from 'rsvp';
 import Service from '@ember/service';
 import fetch from 'fetch';
 import { A } from '@ember/array';
-import { ApolloClient } from 'apollo-client';
-import { InMemoryCache } from 'apollo-cache-inmemory';
-import { createHttpLink } from 'apollo-link-http';
+import {
+  ApolloClient,
+  createHttpLink,
+  InMemoryCache,
+} from '@apollo/client/core';
 import { getOwner } from '@ember/application';
 import { isArray } from '@ember/array';
 import { isNone, isPresent } from '@ember/utils';
