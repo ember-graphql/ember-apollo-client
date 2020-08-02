@@ -2,6 +2,7 @@ import { module, test } from 'qunit';
 import { setupApplicationTest } from 'dummy/tests/helpers/setup';
 import { addResolveFunctionsToSchema } from 'graphql-tools';
 import { click, currentURL, visit } from '@ember/test-helpers';
+import { run } from '@ember/runloop';
 
 module('Acceptance | main', function (hooks) {
   setupApplicationTest(hooks);
@@ -37,7 +38,7 @@ module('Acceptance | main', function (hooks) {
     addResolveFunctionsToSchema({ schema: this.pretender.schema, resolvers });
 
     let apollo = this.owner.lookup('service:apollo');
-    let getQueries = () => apollo.client.queryManager.queryStore.getStore();
+    let getQueries = () => apollo.client.queryManager.getQueryStore();
 
     await visit('/movie/680');
 
@@ -55,7 +56,9 @@ module('Acceptance | main', function (hooks) {
     let queries = getQueries();
     assert.ok(Object.keys(queries).length, 'there is an active watchQuery');
 
-    await visit('/new-review');
+    run(async function () {
+      await click('.add-review');
+    });
 
     // Now that we've gone to a route with no queries, the RouteQueryManager
     // should have unsubscribed from the watchQuery and there should be no
@@ -86,7 +89,7 @@ module('Acceptance | main', function (hooks) {
     addResolveFunctionsToSchema({ schema: this.pretender.schema, resolvers });
 
     let apollo = this.owner.lookup('service:apollo');
-    let getQueries = () => apollo.client.queryManager.queryStore.getStore();
+    let getQueries = () => apollo.client.queryManager.getQueryStore();
 
     await visit('/');
 

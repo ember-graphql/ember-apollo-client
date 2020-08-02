@@ -28,6 +28,13 @@
   >
     Refetch (using route refresh())
   </button>
+
+  <LinkTo
+    @route="new-review"
+    class="button add-review"
+  >
+    Add Review
+  </LinkTo>
 </div>
 
 <MovieDetail @movie={{this.model.movie}} />
