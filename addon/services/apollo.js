@@ -73,10 +73,10 @@ function newDataFunc(observable, resultKey, resolve, unsubscribeFn = null) {
     }
 
     if (isNone(obj)) {
-      obj = dataToSend;
-
       if (isArray(obj)) {
         obj = A(obj);
+      } else {
+        obj = { ...dataToSend };
       }
 
       if (!apolloObservableWeakMap.has(obj)) {
