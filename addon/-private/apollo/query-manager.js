@@ -151,8 +151,8 @@ export default class QueryManager {
   /**
    * Unsubscribes from all actively tracked subscriptions initiated by calls to
    * `watchQuery`. This is normally called automatically by the
-   * ComponentQueryManagerMixin when a component is torn down, or by the
-   * RouteQueryManagerMixin when `resetController` is called on the route.
+   * queryManager decorator when a component is torn down, or qhen `resetController`
+   * is called on the route.
    *
    * @method unsubscribeAll
    * @param {Boolean} onlyStale Whether to unsubscribe only from subscriptions which were previously marked as stale.
