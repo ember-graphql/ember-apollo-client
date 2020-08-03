@@ -17,8 +17,6 @@ module.exports = {
     browser: true,
   },
   rules: {
-    'ember/no-new-mixins': 'off',
-    'ember/no-mixins': 'off',
     'ember/no-legacy-test-waiters': 'off',
   },
   overrides: [
@@ -49,13 +47,7 @@ module.exports = {
         node: true,
       },
       plugins: ['node'],
-      rules: Object.assign(
-        {},
-        require('eslint-plugin-node').configs.recommended.rules,
-        {
-          // add your custom rules and overrides for node files here
-        }
-      ),
+      extends: ['plugin:node/recommended'],
     },
   ],
 };
