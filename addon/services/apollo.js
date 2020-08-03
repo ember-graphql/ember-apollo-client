@@ -14,7 +14,6 @@ import { getOwner } from '@ember/application';
 import { isArray } from '@ember/array';
 import { isNone, isPresent } from '@ember/utils';
 import { registerWaiter } from '@ember/test';
-import deprecateComputed from 'ember-apollo-client/-private/deprecate-computed';
 import { run } from '@ember/runloop';
 import { QueryManager } from '../index';
 
@@ -104,14 +103,7 @@ export default class ApolloService extends Service {
   init() {
     super.init(...arguments);
 
-    let options = this.clientOptions;
-    if (typeof options === 'function') {
-      options = this.clientOptions();
-    } else {
-      deprecateComputed('clientOptions');
-    }
-
-    this.client = new ApolloClient(options);
+    this.client = new ApolloClient(this.clientOptions());
 
     if (Ember.testing) {
       this._registerWaiter();
@@ -155,21 +147,10 @@ export default class ApolloService extends Service {
    * @public
    */
   clientOptions() {
-    let { link, cache } = this;
-
-    if (typeof link === 'function') {
-      link = this.link();
-    } else {
-      deprecateComputed('link');
-    }
-
-    if (typeof cache === 'function') {
-      cache = this.cache();
-    } else {
-      deprecateComputed('cache');
-    }
-
-    return { link, cache };
+    return {
+      link: this.link(),
+      cache: this.cache(),
+    };
   }
 
   /**
