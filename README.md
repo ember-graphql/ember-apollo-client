@@ -1,6 +1,6 @@
 # ember-apollo-client
 
-_Use [apollo-client][apollo-client] and GraphQL from your Ember app._
+_Use [@apollo/client][apollo-client] and GraphQL from your Ember app._
 
 ![Download count all time](https://img.shields.io/npm/dt/ember-apollo-client.svg)
 [![npm version](https://badge.fury.io/js/ember-apollo-client.svg)](https://badge.fury.io/js/ember-apollo-client)
@@ -88,21 +88,11 @@ npm/yarn and import as desired.
 
 Here are some useful packages:
 
-* [apollo-client][apollo-client]
-* [apollo-cache][apollo-cache]
-* [apollo-cache-inmemory][apollo-cache-inmemory]
-* [apollo-link][apollo-link]
-* [apollo-link-context][apollo-link-context]
-* [apollo-link-http][apollo-link-http]
+* [@apollo/client][apollo-client]
 * [graphql-tag][graphql-tag-repo]
 * [graphql-tools][graphql-tools-repo]
 
 [graphql-repo]: https://github.com/graphql/graphql-js "GraphQL"
-[apollo-cache]: https://www.npmjs.com/package/apollo-cache
-[apollo-cache-inmemory]: https://www.npmjs.com/package/apollo-cache-inmemory
-[apollo-link]: https://github.com/apollographql/apollo-link
-[apollo-link-context]: https://www.npmjs.com/package/apollo-link-context
-[apollo-link-http]: https://www.npmjs.com/package/apollo-link-http
 [graphql-tag-repo]: https://github.com/apollographql/graphql-tag "graphql-tag"
 [graphql-tools-repo]: https://github.com/apollographql/graphql-tools "graphql-tools"
 
@@ -306,8 +296,8 @@ Specifically, the `split` function is what we're after (note we are using
 import ApolloService from 'ember-apollo-client/services/apollo';
 import { inject as service } from '@ember/service';
 import { Socket } from 'phoenix';
-import { split } from 'apollo-link';
-import { getMainDefinition } from 'apollo-utilities';
+import { split } from '@apollo/client';
+import { getMainDefinition } from '@apollo/client/utilities';
 import { createAbsintheSocketLink } from '@absinthe/socket-apollo-link';
 import AbsintheSocket from '@absinthe/socket';
 
@@ -339,8 +329,7 @@ class OverriddenApollo extends ApolloService {
 Note: You will need to add the following dependencies to your project:
 
 ```sh
-yarn add -D apollo-link
-yarn add -D apollo-utilities
+yarn add -D @apollo/client
 yarn add -D @absinthe/socket
 yarn add -D @absinthe/socket-apollo-link
 ```
@@ -508,7 +497,7 @@ The `apollo` service has the following public API:
   ```js
   import ApolloService from 'ember-apollo-client/services/apollo';
   import { inject as service } from '@ember/service';
-  import { setContext } from 'apollo-link-context';
+  import { setContext } from '@apollo/client/link/context';
   import { Promise } from 'rsvp';
 
   class OverriddenApollo extends ApolloService {
@@ -545,7 +534,7 @@ The `apollo` service has the following public API:
   Note: You will need to add the following dependencies to your project:
 
   ```sh
-  yarn add -D apollo-link-context
+  yarn add -D @apollo/client
   ```
 
 * `watchQuery(options, resultKey)`: This calls the
@@ -558,12 +547,12 @@ The `apollo` service has the following public API:
   from the query when you're done with it.
 
 * `query(options, resultKey)`: This calls the
-  [`ApolloClient.query`](https://www.apollographql.com/docs/react/api/apollo-client.html#ApolloClient.query)
+  `ApolloClient.query`
   method. It returns a promise that resolves with the raw POJO data that the
   query returns. If you provide a `resultKey`, the resolved data is grabbed from
   that key in the result.
 * `mutate(options, resultKey)`: This calls the
-  [`ApolloClient.mutate`](https://www.apollographql.com/docs/react/api/apollo-client.html#ApolloClient.mutate)
+  `ApolloClient.mutate`
   method. It returns a promise that resolves with the raw POJO data that the
   mutation returns. As with the query methods, the `resultKey` can be used to
   resolve beneath the root.
