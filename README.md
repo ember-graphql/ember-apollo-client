@@ -55,13 +55,13 @@ service and overriding the `clientOptions` property. See the
 
 ### Build time configuration
 
-In your app's `ember-cli-build.js`, you can set build time options for [broccoli-graphql-filter](https://github.com/csantero/broccoli-graphql-filter) to keep file extensions in `.graphql` files.
+In your app's `ember-cli-build.js`, you can set build time options for [broccoli-graphql-filter](https://github.com/csantero/broccoli-graphql-filter) to keep or remove file extensions in `.graphql` files.
 
 ```js
 module.exports = function(defaults) {
   let app = new EmberApp(defaults, {
     emberApolloClient: {
-      keepGraphqlFileExtension: true
+      keepGraphqlFileExtension: false
     }
   });
 
@@ -70,7 +70,7 @@ module.exports = function(defaults) {
 
 ```
 
-`keepGraphqlFileExtension = false`, optional – If `true`, creates files called `my-query.graphql.js` instead of `my-query.js`, so that you can import them as `./my-query.graphql` instead of `./my-query`.
+`keepGraphqlFileExtension = true`, defaults to `true` – If `false`, creates files called `my-query.js` instead of `my-query.graphql.js`, so that you can import them as `./my-query` instead of `./my-query.graphql`.
 
 Example:
 
@@ -153,7 +153,7 @@ computed macro and `watchQuery`:
 ```js
 import Route from "@ember/routing/route";
 import { queryManager } from "ember-apollo-client";
-import query from "my-app/gql/queries/human";
+import query from "my-app/gql/queries/human.graphql";
 
 export default Route.extend({
   apollo: queryManager(),
@@ -355,7 +355,7 @@ fragment ReviewFragment on Human {
 `app/gql/mutations/create-review.graphql`
 
 ```graphql
-#import ReviewFragment from 'my-app/gql/fragments/review-fragment'
+#import ReviewFragment from 'my-app/gql/fragments/review-fragment.graphql'
 
 mutation createReview($ep: Episode!, $review: ReviewInput!) {
   createReview(episode: $ep, review: $review) {
@@ -371,7 +371,7 @@ mutation createReview($ep: Episode!, $review: ReviewInput!) {
 ```js
 import Route from "@ember/routing/route";
 import { inject as service } from "@ember/service";
-import mutation from "my-app/gql/mutations/create-review";
+import mutation from "my-app/gql/mutations/create-review.graphql";
 
 export default Route.extend({
   apollo: service(),
@@ -597,7 +597,7 @@ The `queryManager` computed macro can be used as a decorator when using Ember v3
 ```js
 import Route from '@ember/routing/route';
 import { queryManager } from 'ember-apollo-client'
-import query from 'my-app/gql/queries/human';
+import query from 'my-app/gql/queries/human.graphql';
 
 export default class MyAwesomeRoute extends Route {
   @queryManager apollo;
