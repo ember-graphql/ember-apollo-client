@@ -1,6 +1,6 @@
 # ember-apollo-client
 
-_Use [apollo-client][apollo-client] and GraphQL from your Ember app._
+_Use [@apollo/client][apollo-client] and GraphQL from your Ember app._
 
 ![Download count all time](https://img.shields.io/npm/dt/ember-apollo-client.svg)
 [![npm version](https://badge.fury.io/js/ember-apollo-client.svg)](https://badge.fury.io/js/ember-apollo-client)
@@ -21,12 +21,14 @@ Install the [Apollo Client Developer tools for Chrome](https://chrome.google.com
 
 ## Compatibility
 
+* Apollo Client v3.0 or above
 * Ember.js v3.12 or above
 * Ember CLI v2.13 or above
 * Node.js v10 or above
 * FastBoot 1.0+
 
 For compatibility with Ember versions below 3.4, use version 1.x.
+For compatibility with Apollo Client v1 or v2, use version 1.x or 2.x of this addon.
 
 ## Configuration
 
@@ -53,13 +55,13 @@ service and overriding the `clientOptions` property. See the
 
 ### Build time configuration
 
-In your app's `ember-cli-build.js`, you can set build time options for [broccoli-graphql-filter](https://github.com/csantero/broccoli-graphql-filter) to keep file extensions in `.graphql` files.
+In your app's `ember-cli-build.js`, you can set build time options for [broccoli-graphql-filter](https://github.com/csantero/broccoli-graphql-filter) to keep or remove file extensions in `.graphql` files.
 
 ```js
 module.exports = function(defaults) {
   let app = new EmberApp(defaults, {
     emberApolloClient: {
-      keepGraphqlFileExtension: true
+      keepGraphqlFileExtension: false
     }
   });
 
@@ -68,7 +70,7 @@ module.exports = function(defaults) {
 
 ```
 
-`keepGraphqlFileExtension = false`, optional – If `true`, creates files called `my-query.graphql.js` instead of `my-query.js`, so that you can import them as `./my-query.graphql` instead of `./my-query`.
+`keepGraphqlFileExtension = true`, defaults to `true` – If `false`, creates files called `my-query.js` instead of `my-query.graphql.js`, so that you can import them as `./my-query` instead of `./my-query.graphql`.
 
 Example:
 
@@ -86,21 +88,11 @@ npm/yarn and import as desired.
 
 Here are some useful packages:
 
-* [apollo-client][apollo-client]
-* [apollo-cache][apollo-cache]
-* [apollo-cache-inmemory][apollo-cache-inmemory]
-* [apollo-link][apollo-link]
-* [apollo-link-context][apollo-link-context]
-* [apollo-link-http][apollo-link-http]
+* [@apollo/client][apollo-client]
 * [graphql-tag][graphql-tag-repo]
 * [graphql-tools][graphql-tools-repo]
 
 [graphql-repo]: https://github.com/graphql/graphql-js "GraphQL"
-[apollo-cache]: https://www.npmjs.com/package/apollo-cache
-[apollo-cache-inmemory]: https://www.npmjs.com/package/apollo-cache-inmemory
-[apollo-link]: https://github.com/apollographql/apollo-link
-[apollo-link-context]: https://www.npmjs.com/package/apollo-link-context
-[apollo-link-http]: https://www.npmjs.com/package/apollo-link-http
 [graphql-tag-repo]: https://github.com/apollographql/graphql-tag "graphql-tag"
 [graphql-tools-repo]: https://github.com/apollographql/graphql-tools "graphql-tools"
 
@@ -161,7 +153,7 @@ computed macro and `watchQuery`:
 ```js
 import Route from "@ember/routing/route";
 import { queryManager } from "ember-apollo-client";
-import query from "my-app/gql/queries/human";
+import query from "my-app/gql/queries/human.graphql";
 
 export default Route.extend({
   apollo: queryManager(),
@@ -304,8 +296,8 @@ Specifically, the `split` function is what we're after (note we are using
 import ApolloService from 'ember-apollo-client/services/apollo';
 import { inject as service } from '@ember/service';
 import { Socket } from 'phoenix';
-import { split } from 'apollo-link';
-import { getMainDefinition } from 'apollo-utilities';
+import { split } from '@apollo/client';
+import { getMainDefinition } from '@apollo/client/utilities';
 import { createAbsintheSocketLink } from '@absinthe/socket-apollo-link';
 import AbsintheSocket from '@absinthe/socket';
 
@@ -337,8 +329,7 @@ class OverriddenApollo extends ApolloService {
 Note: You will need to add the following dependencies to your project:
 
 ```sh
-yarn add -D apollo-link
-yarn add -D apollo-utilities
+yarn add -D @apollo/client
 yarn add -D @absinthe/socket
 yarn add -D @absinthe/socket-apollo-link
 ```
@@ -364,7 +355,7 @@ fragment ReviewFragment on Human {
 `app/gql/mutations/create-review.graphql`
 
 ```graphql
-#import ReviewFragment from 'my-app/gql/fragments/review-fragment'
+#import ReviewFragment from 'my-app/gql/fragments/review-fragment.graphql'
 
 mutation createReview($ep: Episode!, $review: ReviewInput!) {
   createReview(episode: $ep, review: $review) {
@@ -380,7 +371,7 @@ mutation createReview($ep: Episode!, $review: ReviewInput!) {
 ```js
 import Route from "@ember/routing/route";
 import { inject as service } from "@ember/service";
-import mutation from "my-app/gql/mutations/create-review";
+import mutation from "my-app/gql/mutations/create-review.graphql";
 
 export default Route.extend({
   apollo: service(),
@@ -506,7 +497,7 @@ The `apollo` service has the following public API:
   ```js
   import ApolloService from 'ember-apollo-client/services/apollo';
   import { inject as service } from '@ember/service';
-  import { setContext } from 'apollo-link-context';
+  import { setContext } from '@apollo/client/link/context';
   import { Promise } from 'rsvp';
 
   class OverriddenApollo extends ApolloService {
@@ -543,7 +534,7 @@ The `apollo` service has the following public API:
   Note: You will need to add the following dependencies to your project:
 
   ```sh
-  yarn add -D apollo-link-context
+  yarn add -D @apollo/client
   ```
 
 * `watchQuery(options, resultKey)`: This calls the
@@ -556,12 +547,12 @@ The `apollo` service has the following public API:
   from the query when you're done with it.
 
 * `query(options, resultKey)`: This calls the
-  [`ApolloClient.query`](https://www.apollographql.com/docs/react/api/apollo-client.html#ApolloClient.query)
+  `ApolloClient.query`
   method. It returns a promise that resolves with the raw POJO data that the
   query returns. If you provide a `resultKey`, the resolved data is grabbed from
   that key in the result.
 * `mutate(options, resultKey)`: This calls the
-  [`ApolloClient.mutate`](https://www.apollographql.com/docs/react/api/apollo-client.html#ApolloClient.mutate)
+  `ApolloClient.mutate`
   method. It returns a promise that resolves with the raw POJO data that the
   mutation returns. As with the query methods, the `resultKey` can be used to
   resolve beneath the root.
@@ -606,7 +597,7 @@ The `queryManager` computed macro can be used as a decorator when using Ember v3
 ```js
 import Route from '@ember/routing/route';
 import { queryManager } from 'ember-apollo-client'
-import query from 'my-app/gql/queries/human';
+import query from 'my-app/gql/queries/human.graphql';
 
 export default class MyAwesomeRoute extends Route {
   @queryManager apollo;
