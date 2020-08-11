@@ -77,7 +77,7 @@
     "qunit-dom": "^1.2.0"
   },
   "peerDependencies": {
-    "graphql": "^14.0.2"
+    "graphql": "^14.0.0 || ^15.0.0"
   },
   "engines": {
     "node": "10.* || >= 12"
