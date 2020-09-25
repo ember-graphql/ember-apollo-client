@@ -116,6 +116,15 @@ export default class ApolloService extends Service {
     }
   }
 
+  willDestroy() {
+    // Ensure watch queries are not refeteched anymore
+    // See: https://www.apollographql.com/docs/react/v2.6/api/apollo-client/#ApolloClient.clearStore
+    // We guard against non-existance mostly to simplify tests a bit here
+    if (typeof this.client.clearStore === 'function') {
+      this.client.clearStore();
+    }
+  }
+
   // options are configured in your environment.js.
   get options() {
     // config:environment not injected into tests, so try to handle that gracefully.
