@@ -4,6 +4,58 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v2.2.1 - 2020-09-25
+
+### :bug: Bug Fix
+- Ensure apollo store is cleared when destroying apollo service (#370) @mydea
+
+### Contributors
+
+@mydea
+
+***
+
+For full changes, see the [comparison between v2.2.0 and v2.2.1](https://github.com/ember-graphql/ember-apollo-client/compare/v2.2.0...v2.2.1)
+
+
+## v2.2.0 - 2020-08-04
+
+### :zap: New Feature
+
+- Handle errorPolicy="all" for queries (#338) @mydea
+
+### :memo: Documentation
+
+- add Blake to contributors in readme (#350) @bgentry
+- docs: using with typescript (#348) @knownasilya
+
+### :house: Internal
+
+- Add myself to package.json maintainers list (#347) @josemarluedke
+- Fix repo URL in package.json (#346) @bgentry
+
+### :wrench: Tooling
+
+- Run CI on Pull Requests (#358) @josemarluedke
+
+### :package: Dependencies
+
+- Bump websocket-extensions from 0.1.3 to 0.1.4 (#352) @dependabot
+- Bump lodash from 4.17.15 to 4.17.19 (#354) @dependabot
+- Bump elliptic from 6.5.2 to 6.5.3 (#356) @dependabot
+- Bump jquery from 3.4.1 to 3.5.0 (#349) @dependabot
+
+***
+
+#### Contributors
+
+@bgentry, @dependabot, @dependabot[bot], @josemarluedke, @knownasilya and @mydea
+
+***
+
+For full changes, see the [comparison between v2.1.0 and v2.2.0](https://github.com/ember-graphql/ember-apollo-client/compare/v2.1.0...v2.2.0)
+
+
 ## v2.1.0 - 2020-04-08
 
 ### :boom: Breaking Change
