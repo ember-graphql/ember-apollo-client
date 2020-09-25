@@ -4,6 +4,41 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v3.0.0 - 2020-09-25
+
+This is a major version with breaking changes. If have you have your app with the latest v2.x without any deprecations, this upgrade will be straight forward.
+
+This version upgrades to Apollo Client V3. There are several changes there, please refer to [their migration guide](https://www.apollographql.com/docs/react/migrating/apollo-client-3-migration/). The most impacting change for Ember Apollo Client is the changes in imports.
+
+### :boom: Breaking Change
+
+- Upgrade to Apollo Client v3 (#355) @dbbk
+- Remove deprecated mixins (#361) @josemarluedke
+- Remove deprecated overwriting of options using computed properties (#362) @josemarluedke
+- Change default value of keepGraphqlFileExtension and remove deprecation (#363) @josemarluedke
+
+## :bug: Bug Fix
+
+- Allow graphql v15 and tell webpack about react (#365) @josemarluedke
+
+### :house: Internal
+- Fix tests on apollo client v3 (#360) @josemarluedke
+
+### :package: Dependencies
+- Upgrade project dependencies (#364) @josemarluedke
+- Bump node-fetch from 2.6.0 to 2.6.1 (#369) @dependabot
+- Upgrade Ember to v3.21 & @apollo/client to v3.2.x (#371) @josemarluedke
+
+***
+
+#### Contributors
+
+@dbbk, and @josemarluedke
+
+***
+
+For full changes, see the [comparison between v2.2.1 and v3.0.0](https://github.com/ember-graphql/ember-apollo-client/compare/v2.2.1...v3.0.0)
+
 ## v2.2.1 - 2020-09-25
 
 ### :bug: Bug Fix
