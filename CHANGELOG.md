@@ -4,6 +4,24 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v3.0.1 - 2020-10-14
+
+### :bug: Bug Fix
+
+- Fix regression: Array is returned as object from resultKey after upgade to v3.0 (#372) @johanrd
+
+***
+
+#### Contributors
+
+@johanrd and @josemarluedke
+
+***
+
+For full changes, see the [comparison between v3.0.0 and v3.0.1](https://github.com/ember-graphql/ember-apollo-client/compare/v3.0.0...v3.0.1)
+
+
+
 ## v3.0.0 - 2020-09-25
 
 This is a major version with breaking changes. If have you have your app with the latest v2.x without any deprecations, this upgrade will be straight forward.
