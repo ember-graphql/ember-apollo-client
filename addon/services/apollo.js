@@ -73,7 +73,7 @@ function newDataFunc(observable, resultKey, resolve, unsubscribeFn = null) {
 
     if (isNone(obj)) {
       if (isArray(dataToSend)) {
-        obj = A(dataToSend);
+        obj = A([...dataToSend]);
       } else {
         obj = { ...dataToSend };
       }
