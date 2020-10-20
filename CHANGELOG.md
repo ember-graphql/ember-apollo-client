@@ -4,6 +4,23 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v3.0.2 - 2020-10-20
+
+### :bug: Bug Fix
+
+- Spread dataToSend array to allow watchQuery using resultKey to update collection (#374) @cloutierlp
+
+***
+
+#### Contributors
+
+@cloutierlp and @josemarluedke
+
+***
+
+For full changes, see the [comparison between v3.0.1 and v3.0.2](https://github.com/ember-graphql/ember-apollo-client/compare/v3.0.1...v3.0.2)
+
+
 ## v3.0.1 - 2020-10-14
 
 ### :bug: Bug Fix
