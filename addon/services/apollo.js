@@ -13,9 +13,9 @@ import {
 import { getOwner } from '@ember/application';
 import { isArray } from '@ember/array';
 import { isNone, isPresent } from '@ember/utils';
-import { registerWaiter } from '@ember/test';
 import { run } from '@ember/runloop';
 import { QueryManager } from '../index';
+import { waitForPromise } from '@ember/test-waiters';
 
 const apolloObservableWeakMap = new WeakMap();
 const apolloUnsubscribeWeakMap = new WeakMap();
@@ -104,10 +104,6 @@ export default class ApolloService extends Service {
     super.init(...arguments);
 
     this.client = new ApolloClient(this.clientOptions());
-
-    if (Ember.testing) {
-      this._registerWaiter();
-    }
   }
 
   willDestroy() {
@@ -173,7 +169,7 @@ export default class ApolloService extends Service {
    * @public
    */
   mutate(opts, resultKey) {
-    return this._waitFor(
+    return waitForPromise(
       new RSVP.Promise((resolve, reject) => {
         this.client
           .mutate(opts)
@@ -223,7 +219,7 @@ export default class ApolloService extends Service {
       subscription && subscription.unsubscribe();
     }
 
-    return this._waitFor(
+    return waitForPromise(
       new RSVP.Promise((resolve, reject) => {
         // TODO: add an error function here for handling errors
         subscription = observable.subscribe({
@@ -255,7 +251,7 @@ export default class ApolloService extends Service {
 
     const obj = new EmberApolloSubscription();
 
-    return this._waitFor(
+    return waitForPromise(
       new RSVP.Promise((resolve, reject) => {
         let subscription = observable.subscribe({
           next: (newData) => {
@@ -290,7 +286,7 @@ export default class ApolloService extends Service {
    * @public
    */
   query(opts, resultKey) {
-    return this._waitFor(
+    return waitForPromise(
       new RSVP.Promise((resolve, reject) => {
         this.client
           .query(opts)
@@ -341,7 +337,7 @@ export default class ApolloService extends Service {
       subscription && subscription.unsubscribe();
     }
 
-    return this._waitFor(
+    return waitForPromise(
       new RSVP.Promise((resolve, reject) => {
         subscription = observable.subscribe({
           next: newDataFunc(observable, resultKey, resolve, unsubscribe),
@@ -375,40 +371,6 @@ export default class ApolloService extends Service {
 
   createQueryManager() {
     return new QueryManager(this);
-  }
-
-  /**
-   * Wraps a promise in test waiters.
-   *
-   * @param {!Promise} promise
-   * @return {!Promise}
-   * @private
-   */
-  _waitFor(promise) {
-    this._incrementOngoing();
-    return promise.finally(() => this._decrementOngoing());
-  }
-
-  // unresolved / ongoing requests, used for tests:
-  _ongoing = 0;
-
-  _incrementOngoing() {
-    this._ongoing++;
-  }
-
-  _decrementOngoing() {
-    this._ongoing--;
-  }
-
-  _shouldWait() {
-    return this._ongoing === 0;
-  }
-
-  _registerWaiter() {
-    this._waiter = () => {
-      return this._shouldWait();
-    };
-    registerWaiter(this._waiter);
   }
 }
 
