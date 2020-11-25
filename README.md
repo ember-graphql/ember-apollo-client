@@ -519,10 +519,9 @@ The `apollo` service has the following public API:
       }
       return new Promise(success => {
         let headers = {};
-        if (this.get('session.isAuthenticated')) {
-          let token = this.get('session.data.authenticated.token');
-          headers['Authorization'] = `Bearer ${token}`;
-        }
+        let token = this.get('session.data.authenticated.token');
+        headers['Authorization'] = `Bearer ${token}`;
+
         success({ headers });
       });
     }
