@@ -31,16 +31,20 @@ module.exports = {
   },
 
   getOptions() {
+    const hostOptions =
+      (this.parent && this.parent.options) ||
+      (this.app && this.app.options) ||
+      {};
+
     return (
-      (this.app && this.app.options.emberApolloClient) || {
+      hostOptions.emberApolloClient || {
         keepGraphqlFileExtension: true,
       }
     );
   },
 
   setupPreprocessorRegistry(type, registry) {
-    let getOptions = this.getOptions.bind(this);
-    let options = getOptions();
+    const options = this.getOptions();
 
     if (type === 'parent') {
       registry.add('js', {
