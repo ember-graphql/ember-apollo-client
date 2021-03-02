@@ -10,8 +10,8 @@ module.exports = {
    */
   afterInstall() {
     return this.addPackagesToProject([
-      { name: 'ember-fetch', target: '^6.3.1' },
-      { name: 'graphql', target: '^14.0.2' },
+      { name: 'ember-fetch', target: '^8.0.4' },
+      { name: 'graphql', target: '^15.5.0' },
     ]);
   },
 };
