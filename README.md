@@ -518,14 +518,11 @@ The `apollo` service has the following public API:
         return {};
       }
       return new Promise(success => {
-        this.get('session').authorize(
-          'authorizer:oauth2',
-          (headerName, headerContent) => {
-            let headers = {};
-            headers[headerName] = headerContent;
-            success({ headers });
-          }
-        );
+        let headers = {};
+        let token = this.get('session.data.authenticated.token');
+        headers['Authorization'] = `Bearer ${token}`;
+
+        success({ headers });
       });
     }
   }
