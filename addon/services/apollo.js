@@ -240,13 +240,17 @@ export default class ApolloService extends Service {
    * the resolved data when the route or component is torn down. That tells
    * Apollo to stop trying to send updated data to a non-existent listener.
    *
+   * @callback errorCallback
+   * @param {Error} error
+   *
    * @method subscribe
    * @param {!Object} opts The query options used in the Apollo Client subscribe.
    * @param {String} resultKey The key that will be returned from the resulting response data. If null or undefined, the entire response data will be returned.
+   * @param {errorCallback} errorHandler The callback that handles subscription errors.
    * @return {!Promise}
    * @public
    */
-  subscribe(opts, resultKey = null) {
+  subscribe(opts, resultKey = null, errorHandler = null) {
     const observable = this.client.subscribe(opts);
 
     const obj = new EmberApolloSubscription();
@@ -264,6 +268,9 @@ export default class ApolloService extends Service {
             run(() => obj._onNewData(dataToSend));
           },
           error(e) {
+            if (errorHandler) {
+              errorHandler(e);
+            }
             reject(e);
           },
         });
