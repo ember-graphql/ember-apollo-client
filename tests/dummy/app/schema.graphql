@@ -24,6 +24,7 @@ type Movie {
   voteAverage: Float
   posterPath: String
   releaseDate: Date
+  reviews: ReviewsConnection!
 }
 
 # Represents a review for a movie
@@ -33,6 +34,14 @@ type Review {
 
   # Comment about the movie
   commentary: String
+}
+
+type ReviewEdge {
+  node: Review!
+}
+
+type ReviewsConnection {
+  edges: [ReviewEdge]!
 }
 
 # The input object sent when someone is creating a new review

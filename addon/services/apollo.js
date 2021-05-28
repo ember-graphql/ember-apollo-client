@@ -16,6 +16,7 @@ import { isNone, isPresent } from '@ember/utils';
 import { run } from '@ember/runloop';
 import { QueryManager } from '../index';
 import { waitForPromise } from '@ember/test-waiters';
+import { tracked } from 'tracked-built-ins';
 
 const apolloObservableWeakMap = new WeakMap();
 const apolloUnsubscribeWeakMap = new WeakMap();
@@ -75,7 +76,7 @@ function newDataFunc(observable, resultKey, resolve, unsubscribeFn = null) {
       if (isArray(dataToSend)) {
         obj = A([...dataToSend]);
       } else {
-        obj = { ...dataToSend };
+        obj = tracked({ ...dataToSend });
       }
 
       if (!apolloObservableWeakMap.has(obj)) {

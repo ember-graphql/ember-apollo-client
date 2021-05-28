@@ -38,7 +38,8 @@
     "@ember/test-waiters": "^2.3.0",
     "broccoli-graphql-filter": "^1.0.0",
     "ember-auto-import": "^1.6.0",
-    "ember-cli-babel": "^7.22.1"
+    "ember-cli-babel": "^7.22.1",
+    "tracked-built-ins": "^1.1.1"
   },
   "devDependencies": {
     "@babel/core": "^7.11.6",
