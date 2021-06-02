@@ -115,6 +115,10 @@ function startPretender() {
     Date() {
       return '2019-09-28';
     },
+
+    Int() {
+      return 5;
+    },
   };
 
   let schema = makeExecutableSchema({ typeDefs: schemaString, resolvers });

@@ -38,3 +38,11 @@
 </div>
 
 <MovieDetail @movie={{this.model.movie}} />
+
+<div class="movie-reviews">
+  {{#each this.reviews as |review|}}
+    <p>{{review.stars}} stars</p>
+  {{else}}
+    <p>No reviews</p>
+  {{/each}}
+</div>
