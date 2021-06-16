@@ -1,5 +1,5 @@
 import Ember from 'ember';
-import { get, set, setProperties } from '@ember/object';
+import { get, set, setProperties, defineProperty } from '@ember/object';
 import { sendEvent } from '@ember/object/events';
 import RSVP from 'rsvp';
 import Service from '@ember/service';
@@ -16,6 +16,7 @@ import { isNone, isPresent } from '@ember/utils';
 import { run } from '@ember/runloop';
 import { QueryManager } from '../index';
 import { waitForPromise } from '@ember/test-waiters';
+import { tracked } from '@glimmer/tracking';
 
 const apolloObservableWeakMap = new WeakMap();
 const apolloUnsubscribeWeakMap = new WeakMap();
@@ -43,6 +44,20 @@ class EmberApolloSubscription {
   _onNewData(newData) {
     set(this, 'lastEvent', newData);
     sendEvent(this, 'event', [newData]);
+  }
+}
+
+class TrackedObject {
+  constructor() {
+    defineProperty(this, 'setUnknownProperty', {
+      configurable: false,
+      enumerable: false,
+      value: function (key, value) {
+        defineProperty(this, key, tracked());
+        this[key] = value;
+      },
+      writable: false,
+    });
   }
 }
 
@@ -75,7 +90,8 @@ function newDataFunc(observable, resultKey, resolve, unsubscribeFn = null) {
       if (isArray(dataToSend)) {
         obj = A([...dataToSend]);
       } else {
-        obj = { ...dataToSend };
+        obj = new TrackedObject();
+        setProperties(obj, dataToSend);
       }
 
       if (!apolloObservableWeakMap.has(obj)) {

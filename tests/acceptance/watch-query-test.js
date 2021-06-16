@@ -13,6 +13,24 @@ module('Acceptance | watch query', function (hooks) {
     posterPath: '/dM2w364MScsjFf8pfMbaWUcWrR.jpg',
     overview: 'lorem',
     releaseDate: '1994-10-14',
+    reviews: {
+      edges: [],
+      __typename: 'ReviewsConnection',
+    },
+    __typename: 'Movie',
+  };
+
+  const mockReviews = {
+    edges: [
+      {
+        node: {
+          stars: 5,
+          __typename: 'Review',
+        },
+        __typename: 'ReviewEdge',
+      },
+    ],
+    __typename: 'ReviewsConnection',
   };
 
   test('data should be updated when executing a mutation', async function (assert) {
@@ -64,7 +82,10 @@ module('Acceptance | watch query', function (hooks) {
             return new Promise((resolve) => {
               setTimeout(() => {
                 resolve(
-                  Object.assign({}, mockMovie, { title: 'The Godfather' })
+                  Object.assign({}, mockMovie, {
+                    title: 'The Godfather',
+                    reviews: mockReviews,
+                  })
                 );
               }, 200);
             });
@@ -81,11 +102,13 @@ module('Acceptance | watch query', function (hooks) {
     assert.equal(currentURL(), '/movie/680');
 
     assert.dom('.movie-title').hasText('Pulp Fiction');
+    assert.dom('.movie-reviews').hasText('No reviews');
 
     isRefetch = true;
     await click('.refetch-data-using-observable');
 
     assert.dom('.movie-title').hasText('The Godfather');
+    assert.dom('.movie-reviews').hasText('5 stars');
   });
 
   test('refetch using reoute refresh should update template', async function (assert) {

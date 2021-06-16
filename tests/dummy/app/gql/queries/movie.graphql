@@ -6,5 +6,12 @@ query GetMovie($id: ID!) {
     voteAverage
     posterPath
     releaseDate
+    reviews {
+      edges {
+        node {
+          stars
+        }
+      }
+    }
   }
 }
