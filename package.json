@@ -1,6 +1,6 @@
 {
   "name": "ember-apollo-client",
-  "version": "3.2.0",
+  "version": "3.2.1",
   "description": "An ember-cli addon for the Apollo GraphQL Client.",
   "keywords": [
     "apollo",
@@ -35,9 +35,8 @@
   },
   "dependencies": {
     "@apollo/client": "^3.2.1",
-    "@ember/test-waiters": "^2.3.0",
-    "@glimmer/tracking": "^1.0.2",
     "@ember/test-waiters": "~3.0.0",
+    "@glimmer/tracking": "^1.0.2",
     "broccoli-graphql-filter": "^1.0.0",
     "ember-auto-import": "^1.6.0",
     "ember-cli-babel": "^7.22.1"
