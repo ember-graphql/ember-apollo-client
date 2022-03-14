@@ -116,8 +116,8 @@ function newDataFunc(observable, resultKey, resolve, unsubscribeFn = null) {
 export default class ApolloService extends Service {
   client = null;
 
-  init() {
-    super.init(...arguments);
+  constructor(...args) {
+    super(...args);
 
     this.client = new ApolloClient(this.clientOptions());
   }

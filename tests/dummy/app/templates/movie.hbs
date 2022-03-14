@@ -1,45 +1,42 @@
 <h2>Movie Detail</h2>
 
-<LinkTo @route="index">
+<LinkTo @route='index'>
   Back
 </LinkTo>
 
-<div class="actions-menu">
+<div class='actions-menu'>
   <button
-    {{action "changeTitle" this.model.movie.id "Rambo: Last Blood"}}
-    class="button change-movie-title"
-    type="button"
+    {{action 'changeTitle' @model.movie.id 'Rambo: Last Blood'}}
+    class='button change-movie-title'
+    type='button'
   >
     Change Movie Title
   </button>
 
   <button
-    {{action "refetchUsingObservable" this.model}}
-    class="button refetch-data-using-observable"
-    type="button"
+    {{action 'refetchUsingObservable' @model}}
+    class='button refetch-data-using-observable'
+    type='button'
   >
     Refetch (using observable)
   </button>
 
   <button
-    {{action "refreshUsingRoute"}}
-    class="button refresh-data"
-    type="button"
+    {{action 'refreshUsingRoute'}}
+    class='button refresh-data'
+    type='button'
   >
     Refetch (using route refresh())
   </button>
 
-  <LinkTo
-    @route="new-review"
-    class="button add-review"
-  >
+  <LinkTo @route='new-review' class='button add-review'>
     Add Review
   </LinkTo>
 </div>
 
-<MovieDetail @movie={{this.model.movie}} />
+<MovieDetail @movie={{@model.movie}} />
 
-<div class="movie-reviews">
+<div class='movie-reviews'>
   {{#each this.reviews as |review|}}
     <p>{{review.stars}} stars</p>
   {{else}}
