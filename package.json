@@ -39,7 +39,7 @@
     "@embroider/macros": "^1.5.0",
     "@glimmer/tracking": "^1.0.2",
     "broccoli-graphql-filter": "^1.0.0",
-    "ember-auto-import": "^1.6.0",
+    "ember-auto-import": "^2.4.0",
     "ember-cli-babel": "^7.22.1"
   },
   "devDependencies": {
@@ -76,7 +76,8 @@
     "npm-run-all": "^4.1.5",
     "pretender": "^3.4.3",
     "prettier": "^2.1.2",
-    "qunit-dom": "^1.4.0"
+    "qunit-dom": "^1.4.0",
+    "webpack": "5"
   },
   "peerDependencies": {
     "graphql": "^14.0.0 || ^15.0.0"
