@@ -1,4 +1,3 @@
-import Ember from 'ember';
 import { get, set, setProperties, defineProperty } from '@ember/object';
 import { sendEvent } from '@ember/object/events';
 import RSVP from 'rsvp';
@@ -17,6 +16,7 @@ import { run } from '@ember/runloop';
 import { QueryManager } from '../index';
 import { waitForPromise } from '@ember/test-waiters';
 import { tracked } from '@glimmer/tracking';
+import { isTesting } from '@embroider/macros';
 
 const apolloObservableWeakMap = new WeakMap();
 const apolloUnsubscribeWeakMap = new WeakMap();
@@ -137,7 +137,7 @@ export default class ApolloService extends Service {
     let config = getOwner(this).resolveRegistration('config:environment');
     if (config && config.apollo) {
       return config.apollo;
-    } else if (Ember.testing) {
+    } else if (isTesting()) {
       return {
         apiURL: 'http://testserver.example/v1/graph',
       };

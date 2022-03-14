@@ -36,6 +36,7 @@
   "dependencies": {
     "@apollo/client": "^3.2.1",
     "@ember/test-waiters": "~3.0.0",
+    "@embroider/macros": "^1.5.0",
     "@glimmer/tracking": "^1.0.2",
     "broccoli-graphql-filter": "^1.0.0",
     "ember-auto-import": "^1.6.0",
@@ -49,7 +50,7 @@
     "broccoli-asset-rev": "^3.0.0",
     "ember-cli": "~3.21.2",
     "ember-cli-dependency-checker": "^3.2.0",
-    "ember-cli-htmlbars": "^5.3.1",
+    "ember-cli-htmlbars": "^5.7.2",
     "ember-cli-inject-live-reload": "^2.0.2",
     "ember-cli-terser": "^4.0.0",
     "ember-compatibility-helpers": "^1.2.1",
