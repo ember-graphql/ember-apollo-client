@@ -55,6 +55,7 @@ module('Acceptance | watch query', function (hooks) {
             'Rambo: Last Blood',
             'correct mutation title is passed in'
           );
+          movie.title = title;
           return Object.assign({}, movie, { title });
         },
       },

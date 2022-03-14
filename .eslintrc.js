@@ -18,6 +18,11 @@ module.exports = {
   },
   rules: {
     'ember/no-legacy-test-waiters': 'off',
+    'ember/no-classic-classes': 'off',
+    'ember/no-classic-components': 'off',
+    'ember/require-tagless-components': 'off',
+    'ember/no-computed-properties-in-native-classes': 'off',
+    'ember/no-actions-hash': 'off',
   },
   overrides: [
     // node files

@@ -31,77 +31,31 @@ let OverriddenApollo = class extends ApolloService {
   }
 };
 
-module('Unit | queryManager | Setup Hooks in Ember Components', function (
-  hooks
-) {
-  setupTest(hooks);
+module(
+  'Unit | queryManager | Setup Hooks in Ember Components',
+  function (hooks) {
+    setupTest(hooks);
 
-  hooks.beforeEach(function (assert) {
-    assertDeepEqual = assert.deepEqual.bind(assert);
-    unsubscribeCalled = 0;
+    hooks.beforeEach(function (assert) {
+      assertDeepEqual = assert.deepEqual.bind(assert);
+      unsubscribeCalled = 0;
 
-    this.subject = function () {
-      this.owner.register('service:overridden-apollo', OverriddenApollo);
-      this.owner.register('component:test-component', TestObject);
-      return this.owner.lookup('component:test-component');
-    };
-  });
-
-  test('it unsubscribes from any watchQuery subscriptions', function (assert) {
-    assert.expect(5);
-
-    TestObject = EmberComponent.extend({
-      apollo: queryManager({ service: 'overridden-apollo' }),
-      willDestroyElement() {
-        assert.ok(true, 'Should have called the original willDestroyElement');
-      },
+      this.subject = function () {
+        this.owner.register('service:overridden-apollo', OverriddenApollo);
+        this.owner.register('component:test-component', TestObject);
+        return this.owner.lookup('component:test-component');
+      };
     });
 
-    let subject = this.subject();
-    assert.equal(unsubscribeCalled, 0, 'should have been initialized with 0');
-
-    subject.apollo.watchQuery({ query: 'fakeQuery' });
-    subject.apollo.watchQuery({ query: 'fakeQuery' });
-
-    subject.willDestroyElement();
-
-    assert.equal(
-      unsubscribeCalled,
-      2,
-      '_apolloUnsubscribe() was called once per watchQuery'
-    );
-  });
-
-  test('it unsubscribes from any subscriptions', async function (assert) {
-    TestObject = EmberComponent.extend({
-      apollo: queryManager({ service: 'overridden-apollo' }),
-    });
-
-    let subject = this.subject();
-    assert.equal(unsubscribeCalled, 0, 'should have been initialized with 0');
-
-    subject.apollo.subscribe({ query: 'fakeSubscription' });
-    subject.apollo.subscribe({ query: 'fakeSubscription' });
-
-    subject.willDestroyElement();
-
-    assert.equal(
-      unsubscribeCalled,
-      2,
-      '_apolloUnsubscribe() was called once per subscribe'
-    );
-  });
-
-  if (gte('3.10.0')) {
-    test('it works using decorator syntax', function (assert) {
+    test('it unsubscribes from any watchQuery subscriptions', function (assert) {
       assert.expect(5);
-      TestObject = class MyTestClassOjbect extends EmberComponent {
-        @queryManager({ service: 'overridden-apollo' }) apollo;
 
+      TestObject = EmberComponent.extend({
+        apollo: queryManager({ service: 'overridden-apollo' }),
         willDestroyElement() {
           assert.ok(true, 'Should have called the original willDestroyElement');
-        }
-      };
+        },
+      });
 
       let subject = this.subject();
       assert.equal(unsubscribeCalled, 0, 'should have been initialized with 0');
@@ -117,5 +71,59 @@ module('Unit | queryManager | Setup Hooks in Ember Components', function (
         '_apolloUnsubscribe() was called once per watchQuery'
       );
     });
+
+    test('it unsubscribes from any subscriptions', async function (assert) {
+      TestObject = EmberComponent.extend({
+        apollo: queryManager({ service: 'overridden-apollo' }),
+      });
+
+      let subject = this.subject();
+      assert.equal(unsubscribeCalled, 0, 'should have been initialized with 0');
+
+      subject.apollo.subscribe({ query: 'fakeSubscription' });
+      subject.apollo.subscribe({ query: 'fakeSubscription' });
+
+      subject.willDestroyElement();
+
+      assert.equal(
+        unsubscribeCalled,
+        2,
+        '_apolloUnsubscribe() was called once per subscribe'
+      );
+    });
+
+    if (gte('3.10.0')) {
+      test('it works using decorator syntax', function (assert) {
+        assert.expect(5);
+        TestObject = class MyTestClassOjbect extends EmberComponent {
+          @queryManager({ service: 'overridden-apollo' }) apollo;
+
+          willDestroyElement() {
+            assert.ok(
+              true,
+              'Should have called the original willDestroyElement'
+            );
+          }
+        };
+
+        let subject = this.subject();
+        assert.equal(
+          unsubscribeCalled,
+          0,
+          'should have been initialized with 0'
+        );
+
+        subject.apollo.watchQuery({ query: 'fakeQuery' });
+        subject.apollo.watchQuery({ query: 'fakeQuery' });
+
+        subject.willDestroyElement();
+
+        assert.equal(
+          unsubscribeCalled,
+          2,
+          '_apolloUnsubscribe() was called once per watchQuery'
+        );
+      });
+    }
   }
-});
+);
