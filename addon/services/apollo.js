@@ -16,7 +16,7 @@ import { run } from '@ember/runloop';
 import { QueryManager } from '../index';
 import { waitForPromise } from '@ember/test-waiters';
 import { tracked } from '@glimmer/tracking';
-import { isTesting } from '@embroider/macros';
+import { macroCondition, isTesting } from '@embroider/macros';
 
 const apolloObservableWeakMap = new WeakMap();
 const apolloUnsubscribeWeakMap = new WeakMap();
@@ -137,7 +137,7 @@ export default class ApolloService extends Service {
     let config = getOwner(this).resolveRegistration('config:environment');
     if (config && config.apollo) {
       return config.apollo;
-    } else if (isTesting()) {
+    } else if (macroCondition(isTesting())) {
       return {
         apiURL: 'http://testserver.example/v1/graph',
       };
