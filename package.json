@@ -75,7 +75,7 @@
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-prettier": "^4.0.0",
     "eslint-plugin-qunit": "^7.2.0",
-    "graphql": "^15.8.0",
+    "graphql": "^16.0.0",
     "graphql-tag": "^2.12.6",
     "graphql-tools": "^4.0.8",
     "loader.js": "^4.7.0",
@@ -87,7 +87,7 @@
     "webpack": "^5.69.1"
   },
   "peerDependencies": {
-    "graphql": "^14.0.0 || ^15.0.0"
+    "graphql": "^14.0.0 || ^15.0.0 || ^16.0.0"
   },
   "engines": {
     "node": "12.* || 14.* || >= 16"
