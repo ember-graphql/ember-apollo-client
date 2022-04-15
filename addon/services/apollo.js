@@ -71,6 +71,10 @@ function extractNewData(resultKey, { data, loading }) {
     return null;
   }
   let keyedData = isNone(resultKey) ? data : data && get(data, resultKey);
+  
+  if (typeof resultKey === 'function'){
+    keyedData = resultKey(keyedData);
+  }
 
   return keyedData || {};
 }
