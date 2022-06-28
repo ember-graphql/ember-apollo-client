@@ -12,7 +12,7 @@ import {
 import { getOwner } from '@ember/application';
 import { isArray } from '@ember/array';
 import { isNone, isPresent } from '@ember/utils';
-import { run } from '@ember/runloop';
+import { run, next } from '@ember/runloop';
 import { QueryManager } from '../index';
 import { waitForPromise } from '@ember/test-waiters';
 import { tracked } from '@glimmer/tracking';
@@ -105,7 +105,7 @@ function newDataFunc(observable, resultKey, resolve, unsubscribeFn = null) {
       return resolve(obj);
     }
 
-    run(() => {
+    next(() => {
       isArray(obj)
         ? obj.setObjects(dataToSend)
         : setProperties(obj, dataToSend);
