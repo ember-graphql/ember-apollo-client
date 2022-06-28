@@ -27,8 +27,15 @@ function installHook(queryManager, context, hookName) {
 
   context[hookName] = function () {
     if (typeof originalHook === 'function') {
-      originalHook.call(this, ...arguments);
+      const result = originalHook.call(this, ...arguments);
+
+      if (result instanceof Promise) {
+        return result.then(() => {
+          hook.call(queryManager, ...arguments);
+        });
+      }
     }
+
     hook.call(queryManager, ...arguments);
   };
 }
