@@ -40,7 +40,7 @@ module('Unit | queryManager | macro - decorator', function (hooks) {
 
   if (gte('3.10.0')) {
     test('it works using decorator syntax without options', function (assert) {
-      TestObject = class MyTestClassOjbect extends EmberObject {
+      TestObject = class MyTestClassObject extends EmberObject {
         @queryManager apollo;
       };
 
@@ -57,7 +57,7 @@ module('Unit | queryManager | macro - decorator', function (hooks) {
     });
 
     test('it works using decorator syntax with options', function (assert) {
-      TestObject = class MyTestClassOjbect extends EmberObject {
+      TestObject = class MyTestClassObject extends EmberObject {
         @queryManager({ service: 'overridden-apollo' }) apollo;
       };
 
@@ -71,6 +71,32 @@ module('Unit | queryManager | macro - decorator', function (hooks) {
         subject.apollo.apollo instanceof OverriddenApollo,
         'the apollo service should be an instance of the overridden apollo service'
       );
+    });
+
+    test('it works using the `defaultQueryManagerService` environment option', function (assert) {
+      const config = this.owner.resolveRegistration('config:environment');
+
+      config.apollo.defaultQueryManagerService = 'overridden-apollo';
+
+      TestObject = class MyTestClassObject extends EmberObject {
+        @queryManager apollo;
+      };
+
+      let subject = this.subject();
+
+      assert.ok(subject.apollo, 'should create an apollo property');
+
+      assert.true(
+        subject.apollo instanceof QueryManager,
+        'it should be an instance of the query manager'
+      );
+
+      assert.true(
+        subject.apollo.apollo instanceof OverriddenApollo,
+        'the apollo service should be an instance of the overridden apollo service'
+      );
+
+      delete config.apollo.defaultQueryManagerService;
     });
   }
 });

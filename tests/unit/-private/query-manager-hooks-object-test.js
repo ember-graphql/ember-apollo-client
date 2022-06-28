@@ -93,7 +93,7 @@ module('Unit | queryManager | Setup Hooks in EmberOject', function (hooks) {
   if (gte('3.10.0')) {
     test('it works using decorator syntax', function (assert) {
       assert.expect(6);
-      TestObject = class MyTestClassOjbect extends EmberObject {
+      TestObject = class MyTestClassObject extends EmberObject {
         @queryManager({ service: 'overridden-apollo' }) apollo;
 
         willDestroy() {

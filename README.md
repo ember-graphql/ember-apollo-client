@@ -41,9 +41,13 @@ let ENV = {
   ...
   apollo: {
     apiURL: 'https://test.example/graphql',
+    
     // Optionally, set the credentials property of the Fetch Request interface
     // to control when a cookie is sent:
     // requestCredentials: 'same-origin', // other choices: 'include', 'omit'
+    
+    // Optionally, define which service a query manager should use by default:
+    // defaultQueryManagerService: 'my-custom-apollo-service',
   },
   ...
 }

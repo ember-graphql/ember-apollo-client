@@ -25,16 +25,20 @@ function isElementDescriptor(args) {
 }
 
 export function queryManager(...theArgs) {
-  let serviceName = 'apollo';
-  let [options] = theArgs;
-  if (typeof options === 'object' && options.service) {
-    serviceName = options.service;
-  }
-
   let setupQueryManager = computed(function () {
-    const service = getOwner(this).lookup(`service:${serviceName}`);
+    const [options] = theArgs;
+    const owner = getOwner(this);
+    const config = owner.resolveRegistration('config:environment');
+
+    const serviceOption = options?.service;
+    const serviceDefaultOption = config.apollo?.defaultQueryManagerService;
+    const serviceName = serviceOption || serviceDefaultOption || 'apollo';
+
+    const service = owner.lookup(`service:${serviceName}`);
     const queryManager = new QueryManager(service);
+
     setupHooks(queryManager, this);
+
     return queryManager;
   });
 

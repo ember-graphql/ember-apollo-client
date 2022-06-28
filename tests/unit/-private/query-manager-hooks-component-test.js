@@ -95,7 +95,7 @@ module(
     if (gte('3.10.0')) {
       test('it works using decorator syntax', function (assert) {
         assert.expect(5);
-        TestObject = class MyTestClassOjbect extends EmberComponent {
+        TestObject = class MyTestClassObject extends EmberComponent {
           @queryManager({ service: 'overridden-apollo' }) apollo;
 
           willDestroyElement() {
