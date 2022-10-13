@@ -82,6 +82,22 @@ Example:
 import myQuery from 'my-app/queries/my-query.graphql';
 ```
 
+If you want to disable the built-in GraphQL file support completely, you can do so by setting the `enableBuiltInGraphqlFileSupport` option to `false`:
+
+```js
+module.exports = function (defaults) {
+  const app = new EmberApp(defaults, {
+    emberApolloClient: {
+      enableBuiltInGraphqlFileSupport: false,
+    },
+  });
+  
+  return app.toTree();
+};
+```
+
+This might be useful if you are using [Embroider](https://github.com/embroider-build/embroider) and want to use a [webpack](https://webpack.js.org/) loader to import GraphQL files.
+
 ### Dependencies
 
 This addon uses [ember-auto-import](https://github.com/ef4/ember-auto-import) to import dependencies.

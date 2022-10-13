@@ -33,15 +33,19 @@ module.exports = {
       (this.app && this.app.options) ||
       {};
 
-    return (
-      hostOptions.emberApolloClient || {
-        keepGraphqlFileExtension: true,
-      }
-    );
+    return {
+      enableBuiltInGraphqlFileSupport: true,
+      keepGraphqlFileExtension: true,
+      ...hostOptions.emberApolloClient,
+    };
   },
 
   setupPreprocessorRegistry(type, registry) {
     const options = this.getOptions();
+
+    if (options.enableBuiltInGraphqlFileSupport === false) {
+      return;
+    }
 
     if (type === 'parent') {
       registry.add('js', {
