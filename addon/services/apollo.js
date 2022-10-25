@@ -2,7 +2,6 @@ import { get, set, setProperties, defineProperty } from '@ember/object';
 import { sendEvent } from '@ember/object/events';
 import RSVP from 'rsvp';
 import Service from '@ember/service';
-import fetch from 'fetch';
 import { A } from '@ember/array';
 import {
   ApolloClient,
@@ -14,9 +13,14 @@ import { isArray } from '@ember/array';
 import { isNone, isPresent } from '@ember/utils';
 import { run, next } from '@ember/runloop';
 import { QueryManager } from '../index';
-import { waitForPromise } from '@ember/test-waiters';
+import { waitFor, waitForPromise } from '@ember/test-waiters';
 import { tracked } from '@glimmer/tracking';
-import { macroCondition, isTesting } from '@embroider/macros';
+import {
+  dependencySatisfies,
+  importSync,
+  isTesting,
+  macroCondition,
+} from '@embroider/macros';
 
 const apolloObservableWeakMap = new WeakMap();
 const apolloUnsubscribeWeakMap = new WeakMap();
@@ -151,12 +155,23 @@ export default class ApolloService extends Service {
 
   link() {
     const { apiURL, requestCredentials } = this.options;
-    const linkOptions = { uri: apiURL, fetch };
+    const linkOptions = { uri: apiURL, fetch: this.getFetchImplementation() };
 
     if (isPresent(requestCredentials)) {
       linkOptions.credentials = requestCredentials;
     }
     return createHttpLink(linkOptions);
+  }
+
+  getFetchImplementation() {
+    if (macroCondition(dependencySatisfies('ember-fetch', '^8.0.0'))) {
+      const emberFetch = importSync('fetch');
+
+      // https://github.com/embroider-build/embroider/issues/1203
+      return emberFetch.default.default || emberFetch.default;
+    }
+
+    return waitFor(fetch);
   }
 
   /**

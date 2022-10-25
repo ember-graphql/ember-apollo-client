@@ -87,7 +87,13 @@
     "webpack": "^5.69.1"
   },
   "peerDependencies": {
+    "ember-fetch": "^8.0.0",
     "graphql": "^14.0.0 || ^15.0.0 || ^16.0.0"
+  },
+  "peerDependenciesMeta": {
+    "ember-fetch": {
+      "optional": true
+    }
   },
   "engines": {
     "node": "12.* || 14.* || >= 16"
