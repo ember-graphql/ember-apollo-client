@@ -179,7 +179,7 @@ export default class ApolloService extends Service {
    * never be updated and does not have to be unsubscribed.
    *
    * @method mutate
-   * @param {!Object} opts The query options used in the Apollo Client mutate.
+   * @param {!import('@apollo/client').MutationOptions} opts The query options used in the Apollo Client mutate.
    * @param {String} resultKey The key that will be returned from the resulting response data. If null or undefined, the entire response data will be returned.
    * @return {!Promise}
    * @public
@@ -222,7 +222,7 @@ export default class ApolloService extends Service {
    * Apollo to stop trying to send updated data to a non-existent listener.
    *
    * @method watchQuery
-   * @param {!Object} opts The query options used in the Apollo Client watchQuery.
+   * @param {!import('@apollo/client').WatchQueryOptions} opts The query options used in the Apollo Client watchQuery.
    * @param {String} resultKey The key that will be returned from the resulting response data. If null or undefined, the entire response data will be returned.
    * @return {!Promise}
    * @public
@@ -257,7 +257,7 @@ export default class ApolloService extends Service {
    * Apollo to stop trying to send updated data to a non-existent listener.
    *
    * @method subscribe
-   * @param {!Object} opts The query options used in the Apollo Client subscribe.
+   * @param {!import('@apollo/client').SubscriptionOptions} opts The query options used in the Apollo Client subscribe.
    * @param {String} resultKey The key that will be returned from the resulting response data. If null or undefined, the entire response data will be returned.
    * @return {!Promise}
    * @public
@@ -296,7 +296,7 @@ export default class ApolloService extends Service {
    * never be updated and does not have to be unsubscribed.
    *
    * @method query
-   * @param {!Object} opts The query options used in the Apollo Client query.
+   * @param {!import('@apollo/client').QueryOptions} opts The query options used in the Apollo Client query.
    * @param {String} resultKey The key that will be returned from the resulting response data. If null or undefined, the entire response data will be returned.
    * @return {!Promise}
    * @public
@@ -339,8 +339,8 @@ export default class ApolloService extends Service {
    * subscription on the provided query manager.
    *
    * @method managedWatchQuery
-   * @param {!Object} manager A QueryManager that should track this active watchQuery.
-   * @param {!Object} opts The query options used in the Apollo Client watchQuery.
+   * @param {!QueryManager} manager A QueryManager that should track this active watchQuery.
+   * @param {!import('@apollo/client').WatchQueryOptions} opts The query options used in the Apollo Client watchQuery.
    * @param {String} resultKey The key that will be returned from the resulting response data. If null or undefined, the entire response data will be returned.
    * @return {!Promise}
    * @private
@@ -371,8 +371,8 @@ export default class ApolloService extends Service {
    * subscription on the provided query manager.
    *
    * @method managedSubscribe
-   * @param {!Object} manager A QueryManager that should track this active subscribe.
-   * @param {!Object} opts The query options used in the Apollo Client subscribe.
+   * @param {!QueryManager} manager A QueryManager that should track this active subscribe.
+   * @param {!import('@apollo/client').SubscriptionOptions} opts The query options used in the Apollo Client subscribe.
    * @param {String} resultKey The key that will be returned from the resulting response data. If null or undefined, the entire response data will be returned.
    * @return {!Promise}
    * @private
