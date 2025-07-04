@@ -2,7 +2,6 @@ import { get, set, setProperties, defineProperty } from '@ember/object';
 import { sendEvent } from '@ember/object/events';
 import RSVP from 'rsvp';
 import Service from '@ember/service';
-import fetch from 'fetch';
 import { A } from '@ember/array';
 import {
   ApolloClient,
@@ -14,13 +13,16 @@ import { isArray } from '@ember/array';
 import { isNone, isPresent } from '@ember/utils';
 import { run, next } from '@ember/runloop';
 import { QueryManager } from '../index';
-import { waitForPromise } from '@ember/test-waiters';
+import { waitForFetch, waitForPromise } from '@ember/test-waiters';
 import { tracked } from '@glimmer/tracking';
 import { macroCondition, isTesting } from '@embroider/macros';
 
 const apolloObservableWeakMap = new WeakMap();
 const apolloUnsubscribeWeakMap = new WeakMap();
 
+function wrappedFetch(...args) {
+  return waitForFetch(fetch(...args));
+}
 export function getObservable(queryResult) {
   return apolloObservableWeakMap.get(queryResult);
 }
@@ -151,7 +153,7 @@ export default class ApolloService extends Service {
 
   link() {
     const { apiURL, requestCredentials } = this.options;
-    const linkOptions = { uri: apiURL, fetch };
+    const linkOptions = { uri: apiURL, fetch: wrappedFetch };
 
     if (isPresent(requestCredentials)) {
       linkOptions.credentials = requestCredentials;

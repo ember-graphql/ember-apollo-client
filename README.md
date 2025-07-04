@@ -15,7 +15,7 @@ This addon is battle tested: it has been used to build several large apps. As su
 ember install ember-apollo-client
 ```
 
-This should also automatically install `ember-fetch` and `graphql`.
+This should also automatically install `graphql`.
 
 Install the [Apollo Client Developer tools for Chrome](https://chrome.google.com/webstore/detail/apollo-client-developer-t/jdkknkkbebbapilgoeccciglkfbmbnfm) for a great GraphQL developer experience!
 
