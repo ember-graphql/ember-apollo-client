@@ -24,7 +24,7 @@ Install the [Apollo Client Developer tools for Chrome](https://chrome.google.com
 * Apollo Client v3.0 or above
 * Ember.js v3.24 or above
 * Ember CLI v2.13 or above
-* Node.js v12 or above
+* Node.js v16 or above
 * FastBoot 1.0+
 
 For compatibility with Ember versions below 3.4, use version 1.x.
