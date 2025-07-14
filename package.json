@@ -39,8 +39,8 @@
   "dependencies": {
     "@apollo/client": "^3.5.10",
     "@ember/string": "^3.1.1",
-    "@ember/test-waiters": "~3.0.1",
-    "@embroider/macros": "^1.5.0",
+    "@ember/test-waiters": "^4.1.0",
+    "@embroider/macros": "^1.18.0",
     "@glimmer/tracking": "^1.1.2",
     "broccoli-graphql-filter": "^1.0.0",
     "ember-auto-import": "^2.4.3",
@@ -49,7 +49,7 @@
   "devDependencies": {
     "@babel/core": "^7.17.7",
     "@ember/optional-features": "^2.0.0",
-    "@ember/test-helpers": "^2.8.1",
+    "@ember/test-helpers": "^4.0.4",
     "@embroider/test-setup": "^1.8.3",
     "@glimmer/component": "^1.1.2",
     "babel-eslint": "^10.1.0",
@@ -64,7 +64,7 @@
     "ember-fetch": "^8.1.1",
     "ember-load-initializers": "^2.1.2",
     "ember-page-title": "^7.0.0",
-    "ember-qunit": "^6.0.0",
+    "ember-qunit": "^8.1.1",
     "ember-resolver": "^8.0.3",
     "ember-source": "~4.8.0",
     "ember-source-channel-url": "^3.0.0",
