@@ -683,7 +683,7 @@ Note: The `graphql` module above is included when you `ember install ember-apoll
 ### Testing
 
 This addon is test-ready! All promises from the apollo service are tracked with
-`Ember.Test.registerWaiter`, so your tests should be completely deterministic.
+`waitForPromise` and `waitForFetch` so your tests should be completely deterministic.
 
 The dummy app contains example routes for mutations and queries:
 
