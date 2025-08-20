@@ -2,6 +2,7 @@
 
 module.exports = {
   test_page: 'tests/index.html?hidepassed',
+  framework: 'qunit',
   disable_watching: true,
   client_decycle_depth: 10,
   launch_in_ci: ['Chrome'],
