@@ -91,18 +91,8 @@
   "peerDependencies": {
     "graphql": "^14.0.0 || ^15.0.0 || ^16.0.0"
   },
-  "//resolutions": {
-    "isbinaryfile": "later versions of isbinaryfile require node.js 18 or later, while this addon maintains compatibility with node.js 16. To ensure compatibility, we pin isbinaryfile to version 5.0.0.",
-    "glob": "later versions of glob require node.js 18 or later, while this addon maintains compatibility with node.js 16. To ensure compatibility, we pin glob to version ^7.2.3.",
-    "minimatch": "later versions of minimatch require node.js 18 or later, while this addon maintains compatibility with node.js 16. To ensure compatibility, we pin minimatch to version ^5.1.6."
-  },
-  "resolutions": {
-    "isbinaryfile": "5.0.0",
-    "glob": "^7.2.3",
-    "minimatch": "^5.1.6"
-  },
   "engines": {
-    "node": "16.* || >= 18"
+    "node": ">= 18"
   },
   "ember": {
     "edition": "octane"
