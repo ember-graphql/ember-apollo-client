@@ -93,7 +93,7 @@
     "graphql": "^14.0.0 || ^15.0.0 || ^16.0.0 || ^17.0.0"
   },
   "engines": {
-    "node": ">= 20"
+    "node": ">= 22"
   },
   "ember": {
     "edition": "octane"
