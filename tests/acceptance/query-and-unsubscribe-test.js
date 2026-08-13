@@ -37,7 +37,8 @@ module('Acceptance | main', function (hooks) {
     addResolveFunctionsToSchema({ schema: this.pretender.schema, resolvers });
 
     let apollo = this.owner.lookup('service:apollo');
-    let getQueries = () => apollo.client.queryManager.getQueryStore();
+    // Apollo Client v4 exposes active ObservableQueries as a Set via obsQueries
+    let getActiveQueries = () => [...apollo.client.queryManager.obsQueries];
 
     await visit('/movie/680');
 
@@ -52,19 +53,16 @@ module('Acceptance | main', function (hooks) {
     assert.dom('.movie-title').hasText('Rambo: Last Blood');
     // Because we used watchQuery() there should be an ongoing query in the
     // apollo query manager:
-    let queries = getQueries();
-    assert.ok(Object.keys(queries).length, 'there is an active watchQuery');
+    let queries = getActiveQueries();
+    assert.ok(queries.length, 'there is an active watchQuery');
 
     await click('.add-review');
 
     // Now that we've gone to a route with no queries, the RouteQueryManager
     // should have unsubscribed from the watchQuery and there should be no
     // ongoing queries:
-    queries = getQueries();
-    assert.notOk(
-      Object.keys(queries).length,
-      'there are no active watchQueries'
-    );
+    queries = getActiveQueries();
+    assert.notOk(queries.length, 'there are no active watchQueries');
   });
 
   test('visiting /', async function (assert) {
@@ -86,7 +84,8 @@ module('Acceptance | main', function (hooks) {
     addResolveFunctionsToSchema({ schema: this.pretender.schema, resolvers });
 
     let apollo = this.owner.lookup('service:apollo');
-    let getQueries = () => apollo.client.queryManager.getQueryStore();
+    // Apollo Client v4 exposes active ObservableQueries as a Set via obsQueries
+    let getActiveQueries = () => [...apollo.client.queryManager.obsQueries];
 
     await visit('/');
 
@@ -94,13 +93,9 @@ module('Acceptance | main', function (hooks) {
 
     // Because we used watchQuery() there should be an ongoing query in the
     // apollo query manager:
-    let queries = getQueries();
-    assert.equal(
-      Object.keys(queries).length,
-      1,
-      'there is an active watchQuery'
-    );
-    assert.deepEqual(queries[Object.keys(queries)[0]].variables, {
+    let queries = getActiveQueries();
+    assert.equal(queries.length, 1, 'there is an active watchQuery');
+    assert.deepEqual(queries[0].variables, {
       topRated: false,
     });
 
@@ -111,13 +106,9 @@ module('Acceptance | main', function (hooks) {
     // Since we changed the query topRated from 'false' to 'true', a new
     // watchQuery should have been fetched referencing 'topRated'. It should
     // still be active, while the 'topRated false' query should not.
-    queries = getQueries();
-    assert.equal(
-      Object.keys(queries).length,
-      1,
-      'there is an active watchQuery'
-    );
-    assert.deepEqual(queries[Object.keys(queries)[0]].variables, {
+    queries = getActiveQueries();
+    assert.equal(queries.length, 1, 'there is an active watchQuery');
+    assert.deepEqual(queries[0].variables, {
       topRated: true,
     });
   });
