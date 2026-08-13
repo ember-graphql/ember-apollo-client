@@ -1,5 +1,10 @@
 # ember-apollo-client
 
+> **Deprecated:** This addon is no longer actively maintained. Please migrate to
+> [glimmer-apollo](https://github.com/josemarluedke/glimmer-apollo), which provides
+> a modern Ember and Glimmer integration for Apollo Client with native support for
+> Octane patterns, tracked properties, and Glimmer components.
+
 _Use [@apollo/client][apollo-client] and GraphQL from your Ember app._
 
 ![Download count all time](https://img.shields.io/npm/dt/ember-apollo-client.svg)
