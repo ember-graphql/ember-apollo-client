@@ -1,6 +1,6 @@
 {
   "name": "ember-apollo-client",
-  "version": "5.0.1",
+  "version": "5.1.0",
   "description": "[Deprecated] An ember-cli addon for the Apollo GraphQL Client. Please migrate to glimmer-apollo (https://github.com/josemarluedke/glimmer-apollo).",
   "keywords": [
     "apollo",
