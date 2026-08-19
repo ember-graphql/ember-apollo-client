@@ -1,7 +1,7 @@
 {
   "name": "ember-apollo-client",
   "version": "5.0.1",
-  "description": "An ember-cli addon for the Apollo GraphQL Client.",
+  "description": "[Deprecated] An ember-cli addon for the Apollo GraphQL Client. Please migrate to glimmer-apollo (https://github.com/josemarluedke/glimmer-apollo).",
   "keywords": [
     "apollo",
     "apollo-client",
@@ -37,26 +37,27 @@
     "test:ember": "ember test"
   },
   "dependencies": {
-    "@apollo/client": "^3.5.10",
+    "@apollo/client": "^4.2.11",
     "@ember/string": "^3.1.1",
-    "@ember/test-waiters": "^4.1.0",
-    "@embroider/macros": "^1.18.0",
+    "@ember/test-waiters": "^4.1.2",
+    "@embroider/macros": "^1.20.6",
     "@glimmer/tracking": "^1.1.2",
-    "broccoli-graphql-filter": "^1.0.0",
-    "ember-auto-import": "^2.4.3",
-    "ember-cli-babel": "^7.26.11"
+    "broccoli-graphql-filter": "^1.0.1",
+    "ember-auto-import": "^2.13.1",
+    "ember-cli-babel": "^7.26.11",
+    "rxjs": "^7.8.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.17.7",
+    "@babel/core": "^7.29.7",
     "@ember/optional-features": "^2.0.0",
-    "@ember/test-helpers": "^4.0.4",
+    "@ember/test-helpers": "^4.0.5",
     "@embroider/test-setup": "^3.0.3",
     "@glimmer/component": "^1.1.2",
     "babel-eslint": "^10.1.0",
     "broccoli-asset-rev": "^3.0.0",
     "ember-cli": "~4.8.1",
     "ember-cli-dependency-checker": "^3.3.1",
-    "ember-cli-htmlbars": "^6.1.1",
+    "ember-cli-htmlbars": "^6.3.0",
     "ember-cli-inject-live-reload": "^2.1.0",
     "ember-cli-terser": "^4.0.2",
     "ember-compatibility-helpers": "^1.2.6",
@@ -64,10 +65,10 @@
     "ember-load-initializers": "^2.1.2",
     "ember-page-title": "^7.0.0",
     "ember-qunit": "^8.1.1",
-    "ember-resolver": "^8.0.3",
+    "ember-resolver": "^8.1.0",
     "ember-source": "~4.8.0",
     "ember-source-channel-url": "^3.0.0",
-    "ember-template-lint": "^4.16.1",
+    "ember-template-lint": "^4.18.2",
     "ember-try": "^3.0.0",
     "eslint": "^7.32.0",
     "eslint-config-prettier": "^8.5.0",
@@ -83,16 +84,16 @@
     "minimatch": "^5.1.6",
     "npm-run-all": "^4.1.5",
     "pretender": "^3.4.7",
-    "prettier": "^2.7.1",
-    "qunit": "^2.19.2",
+    "prettier": "^2.8.8",
+    "qunit": "^2.26.0",
     "qunit-dom": "^2.0.0",
-    "webpack": "^5.74.0"
+    "webpack": "^5.99.0"
   },
   "peerDependencies": {
-    "graphql": "^14.0.0 || ^15.0.0 || ^16.0.0"
+    "graphql": "^14.0.0 || ^15.0.0 || ^16.0.0 || ^17.0.0"
   },
   "engines": {
-    "node": ">= 20"
+    "node": ">= 22"
   },
   "ember": {
     "edition": "octane"
